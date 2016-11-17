@@ -1,0 +1,210 @@
+<div>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" ng-init="permissionCtrl.active.tab = 'home'">
+        <li ng-class="{active: permissionCtrl.active.tab == 'home' }"><a style="cursor:pointer" ng-click="permissionCtrl.activeTab('home');" translate="使用許可_使用許可列表">使用許可列表</a></li>
+        <li ng-class="{active: permissionCtrl.active.tab == 'search' }"><a style="cursor:pointer" ng-click="permissionCtrl.activeTab('search');" translate="使用許可_重置啟動碼">重置啟動碼</a></li>
+        <li ng-class="{active: permissionCtrl.active.tab == 'create' }"><a style="cursor:pointer" ng-click="permissionCtrl.activeTab('create');" translate="使用許可_建立使用許可">建立使用許可</a></li>
+        <li ng-class="{active: permissionCtrl.active.tab == 'changes' }"><a style="cursor:pointer" ng-click="permissionCtrl.activeTab('changes');" translate="使用許可_啟動碼變更清單">啟動碼變更清單</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div ng-switch="permissionCtrl.active.tab">
+            <div ng-switch-when="home">
+                <div style="margin-top: 10px" ng-hide="permissionCtrl.currShow">
+                    <div>
+                        <div class="pull-right">
+                            <label for="search_permission"><i class="fa fa-search"></i></label>
+                            <input type="text" id="search_permission" placeholder="{{ '使用許可_搜尋使用許可' | translate }}" ng-model="permissionCtrl.search_permission.permission_name" >
+                        </div>
+                    </div>
+                    <table class="table table-striped table-hover table-bordered">
+                        <tr>
+                            <th class="text-right" translate="使用許可_使用許可">使用許可</th>
+                            <th class="text-right" translate="使用許可_已使用人數/總人數">已使用人數/總人數</th>
+                            <th class="text-right" translate="使用許可_老師數量">老師數量</th>
+                            <th class="text-right" translate="使用許可_老師許可期限">老師許可期限(天)</th>
+                            <th class="text-right" translate="使用許可_學生數量">學生數量</th>
+                            <th class="text-right" translate="使用許可_學生許可期限">學生許可期限(天)</th>
+                        </tr>
+                        <tr ng-repeat="item in permissionCtrl.permissions | filter:permissionCtrl.search_permission">
+                            <td class="text-right">
+                                <a href="javascript:;" class="code" ng-click="permissionCtrl.currShow = true; permissionCtrl.getContent(item)">{{item.permission_name}}</a>
+                            </td>
+                            <td colspan="5" ng-if="item.error_msg">{{ item.error_msg | translate }}</td>
+                            <td class="text-right" ng-if="!item.error_msg">
+                                {{item.used_count}}/{{item.teacher_count + item.student_count}}
+                            </td>
+                            <td class="text-right" ng-if="!item.error_msg">{{item.teacher_count}}</td>
+                            <td class="text-right" ng-if="!item.error_msg">{{item.teacher_duration}}</td>
+                            <td class="text-right" ng-if="!item.error_msg">{{item.student_count}}</td>
+                            <td class="text-right" ng-if="!item.error_msg">{{item.student_duration}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="panel panel-primary" style="margin-top: 10px" ng-show="permissionCtrl.currShow">
+                    <div class="panel-heading">
+                        <a class="btn btn-primary btn-sm pull-right" style="border:none;margin:-5px 0" ng-click="permissionCtrl.currShow = false">
+                            <i class="fa fa-fw fa-times"></i>
+                        </a>
+                        <h3 class="panel-title">
+                            <span translate="使用許可_使用許可檔案">使用許可檔案</span>: <span class="code">{{ permissionCtrl.curr.permission_name }}</span>
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <div>
+                            <span translate="使用許可_下載">下載</span>:
+                            <a href="/private/sys/permission/export/{{ permissionCtrl.curr.permission_name }}.csv">CSV</a> |
+                            <a href="/private/sys/permission/export/{{ permissionCtrl.curr.permission_name }}.xls">Excel</a>
+                            <div class="pull-right">
+                                <label for="search_account_code"><i class="fa fa-search"></i></label>
+                                <input type="text" id="search_account_code" placeholder="{{ '使用許可_關鍵字搜尋' | translate }}" ng-model="permissionCtrl.search_account_code">
+                            </div>
+                        </div>
+                        <table class="table table-striped table-hover table-bordered">
+                            <tr>
+                                <th translate="使用許可_啟動碼">啟動碼</th>
+                                <th translate="使用許可_角色">角色</th>
+                                <th translate="使用許可_帳號">帳號</th>
+                                <th translate="使用許可_啟動時間">啟動時間</th>
+                                <th class="text-right" translate="使用許可_許可期限">許可期限(天)</th>
+                            </tr>
+                            <tr ng-repeat="item in permissionCtrl.curr.account_codes | filter:permissionCtrl.search_account_code">
+                                <td class="code">{{ item.code }}</td>
+                                <td>{{ item.role }}</td>
+                                <td>{{ item.userid || '使用許可_未使用' | translate }}</td>
+                                <td>{{ item.activation_time | date : 'yyyy-MM-dd HH:mm' }}</td>
+                                <td class="text-right">{{ item.duration }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div ng-switch-when="search">
+                <div style="margin-top: 10px;">
+                    <form class="form-inline" ng-submit="permissionCtrl.searchCode()">
+                        <div class="form-group">
+                            <label for="searchCode" translate="使用許可_查詢啟動碼">查詢啟動碼</label>
+                            <input type="text" id="searchCode" class="form-control" placeholder="{{ '使用許可_啟動碼' | translate }}" required ng-model="permissionCtrl.search_code">
+                        </div>
+                        <button type="submit" class="btn btn-primary" translate="使用許可_查詢">查詢</button>
+                    </form>
+                </div>
+                <div class="panel panel-primary" style="margin-top: 10px" ng-show="permissionCtrl.search.code">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <span translate="使用許可_查詢啟動碼">查詢啟動碼</span>:
+                            <span class="code">{{ permissionCtrl.search.code }}</span>
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-striped table-hover table-bordered">
+                            <tr>
+                                <th class="text-center" translate="使用許可_帳號重置">帳號 / 重置</th>
+                                <th class="text-right" translate="使用許可_啟動碼">啟動碼</th>
+                                <th class="text-right" translate="使用許可_使用許可">使用許可</th>
+                                <th class="text-right" translate="使用許可_角色">角色</th>
+                                <th class="text-right" translate="使用許可_啟動時間">啟動時間</th>
+                                <th class="text-right" translate="使用許可_許可期限">許可期限</th>
+                            </tr>
+                            <tr ng-repeat="item in permissionCtrl.search.account_codes">
+                                <td class="text-center">
+                                    <a href="javascript:;" ng-if="!item.userid" ng-click="permissionCtrl.resetCode(item)" translate="使用許可_重置">重置</a>
+                                    <span ng-if="item.userid">{{ item.userid }}</span>
+                                </td>
+                                <td class="text-right">
+                                    <span class="code">{{ item.code }}</span>
+                                    <span class="code" ng-show="item.new_code"> => {{ item.new_code }}</span>
+                                </td>
+                                <td class="text-right code">{{ item.permission_name }}</td>
+                                <td class="text-right">{{ item.role }}</td>
+                                <td class="text-right">{{ item.activation_time | date : 'yyyy-MM-dd HH:mm' }}</td>
+                                <td class="text-right">{{ item.duration }}</td>
+                            </tr>
+                            <tr ng-show="permissionCtrl.search.account_codes.length==0">
+                              <td colspan="6" translate="使用許可_沒有資料">沒有資料</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div ng-switch-when="create">
+                <div style="margin-top: 10px;" ng-if="permissionCtrl.create.layout=='upload'">
+                    <form class="form-inline" id="myForm" ng-submit="permissionCtrl.uploadPermission()">
+                        <div class="form-group">
+                            <label for="permissionFile" translate="使用許可_上傳許可檔">上傳許可檔(.cbp)</label>
+                            <input type="file" id="permissionFile" class="form-control" accept=".cbp" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" translate="使用許可_上傳" ng-disabled="permissionCtrl.create.uploadBtnDisabled">上傳</button>
+                    </form>
+                </div>
+
+                <div class="panel panel-primary" style="margin-top: 10px" ng-if="permissionCtrl.create.layout=='checked'">
+                    <div class="panel-heading">
+                        <a class="btn btn-primary btn-sm pull-right" style="border:none;margin:-5px 0" ng-click="permissionCtrl.create.layout='upload'">
+                            <i class="fa fa-fw fa-times"></i>
+                        </a>
+                        <h3 class="panel-title">
+                            <span class="ng-binding">{{ '使用許可_許可檔' | translate }}: {{ permissionCtrl.create.info.filename }}</span>
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <div>
+                            <ul class="list-group">
+                                <li class="list-group-item"><strong translate="使用許可_使用許可">使用許可</strong><strong>:</strong> <span>{{ permissionCtrl.create.info.contract_no || "--" }}</span></li>
+                                <li class="list-group-item"><strong translate="使用許可_老師數量">老師數量</strong><strong>:</strong> <span>{{ permissionCtrl.create.info.teacher_count || "--" }}</span></li>
+                                <li class="list-group-item"><strong translate="使用許可_老師許可期限">老師許可期限(天)</strong><strong>:</strong> <span>{{ permissionCtrl.create.info.teaacher_duration || "--" }}</span></li>
+                                <li class="list-group-item"><strong translate="使用許可_學生數量">使用許可_學生數量</strong><strong>:</strong> <span>{{ permissionCtrl.create.info.student_count || "--" }}</span></li>
+                                <li class="list-group-item"><strong translate="使用許可_學生許可期限">學生許可期限(天)</strong><strong>:</strong> <span>{{ permissionCtrl.create.info.student_duration || "--" }}</span></li>
+                                <li class="list-group-item" ng-class="{true: 'list-group-item-success', false: 'list-group-item-danger'}[permissionCtrl.create.info.never_used]"><strong translate="使用許可_未曾建立">未曾建立</strong><strong>:</strong> <span>{{ permissionCtrl.create.info.never_used }}</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="panel-footer" style="text-align:right" ng-if="permissionCtrl.create.info.never_used">
+                        <button type="button" class="btn btn-primary" translate="使用許可_建立" ng-click="permissionCtrl.createCode()" ng-disabled="permissionCtrl.create.createBtnDisabled">建立</button>
+                    </div>
+                </div>
+            </div>
+            <div ng-switch-when="changes">
+                <div style="margin-top: 10px;">
+                    <div>
+                        <div class="pull-right">
+                            <label for="search_changeCode"><i class="fa fa-search"></i></label>
+                            <input type="text" id="search_changeCode" placeholder="{{ '使用許可_關鍵字搜尋' | translate }}" ng-model="search_changeCode">
+                        </div>
+                    </div>
+                    <table class="table table-striped table-hover table-bordered">
+                        <tbody>
+                            <tr>
+                                <th class="text-center" translate="使用許可_變更前啟動碼">變更前啟動碼</th>
+                                <th class="text-center" translate="使用許可_變更後啟動碼">變更後啟動碼</th>
+                                <th class="text-center" translate="使用許可_使用許可">使用許可</th>
+                                <th class="text-center" translate="使用許可_角色">角色</th>
+                                <th class="text-center" translate="使用許可_變更時間">變更時間</th>
+                            </tr>
+                            <tr ng-repeat="item in permissionCtrl.changes | filter: search_changeCode">
+                                <td class="text-center code">{{ item.old_code }}</td>
+                                <td class="text-center code">{{ item.new_code }}</td>
+                                <td class="text-center code">{{ item.permission_name }}</td>
+                                <td class="text-center">{{ item.role }}</td>
+                                <td class="text-center">{{ item.updated_at | date : 'yyyy-MM-dd HH:mm' }}</td>
+                            </tr>
+                            <tr ng-show="permissionCtrl.changes.length==0">
+                              <td colspan="5" translate="使用許可_沒有資料">沒有資料</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="errorMessageModal" class="modal fade" style="z-index:1480">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h4 class="text-danger" translate="{{permissionCtrl.errMessage}}"></h4>
+            </div>
+        </div>
+    </div>
+</div>

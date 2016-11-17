@@ -1,0 +1,133 @@
+<div class="pull-right" style="margin-bottom: 10px">
+    <a class="btn btn-primary" ng-click="accountsCtrl.showCreateAccountModal()">
+        <span translate="管理者_建立管理者">管理者_建立管理者</span>
+    </a>
+</div>
+<div>
+    <table class="table table-striped table-hover table-bordered">
+        <tbody>
+            <tr>
+                <th class="text-center" style="width:30%" translate="管理者_帳號"></th>
+                <th class="text-center" style="width:40%" translate="管理者_帳號別名"></th>
+                <th class="text-center" style="width:30%" translate="管理者_重置資料"></th>
+            </tr>
+            <tr ng-repeat="item in accountsCtrl.accounts">
+                <td class="text-left">{{item.account}}</td>
+                <td class="text-left">{{item.acc_name}}</td>
+                <td clsss="text-left">
+                    <button type="button" class="btn btn-primary" ng-click="accountsCtrl.showEditAccountModal(item)" translate="管理者_修改"></button>
+                    <button type="button" class="btn btn-danger" ng-click="accountsCtrl.showDeleteAccountModal(item)" translate="管理者_删除"></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!-- modal -->
+<div id="createAccountModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" class="form-horizontal" ng-submit="accountsCtrl.createAccount()">
+                <div class="modal-body">
+                    <h4><span translate="管理者_建立管理者"></span></h4>
+                    <div class="form-group">
+                        <label for="acc" class="col-sm-3 control-label" translate="管理者_帳號">帳號</label>
+                        <div class="col-sm-9">
+                            <input id="acc" name="acc" type="text" class="form-control" autofocus required ng-model="accountsCtrl.currentAccount.acc">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="pass" class="col-sm-3 control-label" translate="管理者_密碼">密碼</label>
+                        <div class="col-sm-9">
+                            <input id="pass" name="pass" type="password" class="form-control" autocomplete="off" required ng-model="accountsCtrl.currentAccount.pass">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="pass_confirmation" class="col-sm-3 control-label" translate="管理者_再輸入一次密碼">再輸入一次密碼</label>
+                        <div class="col-sm-9">
+                            <input id="pass_confirmation" name="pass_confirmation" type="password" class="form-control" autocomplete="off" required ng-model="accountsCtrl.currentAccount.pass_confirmation">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="acc_name" class="col-sm-3 control-label" translate="管理者_帳號別名">帳號別名</label>
+                        <div class="col-sm-9">
+                            <input id="acc_name" name="acc_name" type="text" class="form-control" required ng-model="accountsCtrl.currentAccount.acc_name">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input class="btn btn-primary" name="commit" type="submit" value="{{'管理者_建立'|translate}}">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="showChangeDiag" class="modal fade">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form method="post" class="form-horizontal" ng-submit="accountsCtrl.editAccount()">
+                <div class="modal-header">
+                    <h4 class="modal-title" translate="管理者_修改密碼">修改密码</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="inputPassword" class="col-sm-3 control-label" translate="管理者_帳號">帳號</label>
+                        <div class="col-sm-9">
+                            <div>{{accountsCtrl.currentAccount.account}}</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword" class="col-sm-3 control-label" translate="管理者_密碼">密碼</label>
+                        <div class="col-sm-9">
+                            <input type="password" class="form-control" id="inputPassword" name="newpass" required autocomplete="off" required ng-model="accountsCtrl.currentAccount.newpwd">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPasswordConfirm" class="col-sm-3 control-label" translate="管理者_再輸入一次密碼">再輸入一次密碼</label>
+                        <div class="col-sm-9">
+                            <input type="password" class="form-control" id="inputPasswordConfirm" name="newpass_confirmation"   autocomplete="off" required ng-model="accountsCtrl.currentAccount.newpass_confirmation">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="acc_name" class="col-sm-3 control-label" translate="管理者_帳號別名">帳號別名</label>
+                        <div class="col-sm-9">
+                            <input id="acc_name" name="acc_name" type="text" class="form-control" required ng-model="accountsCtrl.currentAccount.acc_name">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" translate="管理者_確定">確定</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="deleteAccountModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h4 translate="管理者_是否删除此帳號">是否删除此帳號</h4>
+                <div>{{accountsCtrl.currentAccount.account}}</div>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-primary" ng-click="accountsCtrl.deleteAccount()">
+                    <span translate="管理者_確定">確定</span>
+                </a>
+                <a class="btn btn-danger" data-dismiss="modal" aria-hidden="true">
+                    <span translate="管理者_取消">取消</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="errorMessageModal" class="modal fade" style="z-index:1480">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h4 class="text-danger" translate="{{accountsCtrl.errMessage}}"></h4>
+            </div>
+        </div>
+    </div>
+</div>

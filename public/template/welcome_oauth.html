@@ -1,0 +1,96 @@
+<style type="text/css">
+        .my-background {
+    background-image: radial-gradient(circle at 50% 50%, rgba(32, 78, 94, 0.76), rgba(0, 0, 0, 0.78)), url('http://www.jorge-almeida.pt/images/IMG_4923_mini.jpg');
+    background-size: auto, cover;
+    width: 100%;
+    height: 1000px
+}
+.button {
+    display: inline-block;
+    margin-top: 63px;
+    margin-left: 0%;
+    padding: 15px 50px;
+    border: 2px solid #c9c9c9;
+    border-radius: 5px;
+    background-color: transparent;
+    -webkit-transition: all 500ms ease-in, all 450ms ease-in;
+    -o-transition: all 500ms ease-in, all 450ms ease-in;
+    transition: all 500ms ease-in, all 450ms ease-in;
+    color: #c2c2c2;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 1px;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+.button:hover {
+    border-color: #0cafeb;
+    background-color: #0cafeb;
+    -webkit-transition: all 250ms ease-in;
+    -o-transition: all 250ms ease-in;
+    transition: all 250ms ease-in;
+    color: white;
+    font-weight: 700;
+}
+.button.buttonhome {
+    margin-top: 100px;
+    margin-right: 15px;
+    margin-left: 15px;
+    border-color: white;
+    -webkit-transition: all 500ms ease-in;
+    -o-transition: all 500ms ease-in;
+    transition: all 500ms ease-in;
+    color: white;
+}
+.button.buttonhome:hover {
+    border-color: #0cafeb;
+}
+
+    </style>
+        <nav class="navbar navbar-static-top navbar-inverse" role="navigation" style="background-color:#000;margin-bottom:0px">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand logo" style="padding:15px 15px" href="javascript:;">
+                        <img ng-show="welcomeCtrl.logo" ng-src="{{ welcomeCtrl.logo }}">
+                        <span ng-show="!welcomeCtrl.logo && welcomeCtrl.web_name" class="logo-header">{{ welcomeCtrl.web_name }}</span>
+                        <span ng-show="!welcomeCtrl.logo && !welcomeCtrl.web_name" class="logo-header"><span style="color:#f00">1</span>Know</span>
+                    </a>
+                </div>
+                <p class="navbar-text navbar-right">
+                    <!-- <a href="#" style="color:#FFF" ng-click="welcomeCtrl.signinWithIschool()">Login</a> -->
+                </p>
+            </div>
+        </nav>
+        <div style="min-width:970px">
+            <div>
+                <div class="my-background">
+                    <div style="padding-top:350px;text-align:center">
+                        <div style="font-size:48px;color:white;text-shadow: rgba(0, 0, 0, 0.2) 0px 1px 0px, black 0px 2px 1px;" translate="B001" remark="Company LOGO" class="ng-scope"><b>Hello, Welcome to Company Name</b>
+                        </div>
+                        <div style="font-size:25px;color:white;text-shadow: rgba(0, 0, 0, 0.2) 0px 1px 0px, black 0px 2px 1px;" translate="B002" remark="Company Slogan" class="ng-scope"><b>Company Slogan</b>
+                        </div>
+                        <div>
+                            <button class="buttonhome button" style="width:406px;margin:40px" href="#" ng-click="welcomeCtrl.signinWithIschool()">Start learning now</button>
+                        </div>
+                        <!-- <div>
+                            <input type="text" class="input-lg" placeholder="Enter Code" ng-model="welcomeCtrl.guestCode" ng-keyup="welcomeCtrl.loginGuest($event)" style="
+                               height: 51px;
+                               border-radius: 5px;
+                               width: 150px;
+                               font-size: 12px;
+                               font-weight: 700;
+                               border: 2px solid #fff;
+                            ">
+                           <button class="buttonhome button" style="width: 300px;margin:40px;margin-left: 7px;" href="#" ng-click="welcomeCtrl.loginGuest()">Start learning now</button>
+                       </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

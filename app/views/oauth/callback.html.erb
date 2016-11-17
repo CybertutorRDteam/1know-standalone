@@ -1,0 +1,16 @@
+<html>
+	<body>
+		<h4>ischool 認證授權中 ......</h4>
+		<script>
+			var url =
+			window.location.href = [
+				'<%= @params[:url] %>',
+				'?client_id=', '<%= @params[:client_id] %>',
+				'&response_type=', '<%= @params[:response_type] %>',
+				'&redirect_uri=', '<%= @params[:redirect_uri] %>',
+				'&state=', '<%= @params[:state] %>',
+				'&scope=', '<%= @params[:scope] %>'
+			].join('');
+		</script>
+	</body>
+</html>

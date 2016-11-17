@@ -1,0 +1,117 @@
+<div>
+    <form method="post" class="form-horizontal" ng-submit="configCtrl.saveConfig()">
+        <h4 translate="系統配置_系統參數">系統參數</h4>
+        <div class="my-config-container">
+            <div class="form-group">
+                <label for="host_name" class="col-sm-3 control-label" translate="系統配置_hostname">Host Name</label>
+                <div class="col-sm-9">
+                    <input id="host_name" name="host_name" type="text" class="form-control" autofocus ng-model="configCtrl.currentConfig.host_name" placeholder="http://140.126.57.223">
+                </div>
+            </div>
+            <div class="form-group">
+                <span class="col-sm-3 control-label" translate="系統配置_開啟啟動碼驗證">開啟啟動碼驗證</span>
+                <div class="col-sm-9">
+                    <label class="checkbox-inline">
+                        <input id="need_activation" name="need_activation" type="checkbox" ng-model="configCtrl.currentConfig.need_activation">
+                        <span class="help-block" translate="系統配置_啟動碼驗證說明">啟動碼驗證說明</span>
+                    </label>
+                </div>
+
+            </div>
+        </div>
+        <h4 translate="系統配置_OAuth">OAuth</h4>
+        <div class="my-config-container">
+            <div class="form-group">
+                <label for="oauth_client_id" class="col-sm-3 control-label" translate="系統配置_OAuth_client_id">OAuth Client ID</label>
+                <div class="col-sm-9">
+                    <input id="oauth_client_id" name="oauth_client_id" type="text" class="form-control" ng-model="configCtrl.currentConfig.oauth_client_id" placeholder="f0a47e722f22ea90c3c336d53a1825d8">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="oauth_client_secret" class="col-sm-3 control-label" translate="系統配置_OAuth_client_secret">OAuth Client Secret</label>
+                <div class="col-sm-9">
+                    <input id="oauth_client_secret" name="oauth_client_secret" type="text" class="form-control" ng-model="configCtrl.currentConfig.oauth_client_secret" placeholder="feb1bb7ef3deb65fbe9ee23232f44763f09d778ae7b027cba0373476a2f0e2cb">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="oauth_redirect_uri" class="col-sm-3 control-label" translate="系統配置_OAuth_redirect_uri">OAuth Redirect URI</label>
+                <div class="col-sm-9">
+                    <input id="oauth_redirect_uri" name="oauth_redirect_uri" type="text" class="form-control" ng-model="configCtrl.currentConfig.oauth_redirect_uri" placeholder="http://140.126.57.223/oauth/ischool">
+                </div>
+            </div>
+        </div>
+        <h4 translate="系統配置_檔案上傳路徑">檔案上傳路徑</h4>
+        <div class="my-config-container">
+            <div class="form-group">
+                <span class="col-sm-3 control-label" translate="系統配置_影片伺服器類型">影片伺服器類型</span>
+                <div class="col-sm-9">
+                    <label class="radio-inline">
+                        <input type="radio" name="videoTypeOptions" id="localhost" value="localhost" ng-model="configCtrl.currentConfig.upload_video_type"> localhost
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="videoTypeOptions" id="wowza" value="wowza" ng-model="configCtrl.currentConfig.upload_video_type"> wowza
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="upload_video_server" class="col-sm-3 control-label" translate="系統配置_影片伺服器位址">影片伺服器位址</label>
+                <div class="col-sm-9">
+                    <input id="upload_video_server" name="upload_video_server" type="text" class="form-control" ng-model="configCtrl.currentConfig.upload_video_server" placeholder="http://140.126.57.157/vod/">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="upload_video_url" class="col-sm-3 control-label" translate="系統配置_影片路徑">影片路徑</label>
+                <div class="col-sm-9">
+                    <input id="upload_video_url" name="upload_video_url" type="text" class="form-control" ng-model="configCtrl.currentConfig.upload_video_url" placeholder="/opt/1know_standalone_upload_file/video">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="upload_doc_url" class="col-sm-3 control-label" translate="系統配置_文件路徑">文件路徑</label>
+                <div class="col-sm-9">
+                    <input id="upload_doc_url" name="upload_doc_url" type="text" class="form-control" ng-model="configCtrl.currentConfig.upload_doc_url" placeholder="/opt/1know_standalone_upload_file/doc">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="upload_image_url" class="col-sm-3 control-label" translate="系統配置_圖片路徑">圖片路徑</label>
+                <div class="col-sm-9">
+                    <input id="upload_image_url" name="upload_image_url" type="text" class="form-control" ng-model="configCtrl.currentConfig.upload_image_url" placeholder="/opt/1know_standalone_upload_file/image">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="upload_icons_url" class="col-sm-3 control-label" translate="系統配置_其他圖片路徑">其他圖片路徑</label>
+                <div class="col-sm-9">
+                    <input id="upload_icons_url" name="upload_icons_url" type="text" class="form-control" ng-model="configCtrl.currentConfig.upload_icons_url" placeholder="/opt/1know_standalone_upload_file/images">
+                    <p class="help-block" translate="系統配置_其他圖片路徑說明">其他圖片路徑說明</p>
+                </div>
+            </div>
+        </div>
+        <h4 translate="系統配置_控智">控智</h4>
+        <div class="my-config-container">
+            <div class="form-group">
+                <label for="konzesys_activate" class="col-sm-3 control-label" translate="系統配置_啟用控智">啟用控智</label>
+                <div class="col-sm-9">
+                    <input id="konzesys_activate" name="konzesys_activate" type="checkbox" ng-model="configCtrl.currentConfig.konzesys_activate">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="konzesys_url" class="col-sm-3 control-label" translate="系統配置_控智服務網址">控智服務網址</label>
+                <div class="col-sm-9">
+                    <input id="konzesys_url" name="konzesys_url" type="text" class="form-control" ng-model="configCtrl.currentConfig.konzesys_url" placeholder="http://218.56.8.86:8080/api.php?action=">
+                </div>
+            </div>
+        </div>
+        <div class="text-center" style="margin: 5px;">
+            <input class="btn btn-primary" name="commit" type="submit" value="{{'系統配置_儲存'|translate}}">
+        </div>
+    </form>
+</div>
+
+<div id="errorMessageModal" class="modal fade" style="z-index:1480">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h4 class="text-danger" translate="{{configCtrl.errMessage}}"></h4>
+            </div>
+        </div>
+    </div>
+</div>

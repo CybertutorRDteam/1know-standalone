@@ -1,0 +1,140 @@
+<div class="container" style="margin:20px auto">
+	<div id="targetModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div ng-if="communityCtrl.targetModal=='join'">
+						<h4><span translate="I001" remark="群組代碼"></span></h4>
+						<input type='text' class="form-control" ng-model='communityCtrl.groupCode' placeholder="{{'I001'|translate}}..." remark="群組代碼"/>
+					</div>
+					<div ng-if="communityCtrl.targetModal=='create'">
+						<h4><span translate="I002" remark="群組名稱"></span></h4>
+						<input type='text' class="form-control" ng-model='communityCtrl.groupName' placeholder="{{'I002'|translate}}..." remark="群組名稱"/>
+					</div>
+					<h4 class="text-danger" ng-show="communityCtrl.errMsg!=undefined">{{communityCtrl.errMsg}}</h4>
+				</div>
+				<div class="modal-footer">
+					<a class="btn btn-primary" ng-click="communityCtrl.join()" ng-if="communityCtrl.targetModal=='join'">
+						<span translate="I003" remark="加入群組"></span>
+					</a>
+					<a class="btn btn-primary" ng-click="communityCtrl.create()" ng-if="communityCtrl.targetModal=='create'">
+						<span translate="I004" remark="建立群組"></span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="profileModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-xs-2 control-label">
+								<span translate="I005" remark="姓"></span>
+							</label>
+							<div class="col-xs-10">
+								<input type="text" class="form-control" ng-model="communityCtrl.guest.last_name"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-2 control-label">
+								<span translate="I006" remark="名"></span>
+							</label>
+							<div class="col-xs-10">
+								<input type="text" class="form-control" ng-model="communityCtrl.guest.first_name"/>
+							</div>
+						</div>
+					</form>
+					<h4 class="text-danger" ng-show="communityCtrl.errMsg!=undefined">{{communityCtrl.errMsg}}</h4>
+				</div>
+				<div class="modal-footer">
+					<span class="text-info pull-left">
+						<span translate="I007" remark="請輸入您的姓名後再加入群組"></span>
+					</span>
+					<a class="btn btn-primary" ng-click="communityCtrl.saveNouser()" ng-show="communityCtrl.guest.first_name!=''||communityCtrl.guest.last_name!=''">
+						<span translate="I003" remark="加入群組"></span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div>
+		<div class="pull-right">
+			<div ng-if="communityCtrl.target=='group'">
+				<div class="btn-group pull-right">
+					<a class="btn btn-primary" ng-click="communityCtrl.showJoinModal()">
+						<span translate="I003" remark="加入群組"></span>
+					</a>
+					<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li>
+							<a href="javascript:;" ng-click="communityCtrl.showCreateModal()">
+								<span translate="I004" remark="建立群組"></span>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div ng-if="communityCtrl.target=='public'" style="width:240px">
+				<div class="input-group">
+					<span class="input-group-addon"><i class="fa fa-fw fa-search"></i></span>
+					<input type="text" class="form-control" ng-model="communityCtrl.keyWord" ng-keyup="communityCtrl.search($event)">
+				</div>
+			</div>
+		</div>
+
+		<div class="btn-group">
+			<a href="#!/join/group" class="btn btn-default" ng-class="{'btn-primary': communityCtrl.target == 'group', active: communityCtrl.target == 'group'}">
+				<span translate="I008" remark="我的群組"></span>
+			</a>
+			<a href="#!/join/public" class="btn btn-default" ng-class="{'btn-primary': communityCtrl.target == 'public', active: communityCtrl.target == 'public'}">
+				<span translate="I009" remark="探索群組"></span>
+			</a>
+		</div>
+	</div>
+	<div ng-if="communityCtrl.target=='group'" style="margin-top:20px">
+		<div class="row">
+			<div class="col-xs-4" ng-repeat="item in communityCtrl.groups">
+				<div class="thumbnail" ng-click="communityCtrl.openGroup(item)">
+					<div class="card-hover" style="position:absolute"></div>
+					<img class="pull-left" style="width:96px;height:96px" ng-src="{{item.logo}}"/>
+					<div style="margin-left:96px;height:96px;padding:25px 15px 0">
+						<div style="font-size:15px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+						<div class="text-muted" style="margin-top:4px">
+							<span><i class="fa fa-fw fa-user"></i> {{item.member_size}}</span>
+							<span style="margin-left:16px"><i class="fa fa-fw fa-book"></i> {{item.knowledge_size}}</span>
+						</div>
+						<span class="label label-danger" style="font-size:13px;position:absolute;top:0;right:0" ng-if="item.message!=''">
+							<span>{{item.message}}</span>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div ng-if="communityCtrl.target=='public'" style="margin-top:20px">
+		<div class="row">
+			<div class="col-xs-4" ng-repeat="item in communityCtrl.groups">
+				<div class="thumbnail" ng-click="communityCtrl.openDiscoverGroup(item)">
+					<div class="card-hover" style="position:absolute"></div>
+					<img class="pull-left" style="width:96px;height:96px" ng-src="{{item.logo}}"/>
+					<div style="margin-left:96px;height:96px;padding:25px 15px 0">
+						<div style="font-size:15px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+						<div class="text-muted" style="margin-top:4px">
+							<span><i class="fa fa-fw fa-user"></i> {{item.member_size}}</span>
+							<span style="margin-left:16px"><i class="fa fa-fw fa-book"></i> {{item.knowledge_size}}</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div ng-if="communityCtrl.start_index!=-1" style="text-align:right">
+			<a class="btn btn-primary" ng-click="communityCtrl.loadAllGroup(communityCtrl.start_index + 1)"><span translate="I010" remark="顯示更多"></span>...</a>
+		</div>
+	</div>
+</div>

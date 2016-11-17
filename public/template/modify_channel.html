@@ -1,0 +1,469 @@
+<div class="container" style="margin:20px auto">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<div style="width:200px;float:left">
+				<img ng-src="{{modifyChannelCtrl.target.logo}}" style="width:100%;"/>
+			</div>
+			<div style="margin-left:220px">
+				<h2 style="margin:0">{{modifyChannelCtrl.target.name}}</h2>
+				<div style="margin-top:20px" ng-bind-html="modifyChannelCtrl.target.description"></div>
+				<div class="alert alert-danger" style="margin:10px;padding:5px" ng-show="modifyChannelCtrl.target.deleteAlert">
+					<span translate="H001" remark="是否刪除此頻道"></span>
+					<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="modifyChannelCtrl.deleteChannel()">
+						<span translate="H002" remark="確定"></span>
+					</a>
+					<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="modifyChannelCtrl.target.deleteAlert=false">
+						<span translate="H003" remark="取消"></span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div ng-if="modifyChannelCtrl.layout=='content'">
+		<div class="row">
+			<div class="col-xs-8">
+				<span>
+					<a href="javascript:;" ng-click="modifyChannelCtrl.loadCategory(null, true)" ng-if="!modifyChannelCtrl.target.view">
+						<span>{{modifyChannelCtrl.target.name}}</span>
+					</a>
+					<span class="text-muted" ng-if="modifyChannelCtrl.target.view">{{modifyChannelCtrl.target.name}}</span>
+				</span>
+				<span ng-repeat="item in modifyChannelCtrl.categoryPath">
+					<span class="divider"><i class="fa fa-fw fa-angle-double-right"></i></span>
+					<a href="javascript:;" ng-click="modifyChannelCtrl.loadCategory(item, false)" ng-if="!item.view">
+						<span>{{item.name}}</span>
+					</a>
+					<span class="text-muted" ng-if="item.view">{{item.name}}</span>
+				</span>
+			</div>
+			<div class="col-xs-4" ng-if="modifyChannelCtrl.target.editable">
+				<div class="btn-group pull-right">
+					<a class="btn btn-sm btn-primary" ng-click="modifyChannelCtrl.addKnowledge()" ng-if="!modifyChannelCtrl.isRoot">
+						<span translate="H004" remark="新增知識"></span>
+					</a>
+					<a class="btn btn-sm btn-primary" ng-click="modifyChannelCtrl.addCategory()">
+						<span translate="H005" remark="新增類別"></span>
+					</a>
+					<div class="btn-group">
+						<a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
+							<i class="fa fa-fw fa-cog"></i>
+						</a>
+						<ul class="dropdown-menu pull-right">
+							<li>
+								<a href="javascript:;" ng-click="mainCtrl.showShareModal(modifyChannelCtrl.target, 'channel')">
+									<span translate="H006" remark="分享頻道"></span>
+								</a>
+							</li>
+							<li class="divider"></li>
+							<li>
+								<a href="javascript:;" ng-click="modifyChannelCtrl.editChannel()">
+									<span translate="H007" remark="編輯頻道"></span>
+								</a>
+							</li>
+							<li>
+								<a href="javascript:;" ng-click="modifyChannelCtrl.editPicture()">
+									<span translate="H008" remark="編輯圖片"></span>
+								</a>
+							</li>
+							<li>
+								<a href="javascript:;" ng-click="modifyChannelCtrl.editMember()">
+									<span translate="H009" remark="編輯成員"></span>
+								</a>
+							</li>
+							<li class="divider"></li>
+							<li>
+								<a href="javascript:;" ng-click="modifyChannelCtrl.target.deleteAlert=true">
+									<span translate="H010" remark="刪除頻道"></span>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div style="margin-top:10px">
+			<div ng-if="modifyChannelCtrl.currentCategory.categories.length>0">
+				<div class="row">
+					<div class="col-xs-4" ng-repeat="item in modifyChannelCtrl.currentCategory.categories">
+						<div class="thumbnail">
+							<div class="card-hover" style="position:absolute" ng-click="modifyChannelCtrl.loadCategory(item, false)"></div>
+							<div class="pull-left" style="padding-top:10px" ng-if="!item.logo">
+								<i class="fa fa-fw fa-folder-o text-info" style="font-size:6em"></i>
+							</div>
+							<img class="pull-left" style="width:96px;height:96px" ng-src="{{item.logo}}" ng-if="item.logo"/>
+							<div style="margin-left:108px;height:94px;padding:5px">
+								<div class="btn-group pull-right">
+									<a class="btn btn-default btn-xs" style="border:none;font-size:14px" ng-click="modifyChannelCtrl.editCategory(item)" ng-if="modifyChannelCtrl.target.editable">
+										<span><i class="fa fa-fw fa-edit text-info"></i></span> <!-- <span translate="編輯"></span> -->
+									</a>
+								</div>
+								<div style="margin-top:30px">
+									<div style="font-size:16px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+									<div class="text-muted" style="margin-top:4px">
+										<span style="margin-right:8px" ng-if="item.category_size>0"><i class="fa fa-fw fa-folder-o"></i> {{item.category_size}}</span>
+										<span ng-if="item.knowledge_size>0"><i class="fa fa-fw fa-book"></i> {{item.knowledge_size}}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div ng-if="modifyChannelCtrl.currentCategory.knowledges.length>0">
+				<div class="row">
+					<div class="col-xs-4" ng-repeat="item in modifyChannelCtrl.currentCategory.knowledges">
+						<div class="thumbnail" ng-click="modifyChannelCtrl.editKnowledge(item)">
+							<div class="card-hover" style="position:absolute"></div>
+							<img class="pull-left" style="width:96px;height:96px" ng-src="{{item.logo}}"/>
+							<div style="margin-left:96px;height:96px;padding:15px 10px 10px 15px">
+								<div style="font-size:15px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+								<a href="{{item.editor.page}}" target="_blank" class="link text-muted">
+									<div style="font-size:13px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.editor.full_name}}</div>
+								</a>
+								<div class="text-muted" style="margin-top:10px">
+									<span>
+										<i class="fa fa-star" ng-style="{'color': item.average_rate >= 1 ? '#eeb929' : '#cacaca'}"></i>
+										<i class="fa fa-star" ng-style="{'color': item.average_rate >= 2 ? '#eeb929' : '#cacaca'}"></i>
+										<i class="fa fa-star" ng-style="{'color': item.average_rate >= 3 ? '#eeb929' : '#cacaca'}"></i>
+										<i class="fa fa-star" ng-style="{'color': item.average_rate >= 4 ? '#eeb929' : '#cacaca'}"></i>
+										<i class="fa fa-star" ng-style="{'color': item.average_rate == 5 ? '#eeb929' : '#cacaca'}"></i>
+									</span>
+									<span class="pull-right">
+										<i class="fa fa-fw fa-user"></i> {{item.readers}}
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div ng-if="modifyChannelCtrl.layout=='picture'" class="panel panel-primary">
+		<div class="panel-heading">
+			<a class="btn btn-primary btn-sm pull-right" style="border:none;margin:-5px 0" ng-click="modifyChannelCtrl.changeLayout('content')">
+				<i class="fa fa-fw fa-times"></i>
+			</a>
+			<h3 class="panel-title" translate="H008" remark="編輯圖片"></h3>
+		</div>
+		<div class="panel-body">
+			<div id="picture_content"></div>
+		</div>
+		<div class="panel-footer">
+			<a class="btn btn-primary pull-right" ng-click="modifyChannelCtrl.savePicture()">
+				<i class="fa fa-fw fa-save"></i> <span translate="H012" remark="儲存"></span>
+			</a>
+			<input type="file" id="input_target_logo" accept="image/*"/>
+			<div class="text-danger" style="margin-top:4px"><span translate="H013" remark="圖片最大尺寸"></span> <span>(200x200)</span></div>
+		</div>
+	</div>
+
+	<div ng-if="modifyChannelCtrl.layout=='channel'" class="panel panel-primary">
+		<div class="panel-heading">
+			<a class="btn btn-primary btn-sm pull-right" style="border:none;margin:-5px 0" ng-click="modifyChannelCtrl.changeLayout('content')">
+				<i class="fa fa-fw fa-times"></i>
+			</a>
+			<h3 class="panel-title">{{modifyChannelCtrl.target.name}}</h3>
+		</div>
+		<div class="panel-body">
+			<form class="form-horizontal" role="form">
+				<div class="form-group">
+					<label class="col-xs-2 control-label">
+						<span translate="H014" remark="名稱"></span>
+					</label>
+					<div class="col-xs-10">
+						<input type="text" class="form-control" ng-model="modifyChannelCtrl.target.edit_name">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-2 control-label">
+						<span translate="H015" remark="簡介"></span>
+					</label>
+					<div class="col-xs-10">
+						<div id="channel-description" style="height:140px"></div>
+					</div>
+				</div>
+			</form>
+			<div class="alert alert-danger" style="margin:0;padding:5px" ng-show="modifyChannelCtrl.target.saveMsg!=undefined">
+				<span ng-bind-html="modifyChannelCtrl.target.saveMsg"></span>
+			</div>
+		</div>
+		<div class="panel-footer" style="text-align:right">
+			<a class="btn btn-primary" ng-click="modifyChannelCtrl.saveChannel()">
+				<i class="fa fa-fw fa-save"></i> <span translate="H012" remark="儲存"></span>
+			</a>
+		</div>
+	</div>
+
+	<div ng-if="modifyChannelCtrl.layout=='category'" class="panel panel-primary">
+		<div class="panel-heading">
+			<a class="btn btn-primary btn-sm pull-right" style="border:none;margin:-5px 0" ng-click="modifyChannelCtrl.changeLayout('content')">
+				<i class="fa fa-fw fa-times"></i>
+			</a>
+			<h3 class="panel-title">
+				<span ng-if="modifyChannelCtrl.modifyTarget.edit_type=='create'" translate="H005" remark="新增類別"></span>
+				<span ng-if="modifyChannelCtrl.modifyTarget.edit_type=='update'">{{modifyChannelCtrl.modifyTarget.name}}</span>
+			</h3>
+		</div>
+		<div class="panel-body">
+			<form class="form-horizontal" role="form">
+				<div class="form-group">
+					<label class="col-xs-2 control-label">
+						<span translate="H014" remark="名稱"></span>
+					</label>
+					<div class="col-xs-10">
+						<input type="text" class="form-control" ng-model="modifyChannelCtrl.modifyTarget.edit_name">
+					</div>
+				</div>
+				<div class="form-group" ng-show="modifyChannelCtrl.modifyTarget.edit_type=='update'">
+					<label class="col-xs-2 control-label">
+						<span translate="H019" remark="排序"></span>
+					</label>
+					<div class="col-xs-10">
+						<div class="btn-group">
+							<a class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:80px">
+								<div>{{modifyChannelCtrl.modifyTarget.edit_priority}}</div>
+							</a>
+							<ul class="dropdown-menu">
+								<li ng-repeat="priority in modifyChannelCtrl.modifyTarget.priorities">
+									<a href="javascript:;" ng-click="modifyChannelCtrl.modifyTarget.edit_priority=priority">
+										<div>{{priority}}</div>
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-2 control-label">
+					</label>
+					<div class="col-xs-10">
+						<div id="picture_content"></div>
+						<div style="margin-top:10px">
+							<input type="file" id="input_target_logo" accept="image/*"/>
+							<div class="text-danger" style="margin-top:4px"><span translate="H013" remark="圖片最大尺寸"></span> <span>(200x200)</span></div>
+						</div>
+					</div>
+				</div>
+			</form>
+			<div class="alert alert-danger" style="margin:0;padding:5px" ng-show="modifyChannelCtrl.modifyTarget.saveMsg!=undefined">
+				<span ng-bind-html="modifyChannelCtrl.modifyTarget.saveMsg"></span>
+			</div>
+			<div class="alert alert-danger" style="margin:0;padding:5px" ng-show="modifyChannelCtrl.modifyTarget.deleteAlert">
+				<span translate="H020" remark="是否刪除此類別"></span>
+				<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="modifyChannelCtrl.deleteCategory()">
+					<span translate="H002" remark="確定"></span>
+				</a>
+				<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="modifyChannelCtrl.modifyTarget.deleteAlert=false">
+					<span translate="H003" remark="取消"></span>
+				</a>
+			</div>
+		</div>
+		<div class="panel-footer" style="text-align:right">
+			<a class="btn btn-danger" ng-click="modifyChannelCtrl.modifyTarget.deleteAlert=true" ng-show="modifyChannelCtrl.modifyTarget.edit_type=='update'">
+				<i class="fa fa-fw fa-trash-o"></i> <span translate="H023" remark="刪除"></span>
+			</a>
+			<a class="btn btn-primary" ng-click="modifyChannelCtrl.saveCategory()">
+				<i class="fa fa-fw fa-save"></i> <span translate="H012" remark="儲存"></span>
+			</a>
+		</div>
+	</div>
+
+	<div ng-if="modifyChannelCtrl.layout=='knowledge'" class="panel panel-primary">
+		<div class="panel-heading">
+			<a class="btn btn-primary btn-sm pull-right" style="border:none;margin:-5px 0" ng-click="modifyChannelCtrl.changeLayout('content')">
+				<i class="fa fa-fw fa-times"></i>
+			</a>
+			<h3 class="panel-title">
+				<span ng-if="modifyChannelCtrl.modifyTarget.edit_type=='create'" translate="H004" remark="新增知識"></span>
+				<span ng-if="modifyChannelCtrl.modifyTarget.edit_type=='update'">{{modifyChannelCtrl.modifyTarget.name}}</span>
+			</h3>
+		</div>
+		<div class="panel-body">
+			<form class="form-horizontal" role="form">
+				<div class="form-group">
+					<label class="col-xs-2 control-label">
+						<span translate="H026" remark="知識代碼或網址"></span>
+					</label>
+					<div class="col-xs-10">
+						<input type="text" class="form-control" ng-model="modifyChannelCtrl.modifyTarget.edit_url">
+					</div>
+				</div>
+				<div class="form-group" ng-show="modifyChannelCtrl.modifyTarget.edit_type=='update'">
+					<label class="col-xs-2 control-label">
+						<span translate="H019" remark="排序"></span>
+					</label>
+					<div class="col-xs-10">
+						<div class="btn-group">
+							<a class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:80px">
+								<div>{{modifyChannelCtrl.modifyTarget.edit_priority}}</div>
+							</a>
+							<ul class="dropdown-menu">
+								<li ng-repeat="priority in modifyChannelCtrl.modifyTarget.priorities">
+									<a href="javascript:;" ng-click="modifyChannelCtrl.modifyTarget.edit_priority=priority">
+										<div>{{priority}}</div>
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</form>
+			<div class="alert alert-danger" style="margin:0;padding:5px" ng-show="modifyChannelCtrl.modifyTarget.saveMsg!=undefined">
+				<span ng-bind-html="modifyChannelCtrl.modifyTarget.saveMsg"></span>
+			</div>
+			<div class="alert alert-danger" style="margin:0;padding:5px" ng-show="modifyChannelCtrl.modifyTarget.deleteAlert">
+				<span translate="H028" remark="是否移除此知識"></span>
+				<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="modifyChannelCtrl.deleteKnowledge()">
+					<span translate="H002" remark="確定"></span>
+				</a>
+				<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="modifyChannelCtrl.modifyTarget.deleteAlert=false">
+					<span translate="H003" remark="取消"></span>
+				</a>
+			</div>
+		</div>
+		<div class="panel-footer" style="text-align:right">
+			<a class="btn btn-danger" ng-click="modifyChannelCtrl.modifyTarget.deleteAlert=true" ng-show="modifyChannelCtrl.modifyTarget.edit_type=='update'">
+				<i class="fa fa-fw fa-trash-o"></i> <span translate="H023" remark="刪除"></span>
+			</a>
+			<a class="btn btn-primary" ng-click="modifyChannelCtrl.saveKnowledge()">
+				<i class="fa fa-fw fa-save"></i> <span translate="H012" remark="儲存"></span>
+			</a>
+		</div>
+	</div>
+
+	<div ng-if="modifyChannelCtrl.layout=='member'" style="background:#fff;border:1px solid #ddd;padding:10px">
+		<div class="row">
+			<div class="col-xs-4">
+				<div class="input-group">
+					<span class="input-group-addon"><span translate="H027" remmark="加入成員"></span></span>
+					<input type="text" class="form-control" placeholder="{{'H021'|translate}}... (press enter)" remark="電子郵件" ng-model="modifyChannelCtrl.memberEmail" ng-keyup="modifyChannelCtrl.addMember($event)"/>
+				</div>
+			</div>
+			<div class="col-xs-3">
+				<div class="input-group">
+					<span class="input-group-addon"><i class="fa fa-fw fa-search"></i></span>
+					<input type="text" class="form-control" ng-model="modifyChannelCtrl.searchWord" ng-keyup="modifyChannelCtrl.searchMember($event)">
+				</div>
+			</div>
+			<div class="col-xs-5">
+				<div class="btn-group pull-right">
+					<a class="btn btn-sm btn-primary" ng-click="modifyChannelCtrl.sortableMember()">
+						<i class="fa fa-fw fa-bars"></i>
+					</a>
+					<a class="btn btn-sm btn-default" ng-click="modifyChannelCtrl.changeLayout('content')">
+						<i class="fa fa-fw fa-times"></i>
+					</a>
+				</div>
+				<div class="btn-group">
+					<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+						<span ng-if="modifyChannelCtrl.filterRole=='all'" translate="H029" remark="-- 全部 --"></span>
+						<span ng-if="modifyChannelCtrl.filterRole=='admin'" translate="H030" remark="管理員"></span>
+						<span ng-if="modifyChannelCtrl.filterRole=='editor'" translate="H031" remark="編輯者"></span>
+						<span ng-if="modifyChannelCtrl.filterRole=='member'" translate="H032" remark="成員"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li>
+							<a href="javascript:;" ng-click="modifyChannelCtrl.loadMember(0)">
+								<span translate="H029" remark="-- 全部 --"></span>
+							</a>
+						</li>
+						<li>
+							<a href="javascript:;" ng-click="modifyChannelCtrl.filterMember('admin', 0)">
+								<span translate="H030" remark="管理員"></span>
+							</a>
+						</li>
+						<li>
+							<a href="javascript:;" ng-click="modifyChannelCtrl.filterMember('editor', 0)">
+								<span translate="H031" remark="編輯者"></span>
+							</a>
+						</li>
+						<li>
+							<a href="javascript:;" ng-click="modifyChannelCtrl.filterMember('member', 0)">
+								<span translate="H032" remark="成員"></span>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div style="margin-top:20px">
+			<ul style="list-style-type:none;margin:0;padding:0" member-list ng-if="modifyChannelCtrl.target.editable">
+				<li ng-repeat="item in modifyChannelCtrl.members" style="border-bottom:1px solid #ddd;padding:4px" ng-style="{'cursor':modifyChannelCtrl.target.sortableMember?'move':'default'}">
+					<div class="row">
+						<div class="col-xs-3">
+							<span style="margin-right:8px" ng-if="modifyChannelCtrl.target.sortableMember">
+								<i class="fa fa-fw fa-sort"></i>
+							</span>
+							<span style="margin-right:8px">{{$index+1}}.</span>
+							<span style="margin-right:8px"><a href="{{item.page}}" target="_blank">{{item.full_name}}</a></span>
+						</div>
+						<div class="col-xs-5">{{item.email}}</div>
+						<div class="col-xs-3">
+							<span ng-show="item.status=='pending'">
+								<a class="btn btn-success btn-xs" ng-click="item.edit_status='approved';modifyChannelCtrl.updateMember(item)">
+									<span translate="H017" remark="同意加入"></span>
+								</a>
+								<a class="btn btn-danger btn-xs" ng-click="item.edit_status='rejection';modifyChannelCtrl.removeMember(item)">
+									<span translate="H018" remark="拒絕加入"></span>
+								</a>
+							</span>
+							<span ng-hide="item.status=='pending'||item.uqid==modifyChannelCtrl.account.uqid">
+								<span ng-if="item.role=='owner'">
+									<span>*****</span>
+								</span>
+								<span ng-if="item.role!='owner'" class="btn-group">
+									<a class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" style="border:none;font-size:14px">
+										<span ng-if="item.role=='admin'" class="text-danger" translate="H030" remark="管理員"></span>
+										<span ng-if="item.role=='editor'" class="text-info" translate="H031" remark="編輯者"></span>
+										<span ng-if="item.role=='member'" class="text-success" translate="H032" remark="成員"></span>
+									</a>
+									<ul class="dropdown-menu">
+										<li>
+											<a href="javascript:;" ng-click="item.edit_role='admin';modifyChannelCtrl.updateMember(item)">
+												<span translate="H030" remark="管理員"></span>
+											</a>
+										</li>
+										<li>
+											<a href="javascript:;" ng-click="item.edit_role='editor';modifyChannelCtrl.updateMember(item)">
+												<span translate="H031" remark="編輯者"></span>
+											</a>
+										</li>
+										<li>
+											<a href="javascript:;" ng-click="item.edit_role='member';modifyChannelCtrl.updateMember(item)">
+												<span translate="H032" remark="成員"></span>
+											</a>
+										</li>
+									</ul>
+								</span>
+							</span>
+						</div>
+						<div class="col-xs-1" style="text-align:right">
+							<span ng-hide="item.uqid==modifyChannelCtrl.account.uqid||item.role=='owner'">
+								<a class="btn btn-default btn-xs" style="border:none;font-size:14px" ng-click="item.removeAlert=true"><i class="fa fa-fw fa-trash-o text-danger"></i></a>
+							</span>
+						</div>
+					</div>
+					<div class="alert alert-danger" style="margin:0;padding:5px" ng-show="item.removeAlert">
+						<span translate="H016" remark="是否移除此成員"></span>
+						<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="item.edit_status='rejection';modifyChannelCtrl.removeMember(item)">
+							<span translate="H002" remark="確定"></span>
+						</a>
+						<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="item.removeAlert=false">
+							<span translate="H003" remark="取消"></span>
+						</a>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div style="margin-top:20px">
+			<div ng-if="modifyChannelCtrl.member_start_index!=-1" style="text-align:right">
+				<a ng-if="modifyChannelCtrl.target.filterRole=='all'" class="btn btn-primary" ng-click="modifyChannelCtrl.loadMember(modifyChannelCtrl.member_start_index + 1)"><span translate="H011" remark="顯示更多"></span>...</a>
+				<a ng-if="modifyChannelCtrl.target.filterRole!='all'" class="btn btn-primary" ng-click="modifyChannelCtrl.filterMember(modifyChannelCtrl.target.filterRole, modifyChannelCtrl.member_start_index + 1)"><span translate="H011" remark="顯示更多"></span>...</a>
+			</div>
+		</div>
+	</div>
+</div>

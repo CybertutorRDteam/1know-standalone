@@ -1,0 +1,2356 @@
+<div class="container" style="margin:20px auto">
+	<div id="errorMessageModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<h4 class="text-danger">{{classroomCtrl.errMessage}}</h4>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="noteVideoModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body" style="background:#000;padding:0px">
+					<div style="height:320px" ng-bind-html="classroomCtrl.noteVideoContent"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="drawDescriptionModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div ng-bind-html="classroomCtrl.drawDescription" style="width:100%;height:100%"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="activityUnitModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body" style="max-height:320px;overflow:auto">
+					<div style="padding:10px" ng-repeat="item in classroomCtrl.import.items">
+						<label class="btn btn-danger btn-sm">
+							<input type="checkbox" ng-model="item.check" ng-change="classroomCtrl.selectSubImportItem(item)"/>
+							<span>{{item.name}}</span>
+						</label>
+						<ul style="list-style-type:none;margin:0;padding:0">
+							<li ng-repeat="item in item.units" style="border-bottom:1px solid #ddd;padding:4px">
+								<label class="btn btn-default" style="border:none;padding:0 4px;">
+									<input type="checkbox" ng-model="item.check"/>
+									<div style="vertical-align:top;width:480px;display:inline-block;margin:2px 0;padding:0 5px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+								</label>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<label class="btn btn-default pull-left" style="border:none">
+						<input type="checkbox" ng-model="classroomCtrl.import.checkAll" ng-change="classroomCtrl.selectImportItem()"/> <span translate="J001" remark="全部選取"></span>
+					</label>
+					<a class="btn btn-primary" ng-click="classroomCtrl.addActivityGoal()"><span translate="J002" remark="加入"></span></a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="importMemberModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<a class="btn btn-primary btn-sm pull-right" ng-click="classroomCtrl.loadMemberFile()">
+						<span translate="J003" remark="讀取檔案"></span>
+					</a>
+					<input type="file" id="load_member_file" accept=".csv" style="display:none"/>
+					<h4 class="text-danger">Ex: email, first_name, last_name</h4>
+				</div>
+				<div class="modal-body" style="max-height:320px;overflow:auto">
+					<table class="table table-condensed table-bordered table-hover" style="margin-top:10px">
+						<tbody>
+							<tr ng-click="item.check=!item.check" ng-repeat="item in classroomCtrl.import.items">
+								<td><input type="checkbox" ng-model="item.check"/></td>
+								<td>{{item.email}}</td>
+								<td>{{item.first_name}}</td>
+								<td>{{item.last_name}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<label class="btn btn-default pull-left" style="border:none">
+						<input type="checkbox" ng-model="classroomCtrl.import.checkAll" ng-change="classroomCtrl.import.selectImportItem()"/> <span translate="J001" remark="全部選取"></span>
+					</label>
+					<a class="btn btn-primary" ng-click="classroomCtrl.importMember()"><span translate="J005" remark="匯入"></span></a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="behaviorModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body" style="text-align:center">
+					<div style="margin-bottom:20px">
+						<span class="btn-group">
+							<a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+								<i class="fa fa-fw fa-5x" ng-class="classroomCtrl.behaviorIcons[classroomCtrl.currentBehavior.icon_index-1]"></i>
+							</a>
+							<ul class="dropdown-menu" style="width:300px;padding:10px">
+								<li>
+									<div style="float:left;display:inline-block;margin-left:10px;width:40px;height:40px"
+										ng-repeat="item in classroomCtrl.behaviorIcons"
+										ng-click="classroomCtrl.currentBehavior.icon_index=$index+1">
+										<i class="fa fa-fw fa-2x" style="cursor:pointer" ng-class="classroomCtrl.behaviorIcons[$index]"></i>
+									</div>
+								</li>
+							</ul>
+						</span>
+					</div>
+					<div style="margin-bottom:20px;width:300px;display:inline-block">
+						<input type="text" class="form-control" ng-model="classroomCtrl.currentBehavior.edit_name"/>
+					</div>
+					<div style="margin-top:10px" ng-if="classroomCtrl.currentBehavior.edit_type=='create'">
+						<a class="btn btn-success" ng-click="classroomCtrl.saveBehavior(1)">
+							<span><i class="fa fa-fw fa-thumbs-o-up"></i> +1</span>
+						</a>
+						<a class="btn btn-danger" ng-click="classroomCtrl.saveBehavior(-1)">
+							<span><i class="fa fa-fw fa-thumbs-o-down"></i> -1</span>
+						</a>
+					</div>
+					<div style="margin-top:10px" ng-if="classroomCtrl.currentBehavior.edit_type=='update'">
+						<a class="btn btn-danger" ng-click="classroomCtrl.currentBehavior.deleteAlert=true">
+							<span translate="J006" remark="刪除"></span>
+						</a>
+						<a class="btn btn-primary" ng-click="classroomCtrl.saveBehavior()">
+							<span translate="J007" remark="儲存"></span>
+						</a>
+					</div>
+					<div class="alert alert-danger" style="margin:10px 0;padding:5px" ng-if="classroomCtrl.currentBehavior.deleteAlert">
+						<span translate="J008" remark="是否刪除此行為表現"></span>
+						<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="classroomCtrl.deleteBehavior()">
+							<span translate="J009" remark="確定"></span>
+						</a>
+						<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="classroomCtrl.currentBehavior.deleteAlert=false">
+							<span translate="J010" remark="取消"></span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="addMemberBehaviorModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<img class="pull-left" ng-src="{{classroomCtrl.currentMember.photo}}" style="width:48px;height:48px"/>
+					<h4 style="margin-left:64px">{{classroomCtrl.currentMember.full_name}}</h4>
+				</div>
+				<div class="modal-body" style="max-height:320px;overflow:auto">
+					<div ng-if="classroomCtrl.currentMember.role=='member'">
+						<div class="row" ng-if="classroomCtrl.behaviors.length>1">
+							<div class="col-xs-3" ng-repeat="item in classroomCtrl.behaviors">
+								<div class="thumbnail">
+									<div class="cover" style="width:100%;height:86px;position:absolute" ng-click="classroomCtrl.addMemberBehavior(item)"></div>
+									<div style="text-align:center">
+										<span class="label" ng-class="{'label-success': item.points > 0, 'label-danger': item.points < 0}" style="position:absolute;top:0;right:0">{{item.points > 0 ? '+1' : '-1'}}</span>
+										<div style="padding:15px 0 10px">
+											<i class="fa fa-fw fa-4x" ng-class="{'text-success': item.points > 0, 'text-danger': item.points < 0, '{{classroomCtrl.behaviorIcons[item.icon-1]}}': true}"></i>
+										</div>
+										<h5 style="line-height:16px">
+											<div style="padding:0 5px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+										</h5>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div ng-if="classroomCtrl.behaviors.length<1">
+							<h3 translate="J011" remark="請先編輯行為表現選項!"></h3>
+						</div>
+					</div>
+					<div ng-if="classroomCtrl.currentMember.role!='member'">
+						<h3 translate="J012" remark="只有成員才可評分"></h3>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="addMultiMemberBehaviorModal" class="modal fade">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-body" style="max-height:560px;overflow:auto">
+					<div class="row">
+						<div class="col-xs-3">
+							<div class="list-group">
+								<a href="javascript:;" class="list-group-item" ng-class="{active: item.selected}" ng-click="item.selected=!item.selected" ng-repeat="item in classroomCtrl.currentActivity.statistics">
+									<span>{{item.full_name}}</span>
+								</a>
+							</div>
+						</div>
+						<div class="col-xs-9">
+							<div class="row" ng-if="classroomCtrl.behaviors.length>1">
+								<div class="col-xs-3" ng-repeat="item in classroomCtrl.behaviors">
+									<div class="thumbnail">
+										<div class="cover" style="width:100%;height:86px;position:absolute" ng-click="classroomCtrl.addMultiMemberBehavior(item)"></div>
+										<div style="text-align:center">
+											<span class="label" ng-class="{'label-success': item.points > 0, 'label-danger': item.points < 0}" style="position:absolute;top:0;right:0">{{item.points > 0 ? '+1' : '-1'}}</span>
+											<div style="padding:15px 0 10px">
+												<i class="fa fa-fw fa-4x" ng-class="{'text-success': item.points > 0, 'text-danger': item.points < 0, '{{classroomCtrl.behaviorIcons[item.icon-1]}}': true}"></i>
+											</div>
+											<h5 style="line-height:16px">
+												<div style="padding:0 5px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+											</h5>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="memberBehaviorModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<img class="pull-left" ng-src="{{classroomCtrl.currentMember.photo}}" style="width:48px;height:48px"/>
+					<h4 style="margin-left:64px">{{classroomCtrl.currentMember.full_name}}</h4>
+				</div>
+				<div class="modal-body" style="max-height:320px;overflow:auto">
+					<ul class="nav">
+						<li ng-repeat="item in classroomCtrl.currentMember.behaviors" style="border-bottom:1px solid #ddd">
+							<div class="row" style="margin-top:12px">
+								<div class="col-xs-1">
+									<i class="fa fa-fw fa-2x" ng-class="{'text-success': item.points > 0, 'text-danger': item.points < 0, '{{classroomCtrl.behaviorIcons[item.icon-1]}}': true}"></i>
+								</div>
+								<div class="col-xs-5"><span>{{item.name}}</span></div>
+								<div class="col-xs-5" style="text-align:right">
+									<span>{{item.gained_time | date:'yyyy/MM/dd @ HH:mm'}}</span>
+								</div>
+								<div class="col-xs-1" style="text-align:right">
+									<a class="btn btn-link" style="padding:0" ng-click="item.deleteAlert=true"><i class="fa fa-fw fa-trash-o text-danger"></i></a>
+								</div>
+							</div>
+							<div class="alert alert-danger" style="margin:10px 0;padding:5px" ng-if="item.deleteAlert">
+								<span translate="J008" remark="是否刪除此行為表現"></span>
+								<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="classroomCtrl.deleteMemberBehavior(item)">
+									<span translate="J009" remark="確定"></span>
+								</a>
+								<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="item.deleteAlert=false">
+									<span translate="J010" remark="取消"></span>
+								</a>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="classroomModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body" style="max-height:320px;overflow:auto">
+					<div ng-show="classroomCtrl.knowledges.length>0">
+						<h4 translate="J016" remark="知識"></h4>
+						<ul class="nav">
+							<li ng-repeat="item in classroomCtrl.knowledges">
+								<a href="javascript:;" ng-click="classroomCtrl.teach(item, 'knowledge')" style="padding:4px;border-bottom:1px solid #ddd">
+									<span>{{item.name}}</span>
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div ng-show="classroomCtrl.activities.length>0">
+						<h4 translate="J017" remark="活動"></h4>
+						<ul class="nav">
+							<li ng-repeat="item in classroomCtrl.activities">
+								<a href="javascript:;" ng-click="classroomCtrl.teach(item, 'activity')" style="padding:4px;border-bottom:1px solid #ddd">
+									<span>{{item.name}}</span>
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div class="text-danger" ng-show="classroomCtrl.errMsg!=undefined">{{classroomCtrl.errMsg}}</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="unitFeedbackModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-xs-2 control-label">
+								<span translate="J018" remark="數字分數"></span>
+							</label>
+							<div class="col-xs-10">
+								<input type="text" class="form-control" style="width:120px" ng-model="classroomCtrl.currentActivity.currentMember.feedbackUnit.edit_score"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-2 control-label">
+								<span translate="J019" remark="文字說明"></span>
+							</label>
+							<div class="col-xs-10">
+								<textarea class="form-control" rows="6" ng-model="classroomCtrl.currentActivity.currentMember.feedbackUnit.edit_comment"></textarea>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<div class="alert alert-danger pull-left" style="margin:0;padding:5px" ng-if="classroomCtrl.currentActivity.currentMember.feedbackUnit.deleteAlert">
+						<span translate="J020" remark="是否刪除此回饋"></span>
+						<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="classroomCtrl.deleteUnitFeedback()">
+							<span translate="J009" remark="確定"></span>
+						</a>
+						<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="classroomCtrl.currentActivity.currentMember.feedbackUnit.deleteAlert=false">
+							<span translate="J010" remark="取消"></span>
+						</a>
+					</div>
+					<a class="btn btn-danger" ng-click="classroomCtrl.currentActivity.currentMember.feedbackUnit.deleteAlert=true" ng-if="classroomCtrl.currentActivity.currentMember.feedbackUnit.feedback_uqid"><span translate="J006" remark="刪除"></span></a>
+					<a class="btn btn-primary" ng-click="classroomCtrl.saveUnitFeedback()"><span translate="J007" remark="儲存"></span></a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div ng-if="classroomCtrl.layout.main=='content'">
+		<div class="row">
+			<div class="col-xs-3">
+				<div style="font-size:28px;padding:10px;margin-bottom:10px;border:1px solid #ddd;background:#fff" ng-if="classroomCtrl.self.role!='member'&&classroomCtrl.target.code">
+					<span><i class="fa fa-fw fa-barcode"></i> {{classroomCtrl.target.code}}</span>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-body" style="padding:10px">
+						<div>
+							<div>
+								<h4>{{classroomCtrl.target.name}}</h4>
+								<div class="text-muted" style=";line-height:14px">{{classroomCtrl.target.description}}</div>
+							</div>
+							<div style="margin-top:8px">
+								<div style="position:relative;width:100%;height:200px" ng-hide="classroomCtrl.self.role!='member'||classroomCtrl.self.behavior.count==0">
+									<div style="position:absolute;font-size:40px;text-align:center;width:100%;top:70px;z-index:999;cursor:pointer" ng-click="classroomCtrl.changeLayout('self-behavior')">{{classroomCtrl.self.behavior.total}}</div>
+									<div style="position:absolute;width:100%;height:200px" id="behaviorChart"></div>
+								</div>
+								<div ng-if="classroomCtrl.self.role!='member'||(classroomCtrl.self.role=='member'&&classroomCtrl.self.behavior.count==0)">
+									<img ng-src="{{classroomCtrl.target.logo}}" style="width:191px;height:191px"/>
+								</div>
+							</div>
+							<div style="margin-top:8px">
+								<div class="btn-group pull-right">
+									<a class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" style="border:none">
+										<i class="fa fa-fw fa-cog text-muted"></i>
+									</a>
+									<ul class="dropdown-menu" ng-if="classroomCtrl.self.role!='member'">
+										<li>
+											<a href="javascript:;" ng-click="mainCtrl.showShareModal(classroomCtrl.target, 'group')">
+												<span translate="J025" remark="分享群組"></span>
+											</a>
+										</li>
+										<li class="divider"></li>
+										<li ng-show="classroomCtrl.self.role=='owner'">
+											<a href="javascript:;" ng-click="classroomCtrl.editProfile()">
+												<span translate="J026" remark="編輯群組"></span>
+											</a>
+										</li>
+										<li ng-show="classroomCtrl.self.role=='owner'">
+											<a href="javascript:;" ng-click="classroomCtrl.editPicture()">
+												<span translate="J027" remark="編輯圖片"></span>
+											</a>
+										</li>
+										<li>
+											<a href="javascript:;" ng-click="classroomCtrl.changeLayout('behavior')">
+												<span translate="J028" remark="編輯行為表現"></span>
+											</a>
+										</li>
+										<li class="divider" ng-show="classroomCtrl.self.role=='owner'"</li>
+										<li ng-show="classroomCtrl.self.role=='owner'">
+											<a href="javascript:;" ng-click="classroomCtrl.target.resetCodeAlert=true" ng-if="classroomCtrl.target.code!=null">
+												<span translate="J029" remark="重設代碼"></span>
+											</a>
+											<a href="javascript:;" ng-click="classroomCtrl.resetCode()" ng-if="classroomCtrl.target.code==null">
+												<span translate="J030" remark="產生代碼"></span>
+											</a>
+										</li>
+										<li class="divider" ng-show="classroomCtrl.self.role=='owner'"></li>
+										<li ng-show="classroomCtrl.self.role=='owner'">
+											<a href="javascript:;" ng-click="classroomCtrl.target.deleteAlert=true">
+												<span translate="J031" remark="刪除群組"></span>
+											</a>
+										</li>
+									</ul>
+									<ul class="dropdown-menu" ng-if="classroomCtrl.self.role=='member'">
+										<li>
+											<a href="javascript:;" ng-click="mainCtrl.showShareModal(classroomCtrl.target, 'group')">
+												<span translate="J025" remark="分享群組"></span>
+											</a>
+										</li>
+										<li class="divider"></li>
+										<li>
+											<a href="javascript:;" ng-click="classroomCtrl.target.unsubscribeAlert=true">
+												<span translate="J033" remark="退出群組"></span>
+											</a>
+										</li>
+									</ul>
+								</div>
+								<div>
+									<a class="btn btn-link" style="padding:0;text-decoration:none" ng-click="classroomCtrl.updateNotification(false)" ng-if="classroomCtrl.self.notification">
+										<span class="text-danger"><i class="fa fa-fw fa-volume-up"></i> <span translate="J034" remark="訊息通知"></span></span>
+									</a>
+									<a class="btn btn-link" style="padding:0;text-decoration:none" ng-click="classroomCtrl.updateNotification(true)" ng-if="!classroomCtrl.self.notification">
+										<span class="text-muted"><i class="fa fa-fw fa-volume-off"></i> <span translate="J035" remark="訊息不通知"></span></span>
+									</a>
+								</div>
+								<div class="alert alert-danger" style="margin:10px 0;padding:5px" ng-if="classroomCtrl.target.deleteAlert">
+									<div translate="J036" remark="是否刪除此群組"></div>
+									<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="classroomCtrl.deleteGroup()">
+										<span translate="J009" remark="確定"></span>
+									</a>
+									<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="classroomCtrl.target.deleteAlert=false">
+										<span translate="J010" remark="取消"></span>
+									</a>
+								</div>
+								<div class="alert alert-danger" style="margin:10px 0;padding:5px" ng-if="classroomCtrl.target.resetCodeAlert">
+									<div translate="J039" remark="是否重設群組代碼"></div>
+									<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="classroomCtrl.resetCode()">
+										<span translate="J009" remark="確定"></span>
+									</a>
+									<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="classroomCtrl.target.resetCodeAlert=false">
+										<span translate="J010" remark="取消"></span>
+									</a>
+								</div>
+								<div class="alert alert-danger" style="margin:10px 0;padding:5px" ng-if="classroomCtrl.target.unsubscribeAlert">
+									<div translate="J042" remark="是否退出此群組"></div>
+									<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="classroomCtrl.leaveGroup()">
+										<span translate="J009" remark="確定"></span>
+									</a>
+									<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="classroomCtrl.target.unsubscribeAlert=false">
+										<span translate="J010" remark="取消"></span>
+									</a>
+								</div>
+							</div>
+						</div>
+						<div style="margin-top:20px">
+							<a class="btn btn-link pull-right" style="padding:0;text-decoration:none" ng-click="classroomCtrl.showAllMember(0)">
+								<span translate="J045" remark="顯示全部"></span>
+							</a>
+							<span class="text-muted">
+								<span translate="J046" remark="成員"></span>
+								<span ng-if="classroomCtrl.target.member_size>0">({{classroomCtrl.target.member_size}})</span>
+							</span>
+							<div style="padding:10px 5px 0">
+								<a href="{{item.page}}" target="_blank" ng-repeat="item in classroomCtrl.target.member" style="padding:0px;margin:0px 2px 2px 0;text-decoration:none;display:inline-block">
+									<img ng-src="{{item.photo}}" style="width:28px;height:28px"/>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-body" style="padding:0">
+						<div>
+							<div style="padding:10px 5px">
+								<div style="height:240px;overflow:auto">
+									<div ng-repeat="item in classroomCtrl.chatroomMessages" style="margin-bottom:5px;padding:3px">
+										<img ng-src="/images/user/{{item.uqid}}_photo.png" class="pull-left" style="width:24px;height:24px">
+										<div class="text-muted" style="font-size:12px;margin-left:32px;white-space:pre-wrap;word-break:break-all">{{item.time | date:'MM/dd @HH:mm'}}</div>
+										<div style="margin-left:32px;white-space:pre-wrap;word-break:break-all">{{item.message}}</div>
+									</div>
+								</div>
+							</div>
+							<div style="padding:5px;border-top:1px solid #ddd;border-bottom:1px solid #ddd;background:#f6f7f8">
+								<input type="text" class="form-control ng-pristine ng-valid" placeholder="{{'J037'|translate}}" remark="message..." ng-model="classroomCtrl.chatroomMessage" ng-keyup="classroomCtrl.sendChatMessage($event)">
+							</div>
+						</div>
+						<div style="padding:10px">
+							<ul class="nav">
+								<li ng-repeat="item in classroomCtrl.presenceUsers">
+									<div style="height:32px;padding:4px 0">
+										<img ng-src="images/user/{{item.uqid}}_photo.png" class="pull-left" style="width:24px;height:24px">
+										<div style="margin-left:32px;white-space:pre-wrap;word-break:break-all">{{item.full_name}}</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div>
+					<div ng-if="classroomCtrl.self.role!='member'">
+						<a class="btn btn-default btn-block" ng-click="classroomCtrl.teach(null)">
+							<span translate="J047" remark="進入線上教室"></span>
+						</a>
+					</div>
+					<div ng-if="classroomCtrl.self.role=='member'">
+						<a class="btn btn-block" ng-class="{'btn-default':!classroomCtrl.teacherOnline,'btn-danger':classroomCtrl.teacherOnline}" ng-click="classroomCtrl.study()">
+							<span translate="J047" remark="進入線上教室"></span>
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-xs-9">
+				<div ng-if="classroomCtrl.layout.sub=='message'" class="row">
+					<div class="col-xs-8">
+						<div class="panel panel-default">
+							<div class="panel-body">
+								<textarea id="post-message" class="form-control" rows="4" style="resize:none;font-size:16px" placeholder="{{'J038'|translate}}" remark="在想些什麼" ng-model="classroomCtrl.wallBoard.whatsMessage" ng-keyup="classroomCtrl.parseWhatsMessage($event)"></textarea>
+								<div ng-show="classroomCtrl.wallBoard.whatsMessage||classroomCtrl.wallBoard.postContent" style="border:2px dashed #ddd;padding:10px;margin-top:10px">
+									<a class="btn btn-link pull-right" style="padding:0;text-decoration:none" ng-click="classroomCtrl.removePostContent()"><i class="fa fa-fw fa-times text-muted"></i></a>
+									<div style="margin-top:20px">
+										<div style="word-break:break-all;margin-bottom:10px" ng-bind-html="classroomCtrl.wallBoard.parseMessage"></div>
+										<div ng-show="classroomCtrl.wallBoard.postContent">
+											<div ng-bind-html="classroomCtrl.wallBoard.postContent.content"></div>
+											<div style="margin-top:10px;padding-top:10px;border-top:1px solid #ddd" ng-if="classroomCtrl.wallBoard.parseMessage||(classroomCtrl.wallBoard.postContent.content&&classroomCtrl.wallBoard.postContent.host)"></div>
+											<div ng-show="classroomCtrl.wallBoard.postContent.host">
+												<a style="font-size:14px;font-weight:bold;word-break:break-all" href="{{classroomCtrl.wallBoard.postContent.url}}" target="_blank">{{classroomCtrl.wallBoard.postContent.title}}</a>
+												<div class="text-muted" style="font-size:12px;line-height:14px;margin-top:4px">{{classroomCtrl.wallBoard.postContent.host}}</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div style="margin-top:10px">
+									<span class="btn-group">
+										<!-- <a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
+											<i class="fa fa-fw fa-file"></i> <span>Drive</span>
+										</a>
+										<ul class="dropdown-menu">
+											<li>
+												<a href="javascript:;" ng-click="classroomCtrl.chooseGoogleFile('message')">
+													<span>Google Drive</span>
+												</a>
+											</li>
+											<li>
+												<a href="javascript:;" ng-click="classroomCtrl.chooseDropboxFile('message')">
+													<span>Dropbox</span>
+												</a>
+											</li>
+										</ul> -->
+									</span>
+									<a class="btn btn-primary btn-sm pull-right" ng-show="classroomCtrl.onPostMessage==undefined" ng-click="classroomCtrl.postMessage()">
+										<span translate="J049" remark="留言"></span>
+									</a>
+								</div>
+							</div>
+						</div>
+						<div style="margin-bottom:20px" ng-if="classroomCtrl.topMessages.length>0">
+							<span class="text-muted"><span translate="J050" remark="置頂貼文"></span></span>
+							<div class="panel panel-default" style="margin-bottom:5px" ng-repeat="item in classroomCtrl.topMessages">
+								<div class="panel-body" style="padding:0" ng-mouseover="item.showToolbar=true" ng-mouseleave="item.showToolbar=false">
+									<div style="padding:15px">
+										<div>
+											<div class="pull-right" ng-if="item.note">
+												<a class="btn btn-link" style="padding:0;text-decoration:none" ng-click="classroomCtrl.openNodeVideo(item.note.content_url, item.note.time)">
+													<i class="fa fa-fw fa-clock-o"></i><span>{{item.note.timeDesc}}</span>
+												</a>
+												<a class="btn btn-link" style="padding:0" href="/watch?k={{item.note.k_uqid}}&u={{item.note.u_uqid}}" target="_blank"
+													data-html="true" data-title="{{item.note.popover}}" data-toggle="tooltip" note-tooltip>
+													<i class="fa fa-fw fa-bookmark-o"></i>
+												</a>
+											</div>
+											<img style="width:40px;height:40px;float:left" ng-src="{{item.publisher.photo}}"/>
+											<div style="margin-left:48px">
+												<a class="text-primary" href="{{item.publisher.page}}" target="_blank">{{item.publisher.full_name}}</a>
+												<div class="text-muted">{{item.publish_time_desc}}</div>
+											</div>
+										</div>
+										<div style="margin-top:10px;word-break:break-word" ng-bind-html="item.content"></div>
+										<div class="alert alert-danger" style="margin:10px 0;padding:5px" ng-show="item.removeMessageAlert">
+											<span translate="J051" remark="是否刪除此訊息"></span>
+											<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="classroomCtrl.removeMessage(item)">
+												<span translate="J009" remark="確定"></span>
+											</a>
+											<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="item.removeMessageAlert=false">
+												<span translate="J010" remark="取消"></span>
+											</a>
+										</div>
+										<div style="font-size:13px;margin-top:10px">
+											<span class="pull-right" ng-if="item.showToolbar">
+												<a class="btn btn-link" style="padding:0 3px;font-size:13px;text-decoration:none" ng-if="item.showTop" ng-click="classroomCtrl.topMessage(item)"><i class="fa fa-fw fa-angle-double-down"></i> <span translate="J054" remark="取消置頂"></span></a>
+												<a class="btn btn-link" style="padding:0 3px;font-size:13px;text-decoration:none" ng-if="item.showModify" ng-click="item.removeMessageAlert=true"><i class="fa fa-fw fa-trash-o"></i> <span translate="J006" remark="刪除"></span></a>
+											</span>
+											<a class="text-primary" style="cursor:pointer;text-decoration:none" ng-click="classroomCtrl.replyMessage(item)">
+												<span translate="J056" remark="回覆"></span>
+											</a>
+											<span> · </span>
+											<a class="text-primary" style="cursor:pointer;text-decoration:none" ng-click="classroomCtrl.likeMessage(item)">
+												<i class="fa fa-fw fa-thumbs-o-up"></i>
+												<span>{{item.like}}</span>
+											</a>
+										</div>
+									</div>
+									<div style="background:#f6f7f8" ng-if="item.message.length>0">
+										<div style="padding:4px 12px" ng-if="item.message.length>1">
+											<a class="btn btn-link" style="font-size:13px;padding:0;text-decoration:none" ng-click="item.showMessage=!item.showMessage">
+												<span style="color:gray" ng-if="item.showMessage"><span translate="J057" remark="隱藏留言"></span> <i class="fa fa-fw fa-chevron-up"></i></span>
+												<span style="color:gray" ng-if="!item.showMessage">{{item.message.length}} <span translate="J058" remark="則留言"></span> <i class="fa fa-fw fa-chevron-down"></i></span>
+											</a>
+										</div>
+										<div>
+											<div ng-repeat="subitem in item.message" style="font-size:13px;border-top:1px solid #fff;padding:10px" ng-show="item.showMessage||item.message.length==$index+1" ng-mouseover="subitem.showToolbar=true" ng-mouseleave="subitem.showToolbar=false">
+												<img class="pull-left" style="width:32px;height:32px;margin-right:8px" ng-src="{{subitem.publisher.photo}}"/>
+												<div style="margin-left:42px;margin-right:10px">
+													<div>
+														<a class="text-primary" href="{{subitem.publisher.page}}" target="_blank">{{subitem.publisher.full_name}}</a>
+													</div>
+													<div style="padding:5px 10px 5px 0;word-break:break-word" ng-bind-html="subitem.content"></div>
+													<div class="alert alert-danger" style="margin:10px 0;padding:5px" ng-show="subitem.removeMessageAlert">
+														<span translate="J051" remark="是否刪除此訊息"></span>
+														<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="classroomCtrl.removeMessage(subitem)">
+															<span translate="J009" remark="確定"></span>
+														</a>
+														<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="subitem.removeMessageAlert=false">
+															<span translate="J010" remark="取消"></span>
+														</a>
+													</div>
+													<div>
+														<a class="btn btn-link pull-right" style="padding:0 3px;font-size:13px" ng-click="subitem.removeMessageAlert=true" ng-show="subitem.showToolbar&&subitem.showModify"><i class="fa fa-fw fa-trash-o"></i> <span translate="J006" remark="刪除"></span></a>
+														<span style="color:gray">{{subitem.publish_time_desc}}</span>
+														<span> · </span>
+														<a class="text-primary" style="cursor:pointer;text-decoration:none" ng-click="classroomCtrl.likeMessage(subitem)">
+															<i class="fa fa-fw fa-thumbs-o-up"></i>
+															<span>{{subitem.like}}</span>
+														</a>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div style="padding:5px" ng-if="item.reply">
+										<textarea id="reply-{{item.uqid}}" class="form-control" style="resize:none" rows="1" placeholder="{{'J032'|translate}}..." remark="訊息" ng-model="item.followMessage" ng-keyup="classroomCtrl.parseFollowMessage($event, item)"></textarea>
+										<div style="padding:10px 0 0;text-align:right">
+											<a class="btn btn-primary btn-sm" ng-click="classroomCtrl.followMessage(item)">
+												<span translate="J049" remark="留言"></span>
+											</a>
+										</div>
+										<div ng-show="item.followMessage||item.postContent" style="border:2px dashed #ddd;padding:10px;margin-top:10px">
+											<div style="word-break:break-all;margin-bottom:10px" ng-bind-html="item.parseMessage"></div>
+											<div ng-show="item.postContent">
+												<div ng-bind-html="item.postContent.content"></div>
+												<div style="margin-top:10px;padding-top:10px;border-top:1px solid #ddd" ng-if="item.parseMessage||(item.postContent.content&&item.postContent.host)"></div>
+												<div ng-show="item.postContent.host">
+													<a style="font-size:14px;font-weight:bold;word-break:break-all" href="{{item.postContent.url}}" target="_blank">{{item.postContent.title}}</a>
+													<div class="text-muted" style="font-size:12px;line-height:14px;margin-top:4px">{{item.postContent.host}}</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div ng-if="classroomCtrl.messages.length>0">
+							<a class="btn btn-link pull-right" style="padding:0;margin-top:-5px" ng-if="classroomCtrl.wallMessageChanged" ng-click="classroomCtrl.refreshMessage()"><span translate="J064" remark="新留言"></span>!</a>
+							<span class="text-muted"><span translate="J065" remark="最新貼文"></span></span>
+							<div class="panel panel-default" style="margin-bottom:5px" ng-repeat="item in classroomCtrl.messages">
+								<div class="panel-body" style="padding:0" ng-mouseover="item.showToolbar=true" ng-mouseleave="item.showToolbar=false">
+									<div style="padding:15px">
+										<div>
+											<div class="pull-right" ng-if="item.note">
+												<a class="btn btn-link" style="padding:0;text-decoration:none" ng-click="classroomCtrl.openNodeVideo(item.note.content_url, item.note.time)">
+													<i class="fa fa-fw fa-clock-o"></i><span>{{item.note.timeDesc}}</span>
+												</a>
+												<a class="btn btn-link" style="padding:0" href="/watch?k={{item.note.k_uqid}}&u={{item.note.u_uqid}}" target="_blank"
+													data-html="true" data-title="{{item.note.popover}}" data-toggle="tooltip" note-tooltip>
+													<i class="fa fa-fw fa-bookmark-o"></i>
+												</a>
+											</div>
+											<img style="width:40px;height:40px;float:left" ng-src="{{item.publisher.photo}}"/>
+											<div style="margin-left:48px">
+												<a class="text-primary" href="{{item.publisher.page}}" target="_blank">{{item.publisher.full_name}}</a>
+												<div class="text-muted">{{item.publish_time_desc}}</div>
+											</div>
+										</div>
+										<div style="margin-top:10px;word-break:break-word" ng-bind-html="item.content"></div>
+										<div class="alert alert-danger" style="margin:10px 0;padding:5px" ng-show="item.removeMessageAlert">
+											<span translate="J051" remark="是否刪除此訊息"></span>
+											<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="classroomCtrl.removeMessage(item)">
+												<span translate="J009" remark="確定"></span>
+											</a>
+											<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="item.removeMessageAlert=false">
+												<span translate="J010" remark="取消"></span>
+											</a>
+										</div>
+										<div style="font-size:13px;margin-top:10px">
+											<span class="pull-right" ng-if="item.showToolbar">
+												<a class="btn btn-link" style="padding:0 3px;font-size:13px;text-decoration:none" ng-if="item.showTop" ng-click="classroomCtrl.topMessage(item)"><i class="fa fa-fw fa-angle-double-up"></i> <span translate="J069" remark="置頂"></span></a>
+												<a class="btn btn-link" style="padding:0 3px;font-size:13px;text-decoration:none" ng-if="item.showModify" ng-click="item.removeMessageAlert=true"><i class="fa fa-fw fa-trash-o"></i> <span translate="J006" remark="刪除"></span></a>
+											</span>
+											<a class="text-primary" style="cursor:pointer;text-decoration:none" ng-click="classroomCtrl.replyMessage(item)">
+												<span translate="J056" remark="回覆"></span>
+											</a>
+											<span> · </span>
+											<a class="text-primary" style="cursor:pointer;text-decoration:none" ng-click="classroomCtrl.likeMessage(item)">
+												<i class="fa fa-fw fa-thumbs-o-up"></i>
+												<span>{{item.like}}</span>
+											</a>
+										</div>
+									</div>
+									<div style="background:#f6f7f8" ng-if="item.message.length>0">
+										<div style="padding:4px 12px" ng-if="item.message.length>1">
+											<a class="btn btn-link" style="font-size:13px;padding:0;text-decoration:none" ng-click="item.showMessage=!item.showMessage">
+												<span style="color:gray" ng-if="item.showMessage"><span translate="J057" remark="隱藏留言"></span> <i class="fa fa-fw fa-chevron-up"></i></span>
+												<span style="color:gray" ng-if="!item.showMessage">{{item.message.length}} <span translate="J058" remark="則留言"></span> <i class="fa fa-fw fa-chevron-down"></i></span>
+											</a>
+										</div>
+										<div>
+											<div ng-repeat="subitem in item.message" style="font-size:13px;border-top:1px solid #fff;padding:10px" ng-show="item.showMessage||item.message.length==$index+1" ng-mouseover="subitem.showToolbar=true" ng-mouseleave="subitem.showToolbar=false">
+												<img class="pull-left" style="width:32px;height:32px;margin-right:8px" ng-src="{{subitem.publisher.photo}}"/>
+												<div style="margin-left:42px;margin-right:10px">
+													<div>
+														<a class="text-primary" href="{{subitem.publisher.page}}" target="_blank">{{subitem.publisher.full_name}}</a>
+													</div>
+													<div style="padding:5px 10px 5px 0;word-break:break-word" ng-bind-html="subitem.content"></div>
+													<div class="alert alert-danger" style="margin:10px 0;padding:5px" ng-show="subitem.removeMessageAlert">
+														<span translate="J051" remark="是否刪除此訊息"></span>
+														<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="classroomCtrl.removeMessage(subitem)">
+															<span translate="J009" remark="確定"></span>
+														</a>
+														<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="subitem.removeMessageAlert=false">
+															<span translate="J010" remark="取消"></span>
+														</a>
+													</div>
+													<div>
+														<a class="btn btn-link pull-right" style="padding:0 3px;font-size:13px" ng-click="subitem.removeMessageAlert=true" ng-show="subitem.showToolbar&&subitem.showModify"><i class="fa fa-fw fa-trash-o"></i> <span translate="J006" remark="刪除"></span></a>
+														<span style="color:gray">{{subitem.publish_time_desc}}</span>
+														<span> · </span>
+														<a class="text-primary" style="cursor:pointer;text-decoration:none" ng-click="classroomCtrl.likeMessage(subitem)">
+															<i class="fa fa-fw fa-thumbs-o-up"></i>
+															<span>{{subitem.like}}</span>
+														</a>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div style="padding:5px" ng-if="item.reply">
+										<textarea id="reply-{{item.uqid}}" class="form-control" style="resize:none" rows="1" placeholder="{{'J032'|translate}}..." remark="訊息" ng-model="item.followMessage" ng-keyup="classroomCtrl.parseFollowMessage($event, item)"></textarea>
+										<div style="padding:10px 0 0;text-align:right">
+											<a class="btn btn-primary btn-sm" ng-click="classroomCtrl.followMessage(item)">
+												<span translate="J049" remark="留言"></span>
+											</a>
+										</div>
+										<div ng-show="item.followMessage||item.postContent" style="border:2px dashed #ddd;padding:10px;margin-top:10px">
+											<div style="word-break:break-all;margin-bottom:10px" ng-bind-html="item.parseMessage"></div>
+											<div ng-show="item.postContent">
+												<div ng-bind-html="item.postContent.content"></div>
+												<div style="margin-top:10px;padding-top:10px;border-top:1px solid #ddd" ng-if="item.parseMessage||(item.postContent.content&&item.postContent.host)"></div>
+												<div ng-show="item.postContent.host">
+													<a style="font-size:14px;font-weight:bold;word-break:break-all" href="{{item.postContent.url}}" target="_blank">{{item.postContent.title}}</a>
+													<div class="text-muted" style="font-size:12px;line-height:14px;margin-top:4px">{{item.postContent.host}}</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div ng-if="classroomCtrl.message_start_index!=-1" style="margin:20px 0;text-align:right">
+								<a class="btn btn-primary" ng-click="classroomCtrl.listMessage(classroomCtrl.message_start_index + 1)"><span translate="J079" remark="顯示更多"></span>...</a>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-xs-4">
+						<div class="panel panel-default">
+							<div class="panel-body" style="padding:10px">
+								<div>
+									<div ng-if="classroomCtrl.self.role!='member'" ng-mouseover="classroomCtrl.modifyActivity=true" ng-mouseleave="classroomCtrl.modifyActivity=false">
+										<a class="btn btn-link pull-right" style="padding:0;font-size:13px;text-decoration:none" ng-click="classroomCtrl.changeLayout('activity')" ng-if="classroomCtrl.self.role!='member'" ng-show="classroomCtrl.modifyActivity">
+											<i class="fa fa-fw fa-edit"></i> <span translate="J080" remark="編輯"></span>
+										</a>
+										<span class="text-muted">
+											<span translate="J017" remark="活動"></span>
+											<span ng-if="classroomCtrl.activities_right.length>0">({{classroomCtrl.activities_right.length}})</span>
+										</span>
+										<div>
+											<table class="table table-hover" style="margin:0">
+												<tbody>
+													<tr ng-repeat="item in classroomCtrl.activities_right" ng-mouseover="item.show_learning=true" ng-mouseleave="item.show_learning=false">
+														<td style="padding:0;border:none;cursor:pointer">
+															<div ng-if="item.type=='tag'">
+																<div class="text-primary" ng-click="classroomCtrl.toggleActivityTag(item)"
+																	style="width:188px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
+																	<i class="fa" style="margin-right:4px" ng-class="{'fa-plus':!item.show,'fa-minus':item.show}"></i> {{item.name}}
+																</div>
+															</div>
+															<div ng-if="item.type=='activity'&&item.show">
+																<a href="#!/learn/activity/{{item.uqid}}" target="_blank" class="pull-right" ng-if="item.show_learning"><i class="fa fa-fw fa-sign-in"></i></a>
+																<div ng-click="classroomCtrl.showActivityStatistics(item)"
+																	ng-class="{'text-primary':item.is_show,'text-danger':!item.is_show}"
+																	ng-style="{'margin-left':item.tag==''?'0':'20px',width:item.tag==''?'168px':'148px'}"
+																	style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
+																	<i class="text-success fa fa-fw fa-check" ng-show="item.progress>=100"></i> {{item.name}}
+																</div>
+															</div>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+									<div ng-if="classroomCtrl.self.role=='member'&&classroomCtrl.activities_right.length>0">
+										<span class="text-muted">
+											<span translate="J017" remakr="活動"></span>
+											<span ng-if="classroomCtrl.activities_right.length>0">({{classroomCtrl.activities_right.length}})</span>
+										</span>
+										<div>
+											<ul class="nav">
+												<li ng-repeat="item in classroomCtrl.activities_right">
+													<a href="javascript:;" style="padding:1px" ng-if="item.type=='tag'">
+														<div class="text-primary" ng-click="classroomCtrl.toggleActivityTag(item)"
+															style="width:188px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
+															<i class="fa" style="margin-right:4px" ng-class="{'fa-plus':!item.show,'fa-minus':item.show}"></i> {{item.name}}
+														</div>
+													</a>
+													<a href="#!/learn/activity/{{item.uqid}}" target="_blank" style="padding:1px" ng-if="item.type=='activity'&&item.show">
+														<div ng-style="{'margin-left':item.tag==''?'0':'20px',width:item.tag==''?'188px':'168px'}"
+															style="width:188px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
+															<i class="text-success fa fa-fw fa-check" ng-show="item.progress>=100"></i> {{item.name}}
+														</div>
+													</a>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+
+								<div style="margin-top:10px">
+									<div ng-if="classroomCtrl.self.role!='member'" ng-mouseover="classroomCtrl.modifyKnowledge=true" ng-mouseleave="classroomCtrl.modifyKnowledge=false">
+										<a class="btn btn-link pull-right" style="padding:0;font-size:13px;text-decoration:none" ng-click="classroomCtrl.changeLayout('knowledge')" ng-if="classroomCtrl.self.role!='member'" ng-show="classroomCtrl.modifyKnowledge">
+											<i class="fa fa-fw fa-edit"></i> <span translate="J080" remark="編輯"></span>
+										</a>
+										<span class="text-muted">
+											<span translate="J016" remark="知識"></span>
+											<span ng-if="classroomCtrl.knowledges.length>0">({{classroomCtrl.knowledges.length}})</span>
+										</span>
+										<div>
+											<ul class="nav">
+												<li ng-repeat="item in classroomCtrl.knowledges">
+													<a href="{{item.page}}" target="_blank" style="padding:1px">
+														<div ng-class="{'text-primary':item.is_show,'text-danger':!item.is_show}" style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+													</a>
+												</li>
+											</ul>
+										</div>
+									</div>
+									<div ng-if="classroomCtrl.self.role=='member'&&classroomCtrl.knowledges.length>0">
+										<span class="text-muted">
+											<span translate="J016" remak="知識"></span>
+											<span ng-if="classroomCtrl.knowledges.length>0">({{classroomCtrl.knowledges.length}})</span>
+										</span>
+										<div>
+											<ul class="nav">
+												<li ng-repeat="item in classroomCtrl.knowledges">
+													<a href="{{item.page}}" target="_blank" style="padding:1px" ng-if="!item.subscribed">
+														<div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+													</a>
+													<a href="#!/learn/knowledge/{{item.know_uqid}}" target="_blank" style="padding:1px" ng-if="item.subscribed">
+														<div class="text-muted" style=";text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+													</a>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+
+								<div style="margin-top:10px">
+									<!--ng-if=classroomCtrl.self.role!='member'-->
+									<div ng-if="!1" ng-mouseover="classroomCtrl.modifyFile=true" ng-mouseleave="classroomCtrl.modifyFile=false">
+										<a class="btn btn-link pull-right" style="padding:0;font-size:13px;text-decoration:none" ng-click="classroomCtrl.changeLayout('file')" ng-if="classroomCtrl.self.role!='member'" ng-show="classroomCtrl.modifyFile">
+											<i class="fa fa-fw fa-edit"></i> <span translate="J080" remark="編輯"></span>
+										</a>
+										<span class="text-muted">
+											<span translate="J087" remark="檔案"></span>
+											<span ng-if="classroomCtrl.target.file.length>0">({{classroomCtrl.target.file.length}})</span>
+										</span>
+										<div>
+											<ul class="nav">
+												<li ng-repeat="item in classroomCtrl.target.file track by $index">
+													<a ng-if="item.url" href="{{item.url}}" target="_blank" style="padding:1px">
+														<div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden"><img style="height:20px;margin-right:4px" ng-src="{{item.icon}}"/>{{item.title}}</div>
+													</a>
+													<div ng-if="!item.url" style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden" ng-bind-html="item.value"></div>
+												</li>
+											</ul>
+										</div>
+									</div>
+									<div ng-if="classroomCtrl.self.role=='member'&&classroomCtrl.target.file.length>0">
+										<span class="text-muted">
+											<span translate="J087" remark="檔案"></span>
+											<span ng-if="classroomCtrl.target.file.length>0">({{classroomCtrl.target.file.length}})</span>
+										</span>
+										<div>
+											<ul class="nav">
+												<li ng-repeat="item in classroomCtrl.target.file">
+													<a ng-if="item.url" href="{{item.url}}" target="_blank" style="padding:1px">
+														<div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.title}}</div>
+													</a>
+													<div ng-if="!item.url" style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden" ng-bind-html="item.value"></div>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+
+								<div style="margin-top:10px">
+									<div ng-if="classroomCtrl.self.role!='member'" ng-mouseover="classroomCtrl.modifyLink=true" ng-mouseleave="classroomCtrl.modifyLink=false">
+										<a class="btn btn-link pull-right" style="padding:0;font-size:13px;text-decoration:none" ng-click="classroomCtrl.changeLayout('link')" ng-if="classroomCtrl.self.role!='member'" ng-show="classroomCtrl.modifyLink">
+											<i class="fa fa-fw fa-edit"></i> <span translate="J080" remark="編輯"></span>
+										</a>
+										<span class="text-muted">
+											<span translate="J090" remark="連結"></span>
+											<span ng-if="classroomCtrl.target.link.length>0">({{classroomCtrl.target.link.length}})</span>
+										</span>
+										<div>
+											<ul class="nav">
+												<li ng-repeat="item in classroomCtrl.target.link">
+													<a ng-if="item.url" href="{{item.url}}" target="_blank" style="padding:1px">
+														<div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.title}}</div>
+													</a>
+													<div ng-if="!item.url" style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden" ng-bind-html="item.value"></div>
+												</li>
+											</ul>
+										</div>
+									</div>
+									<div ng-if="classroomCtrl.self.role=='member'&&classroomCtrl.target.link.length>0">
+										<span class="text-muted">
+											<span translate="J090" remark="連結"></span>
+											<span ng-if="classroomCtrl.target.link.length>0">({{classroomCtrl.target.link.length}})</span>
+										</span>
+										<div>
+											<ul class="nav">
+												<li ng-repeat="item in classroomCtrl.target.link">
+													<a ng-if="item.url" href="{{item.url}}" target="_blank" style="padding:1px">
+														<div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.title}}</div>
+													</a>
+													<div ng-if="!item.url" style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden" ng-bind-html="item.value"></div>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div ng-if="classroomCtrl.layout.sub=='activity'">
+					<div class="panel panel-primary" ng-if="classroomCtrl.layout.third">
+						<div class="panel-body">
+							<div ng-show="classroomCtrl.layout.third=='import'">
+								<div style="margin-bottom:10px">
+									<a class="btn btn-default btn-sm pull-right" ng-click="classroomCtrl.changeLayout('activity')">
+										<i class="fa fa-fw fa-times"></i>
+									</a>
+									<div class="btn-group">
+										<label class="btn btn-default btn-sm">
+											<input type="checkbox" style="margin:0" ng-model="classroomCtrl.importActivity.checkAll" ng-change="classroomCtrl.importActivity.selectAll()"/> <span translate="J001" remark="全部選取"></span>
+										</label>
+										<a class="btn btn-primary btn-sm" ng-click="classroomCtrl.importActivity.add()"><span translate="J002" remark="加入"></span></a>
+									</div>
+								</div>
+								<ul style="list-style-type:none;margin:0;padding:0">
+									<li ng-repeat="item in classroomCtrl.importActivity.items" style="border-bottom:1px solid #ddd;padding:4px">
+										<label class="btn btn-default" style="border:none;padding:0 4px;">
+											<input type="checkbox" ng-model="item.check"/>
+											<div style="vertical-align:top;display:inline-block;margin:2px 0;padding:0 5px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+										</label>
+									</li>
+								</ul>
+							</div>
+							<div ng-show="classroomCtrl.layout.third=='create'||classroomCtrl.layout.third=='modify'">
+								<form class="form-horizontal" role="form">
+									<div class="form-group">
+										<label class="col-xs-2 control-label">
+											<span translate="J094" remark="活動名稱"></span>
+										</label>
+										<div class="col-xs-10">
+											<input type="text" class="form-control" ng-model="classroomCtrl.currentActivity.edit_name"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-xs-2 control-label">
+											<span translate="J095" remark="活動說明"></span>
+										</label>
+										<div class="col-xs-10">
+											<textarea rows="3" class="form-control" ng-model="classroomCtrl.currentActivity.edit_description"></textarea>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-xs-2 control-label">
+											<span translate="J096" remark="分類標韱"></span>
+										</label>
+										<div class="col-xs-5">
+											<input type="text" class="form-control" ng-model="classroomCtrl.currentActivity.edit_tag"/>
+										</div>
+									</div>
+									<div style="margin-top:10px;text-align:right" ng-if="classroomCtrl.currentActivity.edit_goal.length>1">
+										<a class="btn btn-xs btn-primary" ng-click="classroomCtrl.sortableActivityGoal()">
+											<i class="fa fa-fw fa-bars"></i>
+										</a>
+									</div>
+									<ul style="list-style-type:none;margin:0;padding:10px" goal-list>
+										<li ng-repeat="item in classroomCtrl.currentActivity.edit_goal" style="padding:6px 0;border-bottom:1px solid #ddd" ng-style="{'cursor':classroomCtrl.target.sortableActivityGoal?'move':'default'}">
+											<div class="pull-right">
+												<a class="btn btn-default btn-xs" style="border:none;font-size:14px" ng-click="classroomCtrl.removeActivityGoal(item)">
+													<i class="fa fa-fw fa-trash-o text-danger"></i>
+												</a>
+											</div>
+											<div>
+												<span style="margin-right:8px" ng-if="classroomCtrl.target.sortableActivityGoal">
+													<i class="fa fa-fw fa-sort"></i>
+												</span>
+												<span style="margin-right:8px"><span ng-if="$index<9">0</span>{{$index+1}}. </span>
+												<div style="display:inline-block">
+													[<div class="text-primary" style="max-width:140px;padding:0 2px;display:inline-block;vertical-align:middle;text-align:center;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.know.name}}</div>]
+													<div style="width:400px;display:inline-block;vertical-align:middle;padding-left:10px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.unit.name}}</div>
+												</div>
+											</div>
+										</li>
+									</ul>
+								</form>
+								<div style="margin-top:10px">
+									<div class="pull-right">
+										<a class="btn btn-danger btn-sm" ng-click="classroomCtrl.changeLayout('activity')">
+											<i class="fa fa-fw fa-times"></i> <span translate="J010" remark="取消"></span>
+										</a>
+										<a class="btn btn-primary btn-sm" ng-click="classroomCtrl.saveActivity()">
+											<i class="fa fa-fw fa-save"></i> <span translate="J007" remark="儲存"></span>
+										</a>
+									</div>
+									<div class="btn-group">
+										<a class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+											<span translate="J099" remark="群組中的知識"></span>
+										</a>
+										<ul class="dropdown-menu" style="width:240px;max-height:200px;overflow:auto">
+											<li ng-repeat="item in classroomCtrl.knowledges">
+												<a href="javascript:;" ng-click="classroomCtrl.showImportActivityKnowledgeUnit(item)">
+													<div style="max-width:240px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+												</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<hr ng-if="classroomCtrl.layout.fourth"/>
+							<div ng-if="classroomCtrl.layout.fourth">
+								<div style="margin-bottom:10px">
+									<a class="btn btn-default btn-sm pull-right" ng-click="classroomCtrl.layout.fourth=undefined">
+										<i class="fa fa-fw fa-times"></i>
+									</a>
+									<div class="btn-group">
+										<label class="btn btn-default btn-sm">
+											<input type="checkbox" style="margin:0" ng-model="classroomCtrl.importActivityKnowledgeUnit.checkAll" ng-change="classroomCtrl.importActivityKnowledgeUnit.selectAll('all')"/> <span translate="J001" remark="全部選取"></span>
+										</label>
+										<a class="btn btn-primary btn-sm" ng-click="classroomCtrl.importActivityKnowledgeUnit.add()"><span translate="J002" remark="加入"></span></a>
+									</div>
+								</div>
+								<div>
+									<div ng-repeat="item in classroomCtrl.importActivityKnowledgeUnit.items" style="margin-top:8px">
+										<label class="btn btn-danger btn-xs">
+											<input type="checkbox" ng-model="item.check" ng-change="classroomCtrl.importActivityKnowledgeUnit.selectAll('chapter', item)"/>
+											<div style="vertical-align:top;display:inline-block;margin:2px 0;padding:0 5px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+										</label>
+										<ul style="list-style-type:none;margin:0;padding:0">
+											<li ng-repeat="unit in item.units" style="border-bottom:1px solid #ddd;padding:4px">
+												<label class="btn btn-default" style="border:none;padding:0 4px;">
+													<input type="checkbox" ng-model="unit.check"/>
+													<div style="vertical-align:top;display:inline-block;margin:2px 0;padding:0 5px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{unit.name}}</div>
+												</label>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="panel panel-primary" ng-if="!classroomCtrl.layout.third">
+						<div class="panel-heading">
+							<div class="pull-right" style="margin:-5px 0">
+								<div class="btn-group">
+									<a class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" style="border:none">
+										<span translate="J097" remark="從其他群組加入"></span>
+									</a>
+									<ul class="dropdown-menu pull-right" style="max-height:200px;overflow:auto">
+										<li ng-repeat="item in classroomCtrl.selfGroups">
+											<a href="javascript:;" ng-click="classroomCtrl.showImportActivity(item)">
+												<div style="max-width:240px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+											</a>
+										</li>
+									</ul>
+								</div>
+								<a class="btn btn-primary btn-sm" style="border:none" ng-click="classroomCtrl.addActivity()">
+									<span translate="J098" remark="建立活動"></span>
+								</a>
+								<a class="btn btn-primary btn-sm" style="border:none" ng-click="classroomCtrl.sortableActivity()">
+									<i class="fa fa-fw fa-bars"></i>
+								</a>
+								<a class="btn btn-primary btn-sm" style="border:none" ng-click="classroomCtrl.changeLayout('content')">
+									<i class="fa fa-fw fa-times"></i>
+								</a>
+							</div>
+							<h3 class="panel-title"><span translate="J017" remark="活動"></span></h3>
+						</div>
+						<div class="panel-body">
+							<ul style="list-style-type:none;margin:10px;padding:0" activity-list>
+								<li ng-repeat="item in classroomCtrl.activities"
+									style="border-bottom:1px solid #ddd;padding:6px"
+									ng-style="{'cursor':classroomCtrl.target.sortableActivity?'move':'default'}">
+									<div class="pull-right">
+										<a class="btn btn-default btn-xs" style="border:none;font-size:14px"
+											ng-click="classroomCtrl.updateActivity(item, false)" ng-if="item.is_show">
+											<span class="text-info" translate="J091" remark="顯示"></span>
+										</a>
+										<a class="btn btn-default btn-xs" style="border:none;font-size:14px"
+											ng-click="classroomCtrl.updateActivity(item, true)" ng-if="!item.is_show">
+											<span class="text-danger" translate="J092" remark="隱藏"></span>
+										</a>
+										<a class="btn btn-default btn-xs" style="border:none;font-size:14px" ng-click="item.removeAlert=true">
+											<i class="fa fa-fw fa-trash-o text-danger"></i>
+										</a>
+									</div>
+									<div>
+										<span style="margin-right:8px" ng-if="classroomCtrl.target.sortableActivity">
+											<i class="fa fa-fw fa-sort"></i>
+										</span>
+										<span style="margin-right:8px"><span ng-if="$index<9">0</span>{{$index+1}}. </span>
+										<div style="display:inline-block;padding-right:10px" ng-if="item.tag">
+											[<div class="text-primary" style="max-width:120px;padding:0 2px;display:inline-block;vertical-align:middle;text-align:center;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.tag}}</div>]
+										</div>
+										<a class="btn btn-link" style="padding:0;text-decoration:none" ng-click="classroomCtrl.editActivity(item)">
+											<div style="width:360px;display:inline-block;vertical-align:middle;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+										</a>
+									</div>
+									<div class="alert alert-danger" style="margin:10px 0;padding:5px" ng-show="item.removeAlert">
+										<span translate="J093" remark="是否刪除此活動"></span>
+										<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="classroomCtrl.deleteActivity(item)">
+											<span translate="J009" remark="確定"></span>
+										</a>
+										<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="item.removeAlert=false">
+											<span translate="J010" remark="取消"></span>
+										</a>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+
+				<div ng-if="classroomCtrl.layout.sub=='knowledge'">
+					<div class="panel panel-primary" ng-if="classroomCtrl.layout.third">
+						<div class="panel-body">
+							<div ng-if="classroomCtrl.layout.third=='code'">
+								<a class="btn btn-default btn-sm pull-right" style="margin-bottom:10px" ng-click="classroomCtrl.changeLayout('knowledge')">
+									<i class="fa fa-fw fa-times"></i>
+								</a>
+								<div class="input-group" style="width:600px">
+									<span class="input-group-addon"><span translate="J089" remark="知識代碼或網址"></span></span>
+									<input type="text" class="form-control" placeholder="{{'J089'|translate}}... (press enter)" remark="知識代碼或網址" ng-model="classroomCtrl.knowledgeCode" ng-keyup="classroomCtrl.addKnowledge($event)"/>
+								</div>
+							</div>
+							<div ng-if="classroomCtrl.layout.third=='import'">
+								<div style="margin-bottom:10px">
+									<a class="btn btn-default btn-sm pull-right" ng-click="classroomCtrl.changeLayout('knowledge')">
+										<i class="fa fa-fw fa-times"></i>
+									</a>
+									<div class="btn-group">
+										<label class="btn btn-default btn-sm">
+											<input type="checkbox" style="margin:0" ng-model="classroomCtrl.importKnowledge.checkAll" ng-change="classroomCtrl.importKnowledge.selectAll()"/> <span translate="J001" remark="全部選取"></span>
+										</label>
+										<a class="btn btn-primary btn-sm" ng-click="classroomCtrl.importKnowledge.add()"><span translate="J002" remark="加入"></span></a>
+									</div>
+								</div>
+								<div>
+									<ul style="list-style-type:none;margin:0;padding:0">
+										<li ng-repeat="item in classroomCtrl.importKnowledge.items" style="border-bottom:1px solid #ddd;padding:4px">
+											<label class="btn btn-default" style="border:none;padding:0 4px;">
+												<input type="checkbox" ng-model="item.check"/>
+												<div style="vertical-align:top;display:inline-block;margin:2px 0;padding:0 5px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+											</label>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="panel panel-primary" ng-if="!classroomCtrl.layout.third">
+						<div class="panel-heading">
+							<div class="pull-right" style="margin:-5px 0">
+								<div class="btn-group">
+									<a class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" style="border:none">
+										<span translate="J097" remark="從其他群組加入"></span>
+									</a>
+									<ul class="dropdown-menu pull-right" style="max-height:200px;overflow:auto">
+										<li ng-repeat="item in classroomCtrl.selfGroups">
+											<a href="javascript:;" ng-click="classroomCtrl.showImportKnowledge(item)">
+												<div style="max-width:240px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+											</a>
+										</li>
+									</ul>
+								</div>
+								<a class="btn btn-primary btn-sm" style="border:none" ng-click="classroomCtrl.showImportKnowledge({type:'knowledge'})">
+									<span translate="J088" remark="我的知識"></span>
+								</a>
+								<a class="btn btn-primary btn-sm" style="border:none" ng-click="classroomCtrl.layout.third='code'">
+									<span translate="J089" remark="知識代碼或網址"></span>
+								</a>
+								<a class="btn btn-primary btn-sm" style="border:none" ng-click="classroomCtrl.sortableKnowledge()">
+									<i class="fa fa-fw fa-bars"></i>
+								</a>
+								<a class="btn btn-primary btn-sm" style="border:none" ng-click="classroomCtrl.changeLayout('content')">
+									<i class="fa fa-fw fa-times"></i>
+								</a>
+							</div>
+							<h3 class="panel-title"><span translate="J016" remark="知識"></span></h3>
+						</div>
+						<div class="panel-body">
+							<ul style="list-style-type:none;margin:10px;padding:0" knowledge-list>
+								<li ng-repeat="item in classroomCtrl.knowledges" style="border-bottom:1px solid #ddd;padding:6px" ng-style="{'cursor':classroomCtrl.target.sortableKnowledge?'move':'default'}">
+									<div class="pull-right">
+										<a class="btn btn-default btn-xs" style="border:none;font-size:14px"
+											ng-click="classroomCtrl.updateKnowledge(item, false)" ng-if="item.is_show">
+											<span class="text-info" translate="J091" remark="顯示"></span>
+										</a>
+										<a class="btn btn-default btn-xs" style="border:none;font-size:14px"
+											ng-click="classroomCtrl.updateKnowledge(item, true)" ng-if="!item.is_show">
+											<span class="text-danger" translate="J092" remark="隱藏"></span>
+										</a>
+										<a class="btn btn-default btn-xs" style="border:none;font-size:14px" ng-click="classroomCtrl.removeKnowledge(item)">
+											<i class="fa fa-fw fa-trash-o text-danger"></i>
+										</a>
+									</div>
+									<div>
+										<span style="margin-right:8px" ng-if="classroomCtrl.target.sortableKnowledge">
+											<i class="fa fa-fw fa-sort"></i>
+										</span>
+										<span style="margin-right:8px"><span ng-if="$index<9">0</span>{{$index+1}}. </span>
+										<a class="btn btn-link" style="padding:0;text-decoration:none" href="{{item.page}}" target="_blank">
+											<div style="max-width:480px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+										</a>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+
+				<div ng-if="classroomCtrl.layout.sub=='file'">
+					<div class="panel panel-primary" ng-if="classroomCtrl.layout.third">
+						<div class="panel-body">
+							<div ng-if="classroomCtrl.layout.third=='import'">
+								<div style="margin-bottom:10px">
+									<a class="btn btn-default btn-sm pull-right" ng-click="classroomCtrl.changeLayout('file')">
+										<i class="fa fa-fw fa-times"></i>
+									</a>
+									<div class="btn-group">
+										<label class="btn btn-default btn-sm">
+											<input type="checkbox" style="margin:0" ng-model="classroomCtrl.importFile.checkAll" ng-change="classroomCtrl.importFile.selectAll()"/> <span translate="J001" remark="全部選取"></span>
+										</label>
+										<a class="btn btn-primary btn-sm" ng-click="classroomCtrl.importFile.add()"><span translate="J002" remark="加入"></span></a>
+									</div>
+								</div>
+								<div>
+									<ul style="list-style-type:none;margin:0;padding:0">
+										<li ng-repeat="item in classroomCtrl.importFile.items" style="border-bottom:1px solid #ddd;padding:4px">
+											<label class="btn btn-default" style="border:none;padding:0 4px;">
+												<input type="checkbox" ng-model="item.check"/>
+												<div ng-bind-html="item.value" style="vertical-align:top;display:inline-block;margin:2px 0;padding:0 5px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden"></div>
+											</label>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div ng-if="classroomCtrl.layout.third=='modify'">
+								<a class="btn btn-default btn-sm pull-right" style="margin-bottom:10px" ng-click="classroomCtrl.changeLayout('file')">
+									<i class="fa fa-fw fa-times"></i>
+								</a>
+								<input type="text" class="form-control" style="width:600px" ng-model="classroomCtrl.modifyFile.edit_title" ng-keyup="classroomCtrl.changeFile($event)"/>
+							</div>
+						</div>
+					</div>
+					<div class="panel panel-primary" ng-if="!classroomCtrl.layout.third">
+						<div class="panel-heading">
+							<div class="pull-right" style="margin:-5px 0">
+								<div class="btn-group">
+									<a class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" style="border:none">
+										<span translate="J097" remark="從其他群組加入"></span>
+									</a>
+									<ul class="dropdown-menu pull-right" style="max-height:200px;overflow:auto">
+										<li ng-repeat="item in classroomCtrl.selfGroups">
+											<a href="javascript:;" ng-click="classroomCtrl.showImportFile(item)">
+												<div style="max-width:240px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+											</a>
+										</li>
+									</ul>
+								</div>
+								<div class="btn-group">
+									<a class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" style="border:none" ng-click="classroomCtrl.chooseDoc()">
+										<span>选择</span>
+										<!-- <span translate="J086" remark="Drive"></span> -->
+									</a>
+									<!-- <a class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" style="border:none">
+										<span translate="J086" remark="Drive"></span>
+									</a>
+									<ul class="dropdown-menu pull-right" style="max-height:200px;overflow:auto">
+										<li>
+											<a href="javascript:;" ng-click="classroomCtrl.chooseGoogleFile('files')"><span>Google Drive</span></a>
+										</li>
+										<li>
+											<a href="javascript:;" ng-click="classroomCtrl.chooseDropboxFile('files')"><span>Dropbox</span></a>
+										</li>
+									</ul> -->
+								</div>
+								<a class="btn btn-primary btn-sm" style="border:none" ng-click="classroomCtrl.sortableFile()">
+									<i class="fa fa-fw fa-bars"></i>
+								</a>
+								<a class="btn btn-primary btn-sm" style="border:none" ng-click="classroomCtrl.changeLayout('content')">
+									<i class="fa fa-fw fa-times"></i>
+								</a>
+							</div>
+							<h3 class="panel-title"><span translate="J087" remark="檔案"></span></h3>
+						</div>
+						<div class="panel-body">
+							<ul style="list-style-type:none;margin:10px;padding:0" file-list>
+								<li ng-repeat="item in classroomCtrl.target.file track by $index" style="border-bottom:1px solid #ddd;padding:6px" ng-style="{'cursor':classroomCtrl.target.sortableFile?'move':'default'}">
+									<div class="btn-group pull-right">
+										<a class="btn btn-default btn-xs" style="border:none;font-size:14px" ng-click="classroomCtrl.editFile(item)" ng-if="item.url">
+											<i class="fa fa-fw fa-edit text-info"></i>
+										</a>
+										<a class="btn btn-default btn-xs" style="border:none;font-size:14px" ng-click="classroomCtrl.removeFile(item)">
+											<i class="fa fa-fw fa-trash-o text-danger"></i>
+										</a>
+									</div>
+									<div>
+										<span style="margin-right:8px" ng-if="classroomCtrl.target.sortableFile">
+											<i class="fa fa-fw fa-sort"></i>
+										</span>
+										<span style="margin-right:8px"><span ng-if="$index<9">0</span>{{$index+1}}. </span>
+										<div style="display:inline-block">
+											<div ng-if="item.url" style="max-width:480px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
+												<a href="{{item.url}}"><img style="height:20px;margin-right:4px" ng-src="{{item.icon}}"/>{{item.title || item.url}}</a>
+											</div>
+											<div ng-if="!item.url" style="max-width:480px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden" ng-bind-html="item.value"></div>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+
+				<div ng-if="classroomCtrl.layout.sub=='link'">
+					<div class="panel panel-primary" ng-if="classroomCtrl.layout.third">
+						<div class="panel-body">
+							<div ng-if="classroomCtrl.layout.third=='url'">
+								<a class="btn btn-default btn-sm pull-right" style="margin-bottom:10px" ng-click="classroomCtrl.changeLayout('link')">
+									<i class="fa fa-fw fa-times"></i>
+								</a>
+								<div class="input-group" style="width:600px">
+									<span class="input-group-addon"><span translate="J085" remark="連結網址"></span></span>
+									<input type="text" class="form-control" placeholder="{{'J085'|translate}}... (press enter)" remark="連結網址" ng-model="classroomCtrl.linkUrl" ng-keyup="classroomCtrl.addLink($event)"/>
+								</div>
+							</div>
+							<div ng-if="classroomCtrl.layout.third=='import'">
+								<div style="margin-bottom:10px">
+									<a class="btn btn-default btn-sm pull-right" ng-click="classroomCtrl.changeLayout('link')">
+										<i class="fa fa-fw fa-times"></i>
+									</a>
+									<div class="btn-group">
+										<label class="btn btn-default btn-sm">
+											<input type="checkbox" style="margin:0" ng-model="classroomCtrl.importLink.checkAll" ng-change="classroomCtrl.importLink.selectAll()"/> <span translate="J001" remark="全部選取"></span>
+										</label>
+										<a class="btn btn-primary btn-sm" ng-click="classroomCtrl.importLink.add()"><span translate="J002" remark="加入"></span></a>
+									</div>
+								</div>
+								<div>
+									<ul style="list-style-type:none;margin:0;padding:0">
+										<li ng-repeat="item in classroomCtrl.importLink.items" style="border-bottom:1px solid #ddd;padding:4px">
+											<label class="btn btn-default" style="border:none;padding:0 4px;">
+												<input type="checkbox" ng-model="item.check"/>
+												<div ng-bind-html="item.value" style="vertical-align:top;display:inline-block;margin:2px 0;padding:0 5px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden"></div>
+											</label>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div ng-if="classroomCtrl.layout.third=='modify'">
+								<a class="btn btn-default btn-sm pull-right" style="margin-bottom:10px" ng-click="classroomCtrl.changeLayout('link')">
+									<i class="fa fa-fw fa-times"></i>
+								</a>
+								<input type="text" class="form-control" style="width:600px" ng-model="classroomCtrl.modifyLink.edit_title" ng-keyup="classroomCtrl.changeLink($event)"/>
+							</div>
+						</div>
+					</div>
+					<div class="panel panel-primary" ng-if="!classroomCtrl.layout.third">
+						<div class="panel-heading">
+							<div class="pull-right" style="margin:-5px 0">
+								<div class="btn-group">
+									<a class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" style="border:none">
+										<span translate="J097" remark="從其他群組加入"></span>
+									</a>
+									<ul class="dropdown-menu pull-right" style="max-height:200px;overflow:auto">
+										<li ng-repeat="item in classroomCtrl.selfGroups">
+											<a href="javascript:;" ng-click="classroomCtrl.showImportLink(item)">
+												<div style="max-width:240px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+											</a>
+										</li>
+									</ul>
+								</div>
+								<a class="btn btn-primary btn-sm" style="border:none" ng-click="classroomCtrl.layout.third='url'">
+									<span translate="J085" remark="連結網址"></span>
+								</a>
+								<a class="btn btn-primary btn-sm" style="border:none" ng-click="classroomCtrl.sortableLink()">
+									<i class="fa fa-fw fa-bars"></i>
+								</a>
+								<a class="btn btn-primary btn-sm" style="border:none" ng-click="classroomCtrl.changeLayout('content')">
+									<i class="fa fa-fw fa-times"></i>
+								</a>
+							</div>
+							<h3 class="panel-title"><span translate="J090" remark="連結"></span></h3>
+						</div>
+						<div class="panel-body">
+							<ul style="list-style-type:none;margin:10px;padding:0" link-list>
+								<li ng-repeat="item in classroomCtrl.target.link" style="border-bottom:1px solid #ddd;padding:6px" ng-style="{'cursor':classroomCtrl.target.sortableLink?'move':'default'}">
+									<div class="btn-group pull-right">
+										<a class="btn btn-default btn-xs" style="border:none;font-size:14px" ng-click="classroomCtrl.editLink(item)" ng-if="item.url">
+											<i class="fa fa-fw fa-edit text-info"></i>
+										</a>
+										<a class="btn btn-default btn-xs" style="border:none;font-size:14px" ng-click="classroomCtrl.removeLink(item)">
+											<i class="fa fa-fw fa-trash-o text-danger"></i>
+										</a>
+									</div>
+									<div>
+										<span style="margin-right:8px" ng-if="classroomCtrl.target.sortableLink">
+											<i class="fa fa-fw fa-sort"></i>
+										</span>
+										<span style="margin-right:8px"><span ng-if="$index<9">0</span>{{$index+1}}. </span>
+										<div style="display:inline-block">
+											<div ng-if="item.url" style="max-width:480px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
+												<a class="btn btn-link" style="padding:0;text-decoration:none" href="{{item.url}}" target="_blank">{{item.title || item.url}}</a>
+											</div>
+											<div ng-if="!item.url" style="max-width:480px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden" ng-bind-html="item.value"></div>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+
+				<div ng-if="classroomCtrl.layout.sub=='behavior'">
+					<div class="panel panel-primary" ng-if="classroomCtrl.layout.third">
+						<div class="panel-body">
+							<div style="margin-bottom:10px">
+								<a class="btn btn-default btn-sm pull-right" ng-click="classroomCtrl.changeLayout('behavior')">
+									<i class="fa fa-fw fa-times"></i>
+								</a>
+								<div class="btn-group">
+									<label class="btn btn-default btn-sm">
+										<input type="checkbox" style="margin:0" ng-model="classroomCtrl.importBehavior.checkAll" ng-change="classroomCtrl.importBehavior.selectAll()"/> <span translate="J001" remark="全部選取"></span>
+									</label>
+									<a class="btn btn-primary btn-sm" ng-click="classroomCtrl.importBehavior.add()"><span translate="J002" remark="加入"></span></a>
+								</div>
+							</div>
+							<div>
+								<ul style="list-style-type:none;margin:0;padding:0">
+									<li ng-repeat="item in classroomCtrl.importBehavior.items" style="border-bottom:1px solid #ddd;padding:4px">
+										<label class="btn btn-default" style="border:none;padding:4px;">
+											<input type="checkbox" ng-model="item.check"/>
+											<i class="fa fa-fw fa-2x {{classroomCtrl.behaviorIcons[item.icon-1]}}" ng-class="{'text-success': item.points > 0, 'text-danger': item.points < 0}"></i>
+											<div style="vertical-align:top;display:inline-block;margin:2px 0;padding:0 5px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+										</label>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="panel panel-primary" ng-if="!classroomCtrl.layout.third">
+						<div class="panel-heading">
+							<div class="pull-right" style="margin:-5px 0">
+								<span class="btn-group">
+									<a class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" style="border:none">
+										<span translate="J097" remark="從其他群組加入"></span>
+									</a>
+									<ul class="dropdown-menu" style="width:240px;max-height:200px;overflow:auto">
+										<li ng-repeat="item in classroomCtrl.selfGroups" ng-if="item.uqid!=classroomCtrl.target.uqid">
+											<a href="javascript:;" ng-click="classroomCtrl.showImportBehavior(item)">
+												<div style="max-width:240px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+											</a>
+										</li>
+									</ul>
+								</span>
+								<a class="btn btn-primary btn-sm" style="border:none" ng-click="classroomCtrl.changeLayout('content')">
+									<i class="fa fa-fw fa-times"></i>
+								</a>
+							</div>
+							<h3 class="panel-title"><span translate="J028" remark="編輯行為表現"></span></h3>
+						</div>
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-xs-3" style="width:20%" ng-repeat="item in classroomCtrl.behaviors">
+									<div class="thumbnail">
+										<div class="cover" style="width:107px;height:86px;position:absolute" ng-click="classroomCtrl.editBehavior(item)"></div>
+										<div style="text-align:center">
+											<span class="label" ng-class="{'label-success': item.points > 0, 'label-danger': item.points < 0}" style="position:absolute;top:0;right:0">{{item.symbol}}</span>
+											<div style="padding:15px 0 10px">
+												<i class="fa fa-fw fa-4x" ng-class="{'text-success': item.points > 0, 'text-danger': item.points < 0, '{{classroomCtrl.behaviorIcons[item.icon-1]}}': true}"></i>
+											</div>
+											<h5 style="line-height:16px">
+												<div style="padding:0 5px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+											</h5>
+										</div>
+									</div>
+								</div>
+								<div class="col-xs-3" style="width:20%">
+									<div class="thumbnail">
+										<div class="cover" style="width:107px;height:86px;position:absolute" ng-click="classroomCtrl.editBehavior('add')"></div>
+										<div style="text-align:center">
+											<div style="padding:15px 0 10px">
+												<i class="fa fa-fw fa-plus fa-4x"></i>
+											</div>
+											<h5>Add</h5>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div ng-if="classroomCtrl.layout.sub=='self-behavior'" class="panel panel-primary">
+					<div class="panel-heading">
+						<a class="btn btn-primary btn-sm pull-right" style="border:none;margin:-5px 0" ng-click="classroomCtrl.changeLayout('content')">
+							<i class="fa fa-fw fa-times"></i>
+						</a>
+						<h3 class="panel-title"><span translate="J081" remark="行為表現"></span></h3>
+					</div>
+					<div class="panel-body">
+						<table class="table table-condensed table-hover">
+							<tbody>
+								<tr ng-repeat="item in classroomCtrl.selfBehaviors">
+									<td style="border:0;border-bottom:1px solid #ddd">
+										<i class="fa fa-fw fa-2x" ng-class="{'text-success': item.points > 0, 'text-danger': item.points < 0, '{{classroomCtrl.behaviorIcons[item.icon-1]}}': true}"></i>
+									</td>
+									<td style="border:0;border-bottom:1px solid #ddd;padding:12px 5px 0">
+										<span>{{item.name}}</span>
+									</td>
+									<td style="border:0;border-bottom:1px solid #ddd;padding:12px 5px 0">
+										<span>{{item.gained_time | date:'yyyy/MM/dd @ HH:mm'}}</span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<div ng-if="classroomCtrl.layout.sub=='profile'" class="panel panel-primary">
+					<div class="panel-heading">
+						<a class="btn btn-primary btn-sm pull-right" style="border:none;margin:-5px 0" ng-click="classroomCtrl.changeLayout('content')">
+							<i class="fa fa-fw fa-times"></i>
+						</a>
+						<h3 class="panel-title"><span>{{classroomCtrl.target.name}}</span></h3>
+					</div>
+					<div class="panel-body">
+						<form class="form-horizontal" role="form">
+							<div class="form-group">
+								<label class="col-xs-2 control-label">
+								</label>
+								<div class="col-xs-10">
+									<label class="btn btn-sm btn-default" style="border:none">
+										<input type="checkbox" class="input-xlarge" ng-model="classroomCtrl.target.edit_privacy">
+										<span translate="J082" remark="公開群組"></span>
+									</label>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-2 control-label">
+									<span translate="J083" remark="名稱"></span>
+								</label>
+								<div class="col-xs-10">
+									<input type="text" class="form-control" ng-model="classroomCtrl.target.edit_name"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-2 control-label">
+									<span translate="J084" remark="簡介"></span>
+								</label>
+								<div class="col-xs-10">
+									<textarea class="form-control" rows="6" ng-model="classroomCtrl.target.edit_description"></textarea>
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="panel-footer" style="text-align:right">
+						<a class="btn btn-primary" ng-click="classroomCtrl.saveProfile()">
+							<i class="fa fa-fw fa-save"></i> <span translate="J007" remark="儲存"></span>
+						</a>
+					</div>
+				</div>
+
+				<div ng-if="classroomCtrl.layout.sub=='picture'" class="panel panel-primary">
+					<div class="panel-heading">
+						<a class="btn btn-primary btn-sm pull-right" style="border:none;margin:-5px 0" ng-click="classroomCtrl.changeLayout('content')">
+							<i class="fa fa-fw fa-times"></i>
+						</a>
+						<h3 class="panel-title" translate="J027" remark="編輯圖片"></h3>
+					</div>
+					<div class="panel-body">
+						<div id="picture_content"></div>
+					</div>
+					<div class="panel-footer">
+						<a class="btn btn-primary pull-right" ng-click="classroomCtrl.savePicture()">
+							<i class="fa fa-fw fa-save"></i> <span translate="J007" remark="儲存"></span>
+						</a>
+						<input type="file" id="input_group_logo" accept="image/*"/>
+						<div class="text-danger" style="margin-top:4px"><span translate="J066" remark="圖片最大尺寸"></span> <span>(200x200)</span></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div ng-if="classroomCtrl.layout.main=='member'">
+		<div style="margin-bottom:20px">
+			<div class="btn-group pull-right" ng-if="classroomCtrl.self.role!='member'">
+				<a class="btn btn-sm btn-default" ng-class="{active: classroomCtrl.layout.sub == 'list-member', 'btn-primary': classroomCtrl.layout.sub == 'list-member'}" ng-click="classroomCtrl.showAllMember(0)">
+					<span translate="J067" remark="成員清單"></span>
+				</a>
+				<a class="btn btn-sm btn-default" ng-class="{active: classroomCtrl.layout.sub == 'edit-member', 'btn-primary': classroomCtrl.layout.sub == 'edit-member'}" ng-click="classroomCtrl.editMember(0)" ng-show="classroomCtrl.self.role=='owner'">
+					<span translate="J068" remark="編輯成員"></span>
+				</a>
+				<a class="btn btn-sm btn-default" ng-class="{active: classroomCtrl.layout.sub == 'edit-behavior', 'btn-primary': classroomCtrl.layout.sub == 'edit-behavior'}" ng-click="classroomCtrl.editMemberBehavior()">
+					<span translate="J081" remark="行為表現"></span>
+				</a>
+				<a class="btn btn-sm btn-default" ng-click="classroomCtrl.changeLayout('content')">
+					<i class="fa fa-fw fa-times"></i>
+				</a>
+			</div>
+			<div class="pull-right" ng-if="classroomCtrl.self.role=='member'">
+				<a class="btn btn-sm btn-default" ng-click="classroomCtrl.changeLayout('content')">
+					<i class="fa fa-fw fa-times"></i>
+				</a>
+			</div>
+			<div class="input-group pull-right" style="margin-right:8px;width:200px;padding:0" ng-if="classroomCtrl.layout.sub=='list-member'">
+				<span class="input-group-addon"><i class="fa fa-fw fa-search"></i></span>
+				<input type="text" class="form-control" style="height:30px;padding:5px" ng-model="classroomCtrl.memberSearchWord" ng-keyup="classroomCtrl.searchMember($event)"/>
+			</div>
+			<h3 style="margin:0"><span translate="J046" remark="成員"></span></h3>
+		</div>
+		<div>
+			<div ng-if="classroomCtrl.layout.sub=='edit-behavior'">
+				<div class="row">
+					<div class="col-xs-4">
+						<div class="list-group">
+							<a href="javascript:;" class="list-group-item" ng-class="{active: classroomCtrl.currentMember.user_uqid == item.user_uqid}" ng-click="classroomCtrl.showMemberBehavior(item)" ng-if="item.status=='approved'" ng-repeat="item in classroomCtrl.behaviorMembers">
+								<div style="width:40px;display:inline-block">
+									<span class="btn btn-xs btn-block" ng-class="{'btn-success': item.behavior_points > 0, 'btn-danger': item.behavior_points < 0, 'btn-info': item.behavior_points == 0}">{{item.symbol}}</span>
+								</div>
+								<div style="margin-left:8px;display:inline-block">
+									<span>{{item.full_name}}</span>
+								</div>
+							</a>
+						</div>
+					</div>
+					<div class="col-xs-8">
+						<div class="panel panel-default" ng-if="classroomCtrl.currentMember!=undefined">
+							<div class="panel-heading">
+								<img class="pull-left" ng-src="{{classroomCtrl.currentMember.photo}}" style="width:40px;height:40px"/>
+								<a class="btn btn-primary btn-sm pull-right" ng-click="classroomCtrl.showAddMemberBehavior(classroomCtrl.currentMember)">
+									<i class="fa fa-fw fa-plus"></i>
+								</a>
+								<h4 style="margin-left:64px">{{classroomCtrl.currentMember.full_name}}</h4>
+							</div>
+							<div class="panel-body">
+								<ul class="nav">
+									<li ng-repeat="item in classroomCtrl.currentMember.behaviors" style="border-bottom:1px solid #ddd">
+										<div class="row" style="margin-top:12px">
+											<div class="col-xs-1">
+												<i class="fa fa-fw fa-2x" ng-class="{'text-success': item.points > 0, 'text-danger': item.points < 0, '{{classroomCtrl.behaviorIcons[item.icon-1]}}': true}"></i>
+											</div>
+											<div class="col-xs-5"><span>{{item.name}}</span></div>
+											<div class="col-xs-5" style="text-align:right">
+												<span>{{item.gained_time | date:'yyyy/MM/dd @ HH:mm'}}</span>
+											</div>
+											<div class="col-xs-1" style="text-align:right">
+												<a class="btn btn-link" style="padding:0" ng-click="item.deleteAlert=true"><i class="fa fa-fw fa-trash-o text-danger"></i></a>
+											</div>
+										</div>
+										<div class="alert alert-danger" style="margin:10px 0;padding:5px" ng-if="item.deleteAlert">
+											<span translate="J008" remark="是否刪除此行為表現"></span>
+											<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="classroomCtrl.deleteMemberBehavior(item)">
+												<span translate="J009" remark="確定"></span>
+											</a>
+											<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="item.deleteAlert=false">
+												<span translate="J010" remark="取消"></span>
+											</a>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div ng-if="classroomCtrl.layout.sub=='edit-member'" style="background-color:#fff;border:1px solid #ddd;padding:10px">
+				<div>
+					<div>
+						<div class="btn-group pull-right">
+							<a class="btn btn-sm btn-danger" ng-click="classroomCtrl.removeSelectedMemberAlert=true" ng-if="classroomCtrl.removeSelectedMemberCount>0">
+								<span translate="J077" remark="刪除選取"></span> ({{classroomCtrl.removeSelectedMemberCount}})
+							</a>
+							<input type="checkbox" style="margin:10px" ng-model="classroomCtrl.removeAllMember" ng-change="classroomCtrl.checkRemoveMember()"/>
+						</div>
+						<div class="input-group" style="width:400px">
+							<div class="input-group-btn">
+								<a class="btn btn-sm btn-primary" ng-click="classroomCtrl.sortableMember()">
+									<span><i class="fa fa-fw fa-bars"></i></span>
+								</a>
+							</div>
+							<input type="text" class="form-control" style="height:30px;padding:5px" placeholder="{{'J004'|translate}}... (press enter)" remark="電子郵件" ng-model="classroomCtrl.memberAddEmail" ng-keyup="classroomCtrl.addMember($event)"/>
+							<div class="input-group-btn">
+								<a class="btn btn-sm btn-primary" ng-click="classroomCtrl.exportMember()">
+									<span translate="J078" remark="匯出"></span>
+								</a>
+								<a class="btn btn-sm btn-primary" ng-click="classroomCtrl.showImportMember()">
+									<span translate="J005" remark="匯入"></span>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="alert alert-danger" style="margin:10px 0;padding:5px" ng-show="classroomCtrl.removeSelectedMemberAlert">
+						<span translate="J076" remark="是否移除選取成員"></span>
+						<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="classroomCtrl.removeCheckMember()">
+							<span translate="J009" remark="確定"></span>
+						</a>
+						<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="classroomCtrl.removeSelectedMemberAlert=false">
+							<span translate="J010" remark="取消"></span>
+						</a>
+					</div>
+				</div>
+				<div style="margin-top:20px">
+					<ul style="list-style-type:none;margin:0;padding:0px" member-list>
+						<li ng-repeat="item in classroomCtrl.editMembers" style="border-bottom:1px solid #ddd;padding:4px" ng-style="{'cursor':classroomCtrl.target.sortableMember?'move':'default'}">
+							<div class="row">
+								<div class="col-xs-3">
+									<span style="margin-right:8px" ng-if="classroomCtrl.target.sortableMember">
+										<i class="fa fa-fw fa-sort"></i>
+									</span>
+									<span style="margin-right:8px">{{$index+1}}.</span>
+									<span style="margin-right:8px"><a href="{{item.page}}" target="_blank">{{item.full_name}}</a></span>
+								</div>
+								<div class="col-xs-4">{{item.email}}</div>
+								<div class="col-xs-2">{{item.last_view_time_desc}}</div>
+								<div class="col-xs-3" style="text-align:right">
+									<span ng-show="item.status=='pending'">
+										<a class="btn btn-default btn-xs" style="border:none;font-size:14px" ng-click="item.edit_status='approved';classroomCtrl.updateMember(item)">
+											<span class="text-success" translate="J052" remark="同意加入"></span>
+										</a>
+										<a class="btn btn-default btn-xs" style="border:none;font-size:14px" ng-click="item.edit_status='rejection';classroomCtrl.updateMember(item)">
+											<span class="text-danger" translate="J053" remark="拒絕加入"></span>
+										</a>
+									</span>
+									<span ng-hide="item.status=='pending'||item.uqid==classroomCtrl.account.uqid">
+										<span ng-if="item.role=='owner'">*****</span>
+										<a ng-if="item.role=='admin'" class="btn btn-default btn-xs" style="border:none;font-size:14px" ng-click="item.edit_role='member';classroomCtrl.updateMember(item)">
+											<span class="text-danger" translate="J055" remark="管理員"></span>
+										</a>
+										<span ng-if="item.role=='member'">
+											<a ng-if="item.nouser" class="btn btn-default btn-xs disabled" style="border:none;font-size:14px;opacity:1">
+												<span class="text-info" translate="J046" remark="成員"></span>
+											</a>
+											<a ng-if="!item.nouser" class="btn btn-default btn-xs" style="border:none;font-size:14px" ng-click="item.edit_role='admin';classroomCtrl.updateMember(item)">
+												<span class="text-info" translate="J046" remark="成員"></span>
+											</a>
+										</span>
+									</span>
+									<span class="btn-group" ng-hide="item.uqid==classroomCtrl.account.uqid||item.role=='owner'">
+										<a class="btn btn-default btn-xs" style="border:none;font-size:14px" ng-click="item.removeAlert=true">
+											<i class="fa fa-fw fa-trash-o text-danger"></i>
+										</a>
+										<label class="btn btn-default btn-xs" style="border:none">
+											<input type="checkbox" ng-model="item.removeCheck" ng-change="classroomCtrl.countRemoveMember()"/>
+										</label>
+									</span>
+								</div>
+							</div>
+							<div class="alert alert-danger" style="margin:10px 0;padding:5px" ng-show="item.removeAlert">
+								<span translate="J048" remark="是否移除此成員"></span>
+								<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="classroomCtrl.removeMember(item)">
+									<span translate="J009" remark="確定"></span>
+								</a>
+								<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="item.removeAlert=false">
+									<span translate="J010" remark="取消"></span>
+								</a>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div ng-if="classroomCtrl.member_start_index!=-1" style="margin:20px 0;text-align:right">
+					<a class="btn btn-primary" ng-click="classroomCtrl.editMember(classroomCtrl.member_start_index + 1)"><span translate="J079" remark="顯示更多"></span>...</a>
+				</div>
+			</div>
+			<div ng-if="classroomCtrl.layout.sub=='list-member'">
+				<div class="row">
+					<div class="col-xs-2" ng-if="item.status=='approved'" ng-repeat="item in classroomCtrl.listMembers">
+						<div class="thumbnail">
+							<a href="{{item.page}}" target="_blank" style="text-decoration:none">
+								<img style="width:130px;height:130px" ng-src="{{item.photo}}"/>
+								<div style="padding:10px;position:relative">
+									<div style="color:#555;font-size:16px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.full_name}}</div>
+									<div class="text-muted" style="font-size:13px;">{{item.last_view_time_desc||'&nbsp;'}}</div>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div ng-if="classroomCtrl.member_start_index!=-1" style="margin:20px 0;text-align:right">
+					<a class="btn btn-primary" ng-click="classroomCtrl.showAllMember(classroomCtrl.member_start_index + 1)"><span translate="J079" remark="顯示更多"></span>...</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div ng-if="classroomCtrl.layout.main=='activity'">
+		<div ng-show="classroomCtrl.layout.sub=='show-activity-summary'">
+			<div>
+				<div class="pull-right">
+					<span class="btn-group" style="margin-right:12px">
+						<span class="btn btn-xs btn-default disabled" style="opacity:1" translate="J059" remark="未開始"></span>
+						<span class="btn btn-xs btn-warning disabled" style="opacity:1" translate="J060" remark="進行中"></span>
+						<span class="btn btn-xs btn-success disabled" style="opacity:1" translate="J061" remark="已完成"></span>
+					</span>
+					<a class="btn btn-default btn-sm" ng-click="classroomCtrl.changeLayout('content')">
+						<i class="fa fa-fw fa-times"></i>
+					</a>
+				</div>
+				<div class="btn-group">
+					<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+						<span>{{classroomCtrl.currentActivity.name}}</span><span class="caret" style="margin-left:8px"></span>
+					</a>
+					<ul class="dropdown-menu" style="width:320px;max-height:400px;overflow:auto">
+						<li ng-repeat="item in classroomCtrl.activities">
+							<a href="javascript:;" ng-click="classroomCtrl.showActivityStatistics(item)">
+								<div class="text-info" style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden"><i class="text-success fa fa-fw fa-check" ng-show="item.progress>=100"></i> {{item.name}}</div>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div style="overflow:auto;margin-top:10px;text-align:center">
+				<div ng-show="classroomCtrl.currentActivity.loading" style="margin-top:60px;background:#fff;display:inline-block">
+					<div class="progress progress-striped active" style="margin:0;height:32px;width:400px">
+						<div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+							<h5><span translate="J062" remark="讀取中"></span>...</h5>
+						</div>
+					</div>
+				</div>
+				<div ng-show="!classroomCtrl.currentActivity.loading" id="currentActivity_statistics">
+					<div style="z-index:10" header>
+						<div class="pull-left" style="width:212px;border-right:1px solid #ddd" left>
+							<table class="table" style="margin:0">
+								<thead>
+									<tr>
+										<td style="padding:2px;text-align:left">
+											<div style="position:relative;height:60px">
+												<div class="btn-group" style="position:absolute;top:0;padding:8px;width:100%">
+													<span translate="J063" remark="單元" class="pull-right"></span>
+													<span translate="J046" remark="成員"></span>
+												</div>
+												<div class="btn-group" style="position:absolute;bottom:0;left:0">
+													<a class="btn btn-xs btn-primary" style="width:40px" ng-click="classroomCtrl.filterActivityStatistics('all')">{{classroomCtrl.currentActivity.progress.all}}</a>
+													<a class="btn btn-xs btn-default" style="width:40px" ng-click="classroomCtrl.filterActivityStatistics('unstarted')">{{classroomCtrl.currentActivity.progress.unstarted}}</a>
+													<a class="btn btn-xs btn-warning" style="width:40px" ng-click="classroomCtrl.filterActivityStatistics('uncomplated')">{{classroomCtrl.currentActivity.progress.uncomplated}}</a>
+													<a class="btn btn-xs btn-success" style="width:40px" ng-click="classroomCtrl.filterActivityStatistics('complated')">{{classroomCtrl.currentActivity.progress.complated}}</a>
+												</div>
+											</div>
+										</td>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div style="width:726px;margin-left:212px;overflow:hidden" right>
+							<table class="table" style="margin:0">
+								<thead>
+									<tr>
+										<td style="padding:2px;height:60px">
+											<div style="position:relative;height:60px">
+												<div class="activity-chart-header" ng-style="{left: $index * 64}" ng-repeat="item in classroomCtrl.currentActivity.goal" ng-click="classroomCtrl.showUnitStudyResult(item.unit)">{{item.unit.name}}</div>
+											</div>
+										</td>
+									</tr>
+								</thead>
+							</table>
+						</div>
+					</div>
+					<div style="position:absolute" container>
+						<div class="pull-left" style="width:212px;border-right:1px solid #ddd" left>
+							<table class="table" style="width:0">
+								<tbody></tbody>
+							</table>
+						</div>
+						<div style="width:726px;overflow:auto;margin-left:212px;position:absoulate" right>
+							<table class="table" style="width:0">
+								<tbody></tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div ng-if="classroomCtrl.layout.sub=='show-unit-result'">
+			<div style="margin-bottom:20px">
+				<a class="btn btn-default btn-sm pull-right" ng-click="classroomCtrl.changeLayout('show-activity-summary')">
+					<i class="fa fa-fw fa-times"></i>
+				</a>
+				<div class="btn-group pull-right" style="margin-right:12px">
+					<a class="btn btn-sm" ng-class="{'btn-primary': classroomCtrl.currentActivity.currentUnit.viewType=='note', 'btn-default': classroomCtrl.currentActivity.currentUnit.viewType!='note'}" ng-click="classroomCtrl.toggleUnitViewType('note')">
+						<i class="fa fa-fw fa-edit"></i>
+						<span translate="J021" remark="筆記"></span>
+					</a>
+					<a class="btn btn-sm" ng-class="{'btn-primary': classroomCtrl.currentActivity.currentUnit.viewType=='statistics', 'btn-default': classroomCtrl.currentActivity.currentUnit.viewType!='statistics'}" ng-click="classroomCtrl.toggleUnitViewType('statistics')">
+						<i class="fa fa-fw fa-bar-chart-o"></i>
+						<span translate="J022" remark="統計"></span>
+					</a>
+					<a class="btn btn-sm" ng-class="{'btn-primary': classroomCtrl.currentActivity.currentUnit.viewType=='content', 'btn-default': classroomCtrl.currentActivity.currentUnit.viewType!='content'}" ng-click="classroomCtrl.toggleUnitViewType('content')">
+						<i class="fa fa-fw fa-list"></i>
+						<span translate="J023" remark="內容"></span>
+					</a>
+				</div>
+				<div style="font-size:18px;width:560px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{classroomCtrl.currentActivity.name}} - {{classroomCtrl.currentActivity.currentUnit.name}}</div>
+			</div>
+			<div>
+				<div ng-if="classroomCtrl.currentActivity.currentUnit.viewType=='note'">
+					<div id="chart_timebox" style="height:120px;margin:0 auto" ng-if="classroomCtrl.currentActivity.currentUnit.unit_type=='video'"></div>
+					<div style="margin:20px 0 4px">
+						<div class="btn-group pull-right">
+							<a class="btn btn-sm btn-default" ng-class="{'active': classroomCtrl.currentActivity.currentUnit.noteColor=='#fff'}" ng-click="classroomCtrl.toggleUnitNoteColorFilter('#fff')">
+								<div style="width:24px;height:18px;background-color:#fff;border:1px solid #ddd"></div>
+							</a>
+							<a class="btn btn-sm btn-default" ng-class="{'active': classroomCtrl.currentActivity.currentUnit.noteColor=='#dff0d8'}" ng-click="classroomCtrl.toggleUnitNoteColorFilter('#dff0d8')">
+								<div style="width:24px;height:18px;background-color:#dff0d8;border:1px solid #ddd"></div>
+							</a>
+							<a class="btn btn-sm btn-default" ng-class="{'active': classroomCtrl.currentActivity.currentUnit.noteColor=='#d9edf7'}" ng-click="classroomCtrl.toggleUnitNoteColorFilter('#d9edf7')">
+								<div style="width:24px;height:18px;background-color:#d9edf7;border:1px solid #ddd"></div>
+							</a>
+							<a class="btn btn-sm btn-default" ng-class="{'active': classroomCtrl.currentActivity.currentUnit.noteColor=='#fcf8e3'}" ng-click="classroomCtrl.toggleUnitNoteColorFilter('#fcf8e3')">
+								<div style="width:24px;height:18px;background-color:#fcf8e3;border:1px solid #ddd"></div>
+							</a>
+							<a class="btn btn-sm btn-default" ng-class="{'active': classroomCtrl.currentActivity.currentUnit.noteColor=='#f2dede'}" ng-click="classroomCtrl.toggleUnitNoteColorFilter('#f2dede')">
+								<div style="width:24px;height:18px;background-color:#f2dede;border:1px solid #ddd"></div>
+							</a>
+							<a class="btn btn-sm btn-default" ng-click="classroomCtrl.clearUnitNoteColorFilter()"><span translate="J024" remark="清除"></span></a>
+						</div>
+						<div class="btn-group">
+							<a class="btn btn-sm" ng-class="{'btn-primary': classroomCtrl.currentActivity.currentUnit.noteOrderType=='member', 'btn-default': classroomCtrl.currentActivity.currentUnit.noteOrderType!='member'}" ng-click="classroomCtrl.toggleUnitNodteOrderType('member')">
+								<span translate="J040" remark="依成員排序"></span>
+							</a>
+							<a class="btn btn-sm" ng-class="{'btn-primary': classroomCtrl.currentActivity.currentUnit.noteOrderType=='time', 'btn-default': classroomCtrl.currentActivity.currentUnit.noteOrderType!='time'}" ng-click="classroomCtrl.toggleUnitNodteOrderType('time')">
+								<span translate="J041" remark="依時間排序"></span>
+							</a>
+						</div>
+					</div>
+					<div style="background:#fff">
+						<table class="table table-bordered table-condensed" ng-if="classroomCtrl.currentActivity.currentUnit.noteOrderType=='member'">
+							<tbody>
+								<tr ng-repeat="user in classroomCtrl.currentActivity.students">
+									<td style="width:120px" ng-class="{'danger': user.notes.length==0, 'success': user.notes.length>0}">
+										<div style="width:120px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{user.full_name}}</div>
+									</td>
+									<td>
+										<table class="table-condensed" style="width:100%;margin:0" ng-if="user.notes.length>0">
+											<tbody>
+												<tr ng-repeat="item in user.notes" ng-style="$index<user.notes.length-1 ? {'border-bottom':'1px solid #ddd'} : {}" ng-if="item.visible">
+													<td style="width:100px;border-right:1px solid #ddd;vertical-align:top">
+														<a class="btn btn-primary btn-xs btn-block" ng-click="classroomCtrl.openNodeVideo(classroomCtrl.currentActivity.currentUnit.content_url, item.time)" ng-if="classroomCtrl.currentActivity.currentUnit.unit_type=='video'">{{item.timeDesc}}</a>
+													</td>
+													<td ng-style="{'background-color': item.color}">
+														<div ng-if="item.type=='text'"><div style="white-space:pre-wrap;word-break:break-all">{{item.content}}</div></div>
+														<div ng-if="item.type=='image'"><img ng-src="{{item.content.screenshot}}" style="width:400px"/></div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<table class="table table-bordered table-condensed" ng-if="classroomCtrl.currentActivity.currentUnit.noteOrderType=='time'">
+							<tbody>
+								<tr ng-repeat="time in classroomCtrl.currentActivity.currentUnit.timeNotes">
+									<td style="width:100px">
+										<a class="btn btn-primary btn-xs btn-block" ng-click="classroomCtrl.openNodeVideo(classroomCtrl.currentActivity.currentUnit.content_url, item.time)" ng-if="classroomCtrl.currentActivity.currentUnit.unit_type=='video'">{{time.timeDesc}}</a>
+									</td>
+									<td>
+										<table class="table-condensed" style="width:100%;margin:0" ng-if="time.notes.length>0">
+											<tbody>
+												<tr ng-repeat="item in time.notes" ng-style="$index<time.notes.length-1 ? {'border-bottom':'1px solid #ddd'} : {}" ng-if="item.visible">
+													<td style="width:120px;border-right:1px solid #ddd;vertical-align:top">
+														<div style="width:120px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.full_name}}</div>
+													</td>
+													<td ng-style="{'background-color': item.color}">
+														<div ng-if="item.type=='text'"><div style="white-space:pre-wrap;word-break:break-all">{{item.content}}</div></div>
+														<div ng-if="item.type=='image'"><img ng-src="{{item.content.screenshot}}" style="width:400px"/></div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div ng-if="classroomCtrl.currentActivity.currentUnit.viewType=='statistics'">
+					<div class="btn-group" style="margin-bottom:4px" ng-if="classroomCtrl.currentActivity.currentUnit.unit_type=='video'">
+						<a class="btn btn-sm" ng-class="{'btn-primary': classroomCtrl.currentActivity.currentUnit.statisticsType=='normal', 'btn-default': classroomCtrl.currentActivity.currentUnit.statisticsType!='normal'}" ng-click="classroomCtrl.toggleUnitStatisticsType('normal')">
+							<span translate="J043" remark="常態分佈"></span>
+						</a>
+						<a class="btn btn-sm" ng-class="{'btn-primary': classroomCtrl.currentActivity.currentUnit.statisticsType=='full', 'btn-default': classroomCtrl.currentActivity.currentUnit.statisticsType!='full'}" ng-click="classroomCtrl.toggleUnitStatisticsType('full')">
+							<span translate="J044" remark="完整分佈"></span>
+						</a>
+					</div>
+					<div ng-if="classroomCtrl.currentActivity.currentUnit.unit_type!='qa'&&classroomCtrl.currentActivity.currentUnit.unit_type!='draw'"
+						id="unit_study_chart" style="height:560px;margin:0 auto"></div>
+					<div ng-if="classroomCtrl.currentActivity.currentUnit.unit_type=='poll'||classroomCtrl.currentActivity.currentUnit.unit_type=='quiz'" style="margin-top:20px">
+						<div style="background:#fff;width:200px;z-index:10;position:absolute">
+							<table class="table table-bordered table-condensed" style="margin:0">
+								<tbody>
+									<tr>
+										<td>&nbsp;</td>
+									</tr>
+									<tr ng-repeat="item in classroomCtrl.currentActivity.students">
+										<td style="padding:4px 10px;min-width:100px">
+											<div style="height:20px;margin:1px">
+												<span class="text-info">({{item.score.success}} / {{item.score.total}})</span>
+												<span style="margin-left:8px">{{item.full_name}}</span>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div style="overflow:auto;padding-left:200px;max-width:941px;display:inline-block;background:#fff">
+							<table class="table table-bordered table-condensed" style="margin:0">
+								<tbody ng-if="classroomCtrl.currentActivity.currentUnit.unit_type=='poll'">
+									<tr>
+										<td ng-repeat="option in classroomCtrl.currentActivity.currentUnit.content.options" style="text-align:center;min-width:100px">
+											<span ng-if="!option.latex">{{option.item}}</span>
+											<span ng-if="option.latex" mathjax-bind="option.item"></span>
+										</td>
+									</tr>
+									<tr ng-repeat="user in classroomCtrl.currentActivity.students">
+										<td style="text-align:center" ng-repeat="option in classroomCtrl.currentActivity.currentUnit.content.options">
+											<span ng-repeat="item in user.result">
+												<span class="text-success" ng-if="item==option.value"><i class="fa fa-fw fa-check"></i></span>
+											</span>
+											<span>&nbsp;</span>
+										</td>
+									</tr>
+								</tbody>
+								<tbody ng-if="classroomCtrl.currentActivity.currentUnit.unit_type=='quiz'">
+									<tr>
+										<td ng-repeat="quiz in classroomCtrl.currentActivity.currentUnit.quizzes" style="text-align:center;min-width:40px">
+											{{$index+1}}
+										</td>
+									</tr>
+									<tr ng-repeat="user in classroomCtrl.currentActivity.students">
+										<td style="text-align:center" ng-repeat="item in user.quizzes">
+											<span class="text-success" ng-if="item.correct"><i class="fa fa-fw fa-check"></i></span>
+											<span class="text-danger" ng-if="!item.correct">&nbsp;</span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div ng-if="classroomCtrl.currentActivity.currentUnit.unit_type=='quiz'">
+							<a class="btn btn-sm btn-primary" ng-click="classroomCtrl.exportUnitResult()">
+								<span>Download</span>
+							</a>
+						</div>
+					</div>
+					<div ng-if="classroomCtrl.currentActivity.currentUnit.unit_type=='qa'">
+						<div class="panel panel-default">
+							<div class="panel-body">
+								<div ng-bind-html="classroomCtrl.currentActivity.currentUnit.content"></div>
+							</div>
+						</div>
+						<div class="panel panel-default">
+							<table class="table table-bordered table-hover table-condensed">
+								<tbody>
+									<tr ng-repeat="item in classroomCtrl.currentActivity.students">
+										<td style="width:160px">
+											<div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.full_name}}</div>
+										</td>
+										<td>
+											<div ng-bind-html="item.result"></div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div ng-if="classroomCtrl.currentActivity.currentUnit.unit_type=='draw'">
+						<div ng-if="!classroomCtrl.currentActivity.currentUnit.targetItem" style="padding:15px">
+							<div style="width:140px;margin:0 10px 10px 0;display:inline-block" ng-repeat="item in classroomCtrl.currentActivity.students">
+								<div class="thumbnail">
+									<div class="cover" style="width:140px;height:105px;position:absolute" ng-click="classroomCtrl.showTargetItemResult(item)"></div>
+									<img ng-src="{{item.result.result.screenshot}}" style="width:140px;height:105px"/>
+									<div style="border-top:1px solid #ddd;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;padding:4px">{{item.full_name}}</div>
+								</div>
+							</div>
+						</div>
+						<div ng-if="classroomCtrl.currentActivity.currentUnit.targetItem" style="border:1px solid #ddd;background:#fff">
+							<div id="draw-board" style="height:560px;background:rgba(0,0,0,0);bottom:0">
+								<canvas></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div ng-if="classroomCtrl.currentActivity.currentUnit.viewType=='content'">
+					<div ng-if="classroomCtrl.currentActivity.currentUnit.unit_type=='video'">
+						<iframe _sandbox="allow-popups allow-forms allow-same-origin allow-scripts"
+							ng-src="{{classroomCtrl.currentActivity.currentUnit.video_url}}"
+							width="100%" height="560px" frameborder="0"></iframe>
+					</div>
+					<div ng-if="classroomCtrl.currentActivity.currentUnit.unit_type=='web'">
+						<iframe _sandbox="allow-popups allow-forms allow-same-origin allow-scripts"
+							ng-src="{{classroomCtrl.currentActivity.currentUnit.content_url}}"
+							width="100%" height="560px" frameborder="0"></iframe>
+					</div>
+					<div ng-if="classroomCtrl.currentActivity.currentUnit.unit_type=='embed'"
+						ng-bind-html="classroomCtrl.currentActivity.currentUnit.content"
+						style="border:1px solid #ddd;height:560px"></div>
+					<div ng-if="classroomCtrl.currentActivity.currentUnit.unit_type=='quiz'">
+						<div class="panel panel-default" ng-repeat="quiz in classroomCtrl.currentActivity.currentUnit.quizzes">
+							<div class="panel-body">
+								<span class="pull-left">
+									<span><span ng-if="$index<9">0</span>{{$index+1}}.</span>
+								</span>
+								<div ng-bind-html="quiz.content"></div>
+								<div style="margin-top:20px">
+									<div ng-repeat="option in quiz.options">
+										<span class="pull-left" style="margin-right:8px">
+											<i class="fa fa-fw fa-square-o"></i>
+										</span>
+										<span ng-if="!option.latex">{{option.item}}</span>
+										<span ng-if="option.latex" mathjax-bind="option.item"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div ng-if="classroomCtrl.currentActivity.currentUnit.unit_type=='qa'">
+						<div class="panel panel-default">
+							<div class="panel-body">
+								<div ng-bind-html="classroomCtrl.currentActivity.currentUnit.content"></div>
+							</div>
+						</div>
+					</div>
+					<div ng-if="classroomCtrl.currentActivity.currentUnit.unit_type=='poll'">
+						<div class="panel panel-default">
+							<div class="panel-body">
+								<div ng-bind-html="classroomCtrl.currentActivity.currentUnit.content.content"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div ng-if="classroomCtrl.layout.sub=='show-member-result'">
+			<div style="margin-bottom:20px">
+				<div class="pull-right">
+					<span style="margin-right:12px">
+						<a ng-click="classroomCtrl.showAddMemberBehavior(classroomCtrl.currentActivity.currentMember)" class="btn btn-sm btn-primary"><span translate="J081" remark="行為表現"></span></a>
+						<a ng-click="classroomCtrl.showMemberBehavior2(classroomCtrl.currentActivity.currentMember)"
+							class="btn btn-sm btn-default" ng-class="{'btn-info':classroomCtrl.currentActivity.currentMember.behavior_points==0,'btn-success':classroomCtrl.currentActivity.currentMember.behavior_points>0,'btn-danger':classroomCtrl.currentActivity.currentMember.behavior_points<0}">{{classroomCtrl.currentActivity.currentMember.behavior_points || '&nbsp;'}}</a>
+					</span>
+					<a class="btn btn-default btn-sm" ng-click="classroomCtrl.changeLayout('show-activity-summary')">
+						<i class="fa fa-fw fa-times"></i>
+					</a>
+				</div>
+				<div style="font-size:18px;width:560px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{classroomCtrl.currentActivity.currentMember.full_name}} - {{classroomCtrl.currentActivity.name}}</div>
+			</div>
+			<div>
+				<div class="row">
+					<div class="col-xs-4">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<div class="row">
+									<div class="col-xs-6"><h1 class="panel-title" translate="J070" remark="單元名稱"></h1></div>
+									<div class="col-xs-6" style="text-align:right"><h1 class="panel-title" translate="J071" remark="筆記數量"></h1></div>
+								</div>
+							</div>
+							<div class="panel-body" style="padding:0">
+								<div class="list-group" style="margin:0">
+									<a href="javascript:;" class="list-group-item" ng-class="{active:item.active}" ng-click="classroomCtrl.showMemberUnitStudyResult(item)" ng-repeat="item in classroomCtrl.currentActivity.currentMember.units">
+										<span class="badge" ng-if="item.note_size>0">{{item.note_size || 0}}</span>
+										<div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-8">
+						<div class="panel panel-primary" ng-if="!classroomCtrl.layout.third">
+							<div class="panel-heading">
+								<div class="row">
+									<div class="col-xs-4"><h1 class="panel-title" translate="J072" remark="學習進度"></h1></div>
+									<div class="col-xs-4">
+										<h1 class="panel-title">
+											<span translate="J073" remark="學習時間"></span> / <span translate="J074" remark="單元時間"></span>
+										</h1>
+									</div>
+									<div class="col-xs-4"><h1 class="panel-title" translate="J075" remark="最後學習時間"></h1></div>
+								</div>
+							</div>
+							<div class="panel-body" style="padding:0">
+								<div class="list-group" style="margin:0">
+									<div class="list-group-item" ng-repeat="item in classroomCtrl.currentActivity.currentMember.units">
+										<div class="row">
+											<div class="col-xs-4">
+												<div class="progress pull-right" style="margin:0;width:100px">
+													<div class="progress-bar" ng-class="{'progress-bar-success':item.status==4,'progress-bar-warning':item.status==2}" role="progressbar"
+														aria-valuenow="{{item.progress}}" aria-valuemin="0" aria-valuemax="100"
+														style="width:{{item.progress}}%">
+													</div>
+												</div>
+												<div style="width:60px">
+													<span>
+														<i class="fa fa-fw fa-check text-success" ng-if="item.status==4"></i>
+														<div style="width:18px;display:inline-block" ng-if="item.status!=4">&nbsp;</div>
+													</span>
+													<span ng-class="{'text-danger':item.uncomplated}">{{item.progress}}%</span>
+												</div>
+											</div>
+											<div class="col-xs-4">
+												<span>{{item.gained_time_desc}}<span ng-show="item.unit_type=='video'"> / {{item.total_time_desc}}</span></span>
+											</div>
+											<div class="col-xs-4">
+												<span>{{item.last_view_time | date:'yy/MM/dd @ hh:mma'}}</span>
+												<a class="btn btn-link pull-right" style="padding:0" ng-click="classroomCtrl.showUnitFeedbackModal(item)">
+													<i class="fa fa-fw fa-pencil-square-o pull-right"></i>
+												</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="panel panel-primary" ng-if="classroomCtrl.layout.third">
+							<div class="panel-heading">
+								<a class="btn btn-primary btn-sm pull-right" style="border:none;font-size:13px;margin-top:-6px" ng-click="classroomCtrl.hideMemberUnitStudyResult()">
+									<i class="fa fa-fw fa-times"></i>
+								</a>
+								<h1 class="panel-title">&nbsp;</h1>
+							</div>
+							<div class="panel-body" style="padding:5px">
+								<table class="table table-hover table-condensed" style="margin:0">
+									<tbody>
+										<tr ng-repeat="item in classroomCtrl.currentActivity.currentMember.currntUnit.notes">
+											<td style="width:100px">
+												<a class="btn btn-primary btn-xs btn-block" ng-click="classroomCtrl.openNodeVideo(classroomCtrl.currentActivity.currentMember.currntUnit.content_url, item.time)" ng-if="classroomCtrl.currentActivity.currentMember.currntUnit.unit_type=='video'">
+													{{item.timeDesc}}
+												</a>
+												<span ng-if="classroomCtrl.currentActivity.currentMember.currntUnit.unit_type!='video'">{{item.timeDesc}}</span>
+											</td>
+											<td>
+												<div ng-if="item.type=='text'"><div style="white-space:pre-wrap;word-break:break-all">{{item.content}}</div></div>
+												<div ng-if="item.type=='image'"><img ng-src="{{item.content.screenshot}}" style="width:400px"/></div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div ng-if="classroomCtrl.layout.sub=='show-member-unit-result'">
+			<div style="margin-bottom:20px">
+				<a class="btn btn-default btn-sm pull-right" ng-click="classroomCtrl.changeLayout('show-activity-summary')">
+					<i class="fa fa-fw fa-times"></i>
+				</a>
+				<div style="font-size:18px;width:560px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{classroomCtrl.targetItem.member.full_name}} - {{classroomCtrl.targetItem.unit.name}}</div>
+			</div>
+			<div style="background:#fff">
+				<div ng-if="classroomCtrl.targetItem.unit.unit_type=='video'||classroomCtrl.targetItem.unit.unit_type=='web'||classroomCtrl.targetItem.unit.unit_type=='embed'">
+					<div id="member_unit_study_chart" style="height:120px"></div>
+				</div>
+				<div ng-if="classroomCtrl.targetItem.unit.unit_type=='qa'">
+					<div style="border:1px solid #ddd;padding:10px">
+						<div ng-bind-html="classroomCtrl.currentActivity.learnings.study_result.result"></div>
+					</div>
+				</div>
+				<div ng-if="classroomCtrl.targetItem.unit.unit_type=='quiz'" style="font-size:16px;padding:10px">
+					<div style="border:1px solid #ddd;padding:10px;margin-bottom:10px" ng-repeat="quiz in classroomCtrl.currentActivity.learnings.unit.quizzes">
+						<span class="pull-left">
+							<span>
+								(<i class="fa fa-fw" ng-class="{'text-success': quiz.correct, 'fa-check': quiz.correct, 'text-danger': !quiz.correct, 'fa-times': !quiz.correct}"></i>)
+							</span>
+							<span ng-if="$index<9">0</span>{{$index+1}}.
+						</span>
+						<div ng-bind-html="quiz.content"></div>
+						<div ng-repeat="option in quiz.options">
+							<span class="pull-left" style="margin-right:8px">
+								<i class="fa fa-fw" ng-class="{'fa-check-square-o': option.answer, 'fa-square-o': !option.answer}"></i>
+							</span>
+							<div>
+								<span ng-if="!option.latex">{{option.item}}</span>
+								<span ng-if="option.latex" mathjax-bind="option.item"></span>
+								<span ng-show="option.correct">(<i class="fa fa-fw fa-circle-o text-success"></i>)</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div ng-if="classroomCtrl.targetItem.unit.unit_type=='poll'">
+					<div style="font-size:24px;border:1px solid #ddd;padding:30px">
+						<div ng-bind-html="classroomCtrl.currentActivity.learnings.unit.content.content"></div>
+						<div style="margin-top:20px">
+							<div style="line-height:32px" ng-repeat="option in classroomCtrl.currentActivity.learnings.unit.content.options">
+								<span class="pull-left" style="margin-right:8px">
+									<i class="fa fa-fw" ng-class="{'fa-check-square-o': option.answer, 'fa-square-o': !option.answer}"></i>
+								</span>
+								<span ng-if="!option.latex">{{option.item}}</span>
+								<span ng-if="option.latex" mathjax-bind="option.item"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div ng-if="classroomCtrl.targetItem.unit.unit_type=='draw'" style="border:1px solid #ddd">
+					<div id="draw-board" style="height:560px;background:rgba(0,0,0,0);bottom:0">
+						<canvas></canvas>
+					</div>
+				</div>
+			</div>
+			<div style="margin-top:20px" ng-if="classroomCtrl.currentActivity.learnings.notes.length>0">
+				<div class="panel panel-default">
+					<table class="table table-bordered table-hover table-condensed">
+						<tbody>
+							<tr ng-repeat="item in classroomCtrl.currentActivity.learnings.notes">
+								<td style="width:100px">
+									<a class="btn btn-primary btn-xs btn-block" ng-click="classroomCtrl.openNodeVideo(classroomCtrl.targetItem.unit.content_url, item.time)" ng-if="classroomCtrl.targetItem.unit.unit_type=='video'">
+										{{item.timeDesc}}
+									</a>
+									<span ng-if="classroomCtrl.targetItem.unit.unit_type!='video'">{{item.timeDesc}}</span>
+								</td>
+								<td>
+									<div ng-if="item.type=='text'"><div style="white-space:pre-wrap;word-break:break-all">{{item.content}}</div></div>
+									<div ng-if="item.type=='image'"><img ng-src="{{item.content.screenshot}}" style="width:400px"/></div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

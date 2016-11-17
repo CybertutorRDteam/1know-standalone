@@ -1,0 +1,2 @@
+class KonzesysController < ApplicationController
+end

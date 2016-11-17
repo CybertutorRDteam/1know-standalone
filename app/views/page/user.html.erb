@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# object: http://ogp.me/ns/object#">
+    <title><%= @content[:full_name] %></title>
+
+    <meta charset="UTF-8">
+
+    <meta name="keywords" content="1know, oneknow, ischool, flip, classroom, e-learning" />
+    <meta name="description" content="<%= @content[:description].gsub(/<\/?[^>]*>/, "")[0, 120] if @content[:description] != nil %>..." />
+    <meta name="author" content="ischool" />
+
+    <meta property="fb:app_id" content="143261322503748" />
+    <meta property="og:url" content="<%= @content[:page] %>" />
+    <meta property="og:title" content="<%= @content[:full_name] %>" />
+    <meta property="og:description" content="<%= @content[:description].gsub(/<\/?[^>]*>/, "")[0, 120] if @content[:description] != nil %>..." />
+    <meta property="og:image" content="<%= @content[:photo] %>" />
+
+    <link rel="icon" href="<%= @content[:photo]%>" />
+
+    <link rel="stylesheet" href="/library/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/library/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="/css/default.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-static-top navbar-inverse">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand logo" style="padding:7px 15px" href="/">
+                    <% if @APP_CONFIG['logo']!=nil and @APP_CONFIG['logo']!=""  %>
+                        <img src="<%= @APP_CONFIG['logo'] %>">
+                    <% elsif @APP_CONFIG['web_name'] %>
+                        <span class="logo-header"><%= @APP_CONFIG['web_name'] %></span>
+                    <% else %>
+                        <span class="logo-header"><span style="color:#f00">1</span>Know</span>
+                    <% end %>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="margin:20px auto">
+        <div>
+            <img src="<%= @content[:banner] %>" style="width:940px;height:188px"/>
+        </div>
+        <div class="row" style="margin-top:10px">
+            <div class="col-xs-9">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h3 class="text-info"><%= @content[:full_name] %></h3>
+                        <div><%= @content[:description].html_safe if @content[:description] != nil %></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-3">
+                <div class="panel panel-default">
+                    <div class="panel-body" style="padding:10px">
+                        <div>
+                            <div style="text-align:center">
+                                <img src="<%= @content[:photo] %>" style="width:191px;height:191px"/>
+                            </div>
+                            <% if (@content[:website] != nil and @content[:website] != '') or (@content[:facebook] != nil and @content[:facebook] != '') or (@content[:twitter] != nil and @content[:twitter] != '') %>
+                            <div style="padding:10px 0">
+                                <% if @content[:website] != nil and @content[:website] != ''%>
+                                <a class="btn btn-sm btn-default" href="<%= @content[:website] %>" target="_blank"><i class="fa fa-fw fa-link"></i></a>
+                                <% end %>
+                                <% if @content[:facebook] != nil and @content[:facebook] != '' %>
+                                <a class="btn btn-sm btn-default" href="<%= @content[:facebook] %>" target="_blank"><i class="fa fa-fw fa-facebook"></i></a>
+                                <% end %>
+                                <% if @content[:twitter] != nil and @content[:twitter] != '' %>
+                                <a class="btn btn-sm btn-default" href="<%= @content[:twitter] %>" target="_blank"><i class="fa fa-fw fa-twitter"></i></a>
+                                <% end %>
+                            </div>
+                            <% end %>
+                        </div>
+                        <div style="margin-top">
+                            <ul class="nav">
+                                <% @content[:knowledge].each{|k| %>
+                                <li>
+                                    <% if k[:subscribed] %>
+                                    <a href="/learn/knowledge/<%= k[:uqid] %>" target="_blank" style="padding:2px">
+                                        <div class="text-muted" style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden"><%= k[:name] %></div>
+                                    </a>
+                                    <% else %>
+                                    <a href="<%= k[:page] %>" target="_blank" style="padding:2px">
+                                        <div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden"><%= k[:name] %></div>
+                                    </a>
+                                    <% end %>
+                                </li>
+                                <% } %>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" style="text-align:center;margin-top:20px">
+        <span style="margin:0 8px"><%=@APP_CONFIG['copyright']%></span>
+    </div>
+</body>
+</html>

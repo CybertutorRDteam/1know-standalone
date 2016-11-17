@@ -1,0 +1,282 @@
+<div>
+	<nav class="navbar navbar-static-top navbar-inverse" role="navigation" style="background-color:rgba(34,34,34,0.88)">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand logo" style="padding:7px 15px" href="javascript:;">
+					<img ng-show="welcomeCtrl.logo" ng-src="{{ welcomeCtrl.logo }}">
+					<span ng-show="!welcomeCtrl.logo && welcomeCtrl.web_name" class="logo-header">{{ welcomeCtrl.web_name }}</span>
+					<span ng-show="!welcomeCtrl.logo && !welcomeCtrl.web_name" class="logo-header"><span style="color:#f00">1</span>Know</span>
+				</a>
+			</div>
+		</div>
+	</nav>
+
+	<div style="min-width:970px">
+		<div>
+			<div style="background-color:#c8e7fc">
+				<div style="background-color:#c8e7fc;background:url(/img/index_cover.png) no-repeat 50% 50%;width:100%;height:600px">
+					<div style="padding-top:60px;text-align:center">
+						<div style="font-size:48px" translate="B001"></div>
+						<div style="font-size:30px" translate="B002"></div>
+						<div style="margin-top:30px;text-align:center">
+							<div style="width:200px;display:inline-block;vertical-align:top">
+								<a class="btn btn-block btn-primary" ng-click="welcomeCtrl.signinWithGuest()"><span translate="B003"></span></a>
+							</div>
+							<div style="width:200px;display:inline-block;vertical-align:top">
+								<div class="input-group">
+									<input type="text" class="form-control" ng-model="welcomeCtrl.guestCode" placeholder="{{'B050'|translate}}..." ng-keyup="welcomeCtrl.loginGuest($event)"></input>
+									<span class="input-group-btn">
+										<a class="btn btn-primary" ng-click="welcomeCtrl.loginGuest()"><i class="fa fa-fw fa-sign-in"></i></a>
+									</span>
+								</div>
+							</div>
+						</div>
+						<div style="margin-top:6px">
+							<a class="btn btn-danger" style="width:406px" ng-click="welcomeCtrl.signinWithIschool()"><span translate="B004"></span></a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div style="text-align:center;background:#fff">
+				<a class="btn btn-default btn-sm" style="margin-top:-20px" href="javascript:;" ng-click="welcomeCtrl.scrollTo()">
+					<i class="fa fa-fw fa-chevron-down"></i>
+				</a>
+			</div>
+		</div>
+
+		<div style="background:#fff;padding:60px 0">
+			<div>
+				<div style="text-align:center;font-size:30px">
+					<div translate="B005"></div>
+				</div>
+				<div style="text-align:center;font-size:18px;padding:4px 60px 0">
+					<div translate="B006"></div>
+				</div>
+			</div>
+
+			<div class="container" style="margin-top:60px">
+				<div class="row">
+					<div class="col-xs-1">
+						<div style="padding:8px 2px;width:58px;height:58px;text-align:center;background:#5cb85c">
+							<i class="fa fa-fw fa-archive fa-3x" style="color:#fff"></i>
+						</div>
+					</div>
+					<div class="col-xs-5">
+						<div style="font-size:18px" translate="B007"></div>
+						<div style="font-size:14px" translate="B008"></div>
+					</div>
+					<div class="col-xs-1">
+						<div style="padding:8px 2px;width:58px;height:58px;text-align:center;background:#f0ad4e">
+							<i class="fa fa-fw fa-edit fa-3x" style="color:#fff"></i>
+						</div>
+					</div>
+					<div class="col-xs-5">
+						<div style="font-size:18px" translate="B009"></div>
+						<div style="font-size:14px" translate="B010"></div>
+					</div>
+				</div>
+				<div class="row" style="margin-top:20px">
+					<div class="col-xs-1">
+						<div style="padding:8px 2px;width:58px;height:58px;text-align:center;background:#5bc0de">
+							<i class="fa fa-fw fa-clock-o fa-3x" style="color:#fff"></i>
+						</div>
+					</div>
+					<div class="col-xs-5">
+						<div style="font-size:18px" translate="B011"></div>
+						<div style="font-size:14px" translate="B012"></div>
+					</div>
+					<div class="col-xs-1">
+						<div style="padding:8px 2px;width:58px;height:58px;text-align:center;background:#d9534f">
+							<i class="fa fa-fw fa-tint fa-3x" style="color:#fff"></i>
+						</div>
+					</div>
+					<div class="col-xs-5">
+						<div style="font-size:18px" translate="B013"></div>
+						<div style="font-size:14px" translate="B014"></div>
+					</div>
+				</div>
+				<div class="row" style="margin-top:20px">
+					<div class="col-xs-1">
+						<div style="padding:8px 2px;width:58px;height:58px;text-align:center;background:rgba(34,34,34,0.78)">
+							<i class="fa fa-fw fa-share-square-o fa-3x" style="color:#fff"></i>
+						</div>
+					</div>
+					<div class="col-xs-5">
+						<div style="font-size:18px" translate="B015"></div>
+						<div style="font-size:14px" translate="B016"></div>
+					</div>
+					<div class="col-xs-1">
+						<div style="padding:8px 2px;width:58px;height:58px;text-align:center;background:#428bca">
+							<i class="fa fa-fw fa-tasks fa-3x" style="color:#fff"></i>
+						</div>
+					</div>
+					<div class="col-xs-5">
+						<div style="font-size:18px" translate="B017"></div>
+						<div style="font-size:14px" translate="B018"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div style="background:#f6f6f6;padding:60px 0">
+			<div>
+				<div style="text-align:center;font-size:30px">
+					<div translate="B019"></div>
+				</div>
+				<div style="text-align:center;font-size:18px;padding:4px 60px 0">
+					<div translate="B020"></div>
+					<div translate="B021"></div>
+				</div>
+			</div>
+
+			<div class="container" style="margin-top:60px">
+				<div class="row">
+					<div class="col-xs-1">
+						<div style="padding:8px 2px;width:58px;height:58px;text-align:center;background:#5cb85c">
+							<i class="fa fa-fw fa-group fa-3x" style="color:#fff"></i>
+						</div>
+					</div>
+					<div class="col-xs-5">
+						<div style="font-size:18px" translate="B022"></div>
+						<div style="font-size:14px" translate="B023"></div>
+					</div>
+					<div class="col-xs-1">
+						<div style="padding:8px 2px;width:58px;height:58px;text-align:center;background:#f0ad4e">
+							<i class="fa fa-fw fa-lightbulb-o fa-3x" style="color:#fff"></i>
+						</div>
+					</div>
+					<div class="col-xs-5">
+						<div style="font-size:18px" translate="B024"></div>
+						<div style="font-size:14px" translate="B025"></div>
+					</div>
+				</div>
+				<div class="row" style="margin-top:20px">
+					<div class="col-xs-1">
+						<div style="padding:8px 2px;width:58px;height:58px;text-align:center;background:#5bc0de">
+							<i class="fa fa-fw fa-tags fa-3x" style="color:#fff"></i>
+						</div>
+					</div>
+					<div class="col-xs-5">
+						<div style="font-size:18px" translate="B026"></div>
+						<div style="font-size:14px" translate="B027"></div>
+					</div>
+					<div class="col-xs-1">
+						<div style="padding:8px 2px;width:58px;height:58px;text-align:center;background:#d9534f">
+							<i class="fa fa-fw fa-bar-chart-o fa-3x" style="color:#fff"></i>
+						</div>
+					</div>
+					<div class="col-xs-5">
+						<div style="font-size:18px" translate="B028"></div>
+						<div style="font-size:14px" translate="B029"></div>
+					</div>
+				</div>
+				<div class="row" style="margin-top:20px">
+					<div class="col-xs-1">
+						<div style="padding:8px 2px;width:58px;height:58px;text-align:center;background:rgba(34,34,34,0.78)">
+							<i class="fa fa-fw fa-sitemap fa-3x" style="color:#fff"></i>
+						</div>
+					</div>
+					<div class="col-xs-5">
+						<div style="font-size:18px" translate="B030"></div>
+						<div style="font-size:14px" translate="B031"></div>
+					</div>
+					<div class="col-xs-1">
+						<div style="padding:8px 2px;width:58px;height:58px;text-align:center;background:#428bca">
+							<i class="fa fa-fw fa-magic fa-3x" style="color:#fff"></i>
+						</div>
+					</div>
+					<div class="col-xs-5">
+						<div style="font-size:18px" translate="B032"></div>
+						<div style="font-size:14px" translate="B033"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div style="background:#fff;padding:60px 0">
+			<div>
+				<div style="text-align:center;font-size:30px">
+					<div translate="B034"></div>
+				</div>
+				<div style="text-align:center;font-size:18px;padding:4px 60px 0">
+					<div translate="B035"></div>
+					<div translate="B036"></div>
+				</div>
+			</div>
+
+			<div class="container" style="margin-top:60px">
+				<div class="row">
+					<div class="col-xs-1">
+						<div style="padding:8px 2px;width:58px;height:58px;text-align:center;background:#5cb85c">
+							<i class="fa fa-fw fa-cloud-download fa-3x" style="color:#fff"></i>
+						</div>
+					</div>
+					<div class="col-xs-5">
+						<div style="font-size:18px" translate="B037"></div>
+						<div style="font-size:14px" translate="B038"></div>
+					</div>
+					<div class="col-xs-1">
+						<div style="padding:8px 2px;width:58px;height:58px;text-align:center;background:#f0ad4e">
+							<i class="fa fa-fw fa-retweet fa-3x" style="color:#fff"></i>
+						</div>
+					</div>
+					<div class="col-xs-5">
+						<div style="font-size:18px" translate="B039"></div>
+						<div style="font-size:14px" translate="B040"></div>
+					</div>
+				</div>
+				<div class="row" style="margin-top:20px">
+					<div class="col-xs-1">
+						<div style="padding:8px 2px;width:58px;height:58px;text-align:center;background:#5bc0de">
+							<i class="fa fa-fw fa-comments-o fa-3x" style="color:#fff"></i>
+						</div>
+					</div>
+					<div class="col-xs-5">
+						<div style="font-size:18px" translate="B041"></div>
+						<div style="font-size:14px" translate="B042"></div>
+					</div>
+					<div class="col-xs-1">
+						<div style="padding:8px 2px;width:58px;height:58px;text-align:center;background:#d9534f">
+							<i class="fa fa-fw fa-exchange fa-3x" style="color:#fff"></i>
+						</div>
+					</div>
+					<div class="col-xs-5">
+						<div style="font-size:18px" translate="B043"></div>
+						<div style="font-size:14px" translate="B044"></div>
+					</div>
+				</div>
+				<div class="row" style="margin-top:20px">
+					<div class="col-xs-1">
+						<div style="padding:8px 2px;width:58px;height:58px;text-align:center;background:rgba(34,34,34,0.78)">
+							<i class="fa fa-fw fa-video-camera fa-3x" style="color:#fff"></i>
+						</div>
+					</div>
+					<div class="col-xs-5">
+						<div style="font-size:18px" translate="B045"></div>
+						<div style="font-size:14px" translate="B046"></div>
+					</div>
+					<div class="col-xs-1">
+					</div>
+					<div class="col-xs-5">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div style="height:34px"></div>
+	<div class="navbar-fixed-bottom" style="background-color:rgba(34,34,34,0.88);text-align:center;padding:6px 0">
+		<span style="color:#e5e5e5">{{ welcomeCtrl.copyright }}</span>
+		<a class="btn btn-link" style="padding:0 4px;color:#e5e5e5;text-decoration:none" href="mailto:{{ welcomeCtrl.service_email }}">
+			<i class="fa fa-fw fa-envelope"></i> <span translate="B047"></span>
+		</a>
+		<!-- <a class="btn btn-link" style="padding:0 4px;color:#e5e5e5;text-decoration:none" target="_blank" href="http://1know.weebly.com/25805203162521624039.html">
+			<i class="fa fa-fw fa-question-circle"></i> <span translate="說明"></span>
+		</a> -->
+	</div>
+</div>

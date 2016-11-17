@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="1know">
+<head>
+	<title translate="1Know 翻轉你的學習"></title>
+
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="cleartype" content="on" />
+
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="expires" content="0">
+
+	<meta name="keywords" content="1know, ischool, flipped, classroom, learning, 翻轉, 學習, 翻滾" />
+	<meta name="description" content="開啟知識新生活，網路上好影片很多，我們的時間卻有限，分享與合作，幫助我們連結最好的資源。" />
+	<meta name="author" content="ischool" />
+
+	<meta property="fb:app_id" content="143261322503748" />
+	<meta property="og:url" content="<%= @content[:protocol]%><%= @content[:host]%>" />
+	<meta property="og:title" content="1Know 翻轉你的學習" />
+	<meta property="og:description" content="開啟知識新生活，網路上好影片很多，我們的時間卻有限，分享與合作，幫助我們連結最好的資源。" />
+	<meta property="og:image" content="<%= @content[:protocol]%><%= @content[:host]%>/icon.png" />
+
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+	<link rel="apple-touch-icon-precomposed" href="/img/icon-114.png" sizes="114x114" />
+	<link rel="apple-touch-icon-precomposed" href="/img/icon-72.png" sizes="72x72" />
+	<link rel="apple-touch-icon-precomposed" href="/img/icon.png" />
+
+	<link rel="icon" href="/favicon.ico" />
+	<link rel="canonical" href="<%= @content[:protocol]%><%= @content[:host]%>" />
+
+	<link rel="stylesheet" href="/library/bootstrap/css/bootstrap.css" />
+	<link rel="stylesheet" href="/library/font-awesome/css/font-awesome.css" />
+	<link rel="stylesheet" href="/library/video-js/video-js.css" />
+	<link rel="stylesheet" href="/library/redactor/redactor.css" />
+	<link rel="stylesheet" href="/library/jquery.Jcrop/jquery.Jcrop.css" />
+	<link rel="stylesheet" href="/library/literallycanvas/literallycanvas.css" />
+	<link rel="stylesheet" href="/css/default.css">
+	<link rel="stylesheet" href="/css/standalone.css">
+
+	<script src="/library/jquery/jquery-1.11.0.min.js"></script>
+	<script src="/library/jquery/jquery-migrate-1.2.1.min.js"></script>
+
+	<script src="/library/jquery/jquery-ui.min.js"></script>
+	<script src="/library/jquery/jquery.autosize.min.js"></script>
+	<script src="/library/angularjs/angular.min.js"></script>
+	<script src="/library/angularjs/angular-animate.min.js"></script>
+	<script src="/library/angularjs/angular-route.min.js"></script>
+	<script src="/library/angularjs/angular-strap.min.js"></script>
+	<script src="/library/angularjs/angular-strap.tpl.min.js"></script>
+	<script src="/library/angularjs/angular-translate.min.js"></script>
+	<script src="/library/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/library/underscore/underscore.min.js"></script>
+	<script src="/library/redactor/redactor.min.js"></script>
+	<script src="/library/redactor/fullscreen.js"></script>
+	<script src="/library/redactor/fontcolor.js"></script>
+	<script src="/library/redactor/fontsize.js"></script>
+	<script src="/library/jquery.Jcrop/jquery.Jcrop.min.js"></script>
+	<script src="/library/literallycanvas/literallycanvas.js"></script>
+	<script src="/library/highcharts/highcharts.js"></script>
+	<script src="/library/highcharts/highcharts-more.js"></script>
+	<script src="/library/video-js/video.js"></script>
+	<script src="/library/video-js/plugins/vjs.youtube.js"></script>
+	<script src="/library/video-js/plugins/vjs.vimeo.js"></script>
+	<script src="/library/video-js/plugins/vjs.speed.js"></script>
+	<script src="/library/websocket_rails/websocket_rails.js"></script>
+    <script src="/library/websocket_rails/event.js"></script>
+    <script src="/library/websocket_rails/abstract_connection.js"></script>
+    <script src="/library/websocket_rails/http_connection.js"></script>
+    <script src="/library/websocket_rails/websocket_connection.js"></script>
+    <script src="/library/websocket_rails/channel.js"></script>
+	<script src="/js/chooser.js"></script>
+	<script src="/js/language.js?<%= srand %>"></script>
+</head>
+
+<body>
+	<script>
+		var web_name = "<%=@APP_CONFIG['web_name']%>";
+		var logo = "<%=@APP_CONFIG['logo']%>";
+		var copyright = "<%=@APP_CONFIG['copyright']%>";
+		var service_email = "<%=@APP_CONFIG['service_email']%>";
+	</script>
+	<% if @content[:role] == 'NotLogin' %>
+	<script>
+		var client_id = "<%=@APP_CONFIG['client_id']%>";
+		var redirect_uri = "<%=@APP_CONFIG['redirect_uri']%>";
+	</script>
+	<div ng-view class="reveal-animate"></div>
+	<script src="/js/welcome.js?<%=@APP_CONFIG['version']%>"></script>
+	<% elsif @content[:role] == 'NeedActivation' %>
+	<script src="/js/activation_code.js?<%=@APP_CONFIG['version']%>"></script>
+	<div ng-view class="reveal-animate"></div>
+	<% else %>
+	<main></main>
+	<div ng-view class="reveal-animate"></div>
+	<script>
+		var host_name = "<%=@APP_CONFIG['host_name']%>";
+	</script>
+
+	<script src="/js/main.js?<%=@APP_CONFIG['version']%>"></script>
+	<script src="/js/learning.js?<%=@APP_CONFIG['version']%>"></script>
+	<script src="/js/discovery.js?<%=@APP_CONFIG['version']%>"></script>
+	<script src="/js/watch.js?<%=@APP_CONFIG['version']%>"></script>
+	<script src="/js/creation.js?<%=@APP_CONFIG['version']%>"></script>
+	<script src="/js/modify_knowledge.js?<%=@APP_CONFIG['version']%>"></script>
+	<script src="/js/modify_channel.js?<%=@APP_CONFIG['version']%>"></script>
+	<script src="/js/community.js?<%=@APP_CONFIG['version']%>"></script>
+	<script src="/js/classroom.js?<%=@APP_CONFIG['version']%>"></script>
+	<script src="/js/synchronous_study.js?<%=@APP_CONFIG['version']%>"></script>
+	<script src="/js/synchronous_teach.js?<%=@APP_CONFIG['version']%>"></script>
+	<script src="/js/personal.js?<%=@APP_CONFIG['version']%>"></script>
+	<script src="/js/background.js?<%=@APP_CONFIG['version']%>"></script>
+
+	<script src="/library/youku/youku.js"></script>
+
+	<script src="/library/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	<% end %>
+</body>
+</html>

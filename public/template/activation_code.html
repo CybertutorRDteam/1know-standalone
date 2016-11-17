@@ -1,0 +1,56 @@
+<nav class="navbar navbar-static-top navbar-inverse" role="navigation" style="background-color:rgba(34,34,34,0.88)">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <span>
+				<a class="navbar-brand logo" style="padding:7px 15px" href="/">
+					<img ng-show="logo" ng-src="{{ logo }}">
+                    <span ng-show="!logo && web_name" class="logo-header">{{ web_name }}</span>
+                    <span ng-show="!logo && !web_name" class="logo-header"><span style="color:#f00">1</span>Know</span>
+            </a>
+            </span>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li style="padding:8px 0 0 0">
+                    <!-- <iframe src="//www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2F1know.net&amp;width&amp;layout=button_count&amp;action=like&amp;show_faces=true&amp;share=true&amp;height=21&amp;appId=143261322503748" scrolling="no" frameborder="0" style="border:none;overflow:hidden;height:21px;width:140px" allowTransparency="true"></iframe> -->
+                </li>
+                <li class="dropdown">
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" style="padding:7px">
+                        <img ng-src="{{account.photo}}" style="width:24px;height:24px" />
+                        <span style="margin:0 4px">{{account.full_name}}</span><span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="javascript:;" ng-click="signout()">
+                                <i class="fa fa-fw fa-sign-out"></i> <span translate="A029" remark="登出"></span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="panel panel-primary" style="width:50%; border-radius:4px;margin-left:auto; margin-right:auto; margin-top:50px; font-size:2em;">
+    <!-- Default panel contents -->
+    <div class="panel-heading">
+        请输入启动码:
+        <button type="button" class="btn btn-primary " style="float:right; border: 0px;" data-toggle="tooltip" data-placement="top" title="请向系统管理员取得您的启动码">
+            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+        </button>
+    </div>
+    <div class="panel-body">
+        <input type="text" ng-model="a_code" style="width:80%; padding: 4px 8px;" />
+        <button class="btn btn-primary" ng-click="sendACode();" style="font-size:0.8em;">送出</button>
+        <div ng-show="hasError" style="color:red; margin-top:8px;">{{ errMsg }}</div>
+        <div ng-show="isActivateSuccess" style="color:blue; margin-top:8px;">
+            恭喜您启用成功! 您的使用期限为{{ exp_date.substr(0,10) }}止 <br />请按
+            <a href="javascript:void(0);" style="color:red;" onclick="window.location.href='/';">这里</a> 开始使用
+        </div>
+    </div>
+</div>

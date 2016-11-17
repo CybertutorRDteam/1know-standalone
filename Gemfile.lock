@@ -1,0 +1,189 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    actionmailer (4.0.0)
+      actionpack (= 4.0.0)
+      mail (~> 2.5.3)
+    actionpack (4.0.0)
+      activesupport (= 4.0.0)
+      builder (~> 3.1.0)
+      erubis (~> 2.7.0)
+      rack (~> 1.5.2)
+      rack-test (~> 0.6.2)
+    activemodel (4.0.0)
+      activesupport (= 4.0.0)
+      builder (~> 3.1.0)
+    activerecord (4.0.0)
+      activemodel (= 4.0.0)
+      activerecord-deprecated_finders (~> 1.0.2)
+      activesupport (= 4.0.0)
+      arel (~> 4.0.0)
+    activerecord-deprecated_finders (1.0.4)
+    activerecord-session_store (0.1.1)
+      actionpack (>= 4.0.0, < 5)
+      activerecord (>= 4.0.0, < 5)
+      railties (>= 4.0.0, < 5)
+    activesupport (4.0.0)
+      i18n (~> 0.6, >= 0.6.4)
+      minitest (~> 4.2)
+      multi_json (~> 1.3)
+      thread_safe (~> 0.1)
+      tzinfo (~> 0.3.37)
+    arel (4.0.2)
+    builder (3.1.4)
+    coffee-rails (4.1.0)
+      coffee-script (>= 2.2.0)
+      railties (>= 4.0.0, < 5.0)
+    coffee-script (2.3.0)
+      coffee-script-source
+      execjs
+    coffee-script-source (1.10.0)
+    daemons (1.2.3)
+    domain_name (0.5.20161021)
+      unf (>= 0.0.5, < 1.0.0)
+    em-synchrony (1.0.4)
+      eventmachine (>= 1.0.0.beta.1)
+    erubis (2.7.0)
+    eventmachine (1.0.8)
+    execjs (2.6.0)
+    faye-websocket (0.10.2)
+      eventmachine (>= 0.12.0)
+      websocket-driver (>= 0.5.1)
+    ffi (1.9.10)
+    gene_pool (1.4.1)
+      thread_safe
+    hike (1.2.3)
+    hiredis (0.6.1)
+    http-cookie (1.0.3)
+      domain_name (~> 0.5)
+    httparty (0.13.3)
+      json (~> 1.8)
+      multi_xml (>= 0.5.2)
+    i18n (0.7.0)
+    iconv (1.0.4)
+    jbuilder (1.5.3)
+      activesupport (>= 3.0.0)
+      multi_json (>= 1.2.0)
+    json (1.8.2)
+    libreconv (0.9.0)
+      spoon
+    macaddr (1.7.1)
+      systemu (~> 2.6.2)
+    mail (2.5.4)
+      mime-types (~> 1.16)
+      treetop (~> 1.4.8)
+    mime-types (1.25.1)
+    mini_portile2 (2.0.0)
+    minitest (4.7.5)
+    multi_json (1.11.0)
+    multi_xml (0.5.5)
+    netrc (0.11.0)
+    nokogiri (1.6.7.1)
+      mini_portile2 (~> 2.0.0.rc2)
+    oj (2.12.1)
+    oj_mimic_json (1.0.1)
+    persistent_http (1.0.6)
+      gene_pool (>= 1.3)
+    persistent_httparty (0.1.2)
+      httparty (~> 0.9)
+      persistent_http (< 2)
+    pg (0.18.4)
+    polyglot (0.3.5)
+    qiniu (6.4.0)
+      json (~> 1.7)
+      mime-types (~> 1.19)
+      rest-client (~> 1.6)
+      ruby-hmac (~> 0.4)
+    rack (1.5.5)
+    rack-test (0.6.3)
+      rack (>= 1.0)
+    rails (4.0.0)
+      actionmailer (= 4.0.0)
+      actionpack (= 4.0.0)
+      activerecord (= 4.0.0)
+      activesupport (= 4.0.0)
+      bundler (>= 1.3.0, < 2.0)
+      railties (= 4.0.0)
+      sprockets-rails (~> 2.0.0)
+    railties (4.0.0)
+      actionpack (= 4.0.0)
+      activesupport (= 4.0.0)
+      rake (>= 0.8.7)
+      thor (>= 0.18.1, < 2.0)
+    rake (10.4.2)
+    rb-readline (0.5.3)
+    redis (3.2.0)
+    redis-objects (1.2.1)
+      redis (>= 3.0.2)
+    rest-client (1.8.0)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 3.0)
+      netrc (~> 0.7)
+    ruby-hmac (0.4.0)
+    spoon (0.0.4)
+      ffi
+    sprockets (2.12.3)
+      hike (~> 1.2)
+      multi_json (~> 1.0)
+      rack (~> 1.0)
+      tilt (~> 1.1, != 1.3.0)
+    sprockets-rails (2.0.1)
+      actionpack (>= 3.0)
+      activesupport (>= 3.0)
+      sprockets (~> 2.8)
+    systemu (2.6.5)
+    thin (1.6.4)
+      daemons (~> 1.0, >= 1.0.9)
+      eventmachine (~> 1.0, >= 1.0.4)
+      rack (~> 1.0)
+    thor (0.19.1)
+    thread_safe (0.3.5)
+    tilt (1.4.1)
+    treetop (1.4.15)
+      polyglot
+      polyglot (>= 0.3.1)
+    turbolinks (2.5.3)
+      coffee-rails
+    tzinfo (0.3.46)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.7.2)
+    uuid (2.3.7)
+      macaddr (~> 1.0)
+    websocket-driver (0.6.3)
+      websocket-extensions (>= 0.1.0)
+    websocket-extensions (0.1.2)
+    websocket-rails (0.7.0)
+      em-synchrony
+      faye-websocket
+      hiredis
+      rack
+      rails
+      redis
+      redis-objects
+      thin
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  activerecord-session_store
+  httparty
+  iconv
+  jbuilder (~> 1.2)
+  libreconv
+  nokogiri
+  oj
+  oj_mimic_json
+  persistent_httparty
+  pg
+  qiniu (~> 6.4)
+  rails (= 4.0.0)
+  rb-readline
+  redis (= 3.2.0)
+  turbolinks
+  uuid (~> 2.3.7)
+  websocket-rails
+
+BUNDLED WITH
+   1.11.2

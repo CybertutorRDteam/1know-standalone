@@ -1,0 +1,90 @@
+<div class="container" style="margin:20px auto">
+	<div id="createModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<h4 ng-if="creationCtrl.target=='knowledge'" translate="F001" remark="知識名稱"></h4>
+					<h4 ng-if="creationCtrl.target=='channel'" translate="F002" remark="頻道名稱"></h4>
+					<input type='text' class="form-control" ng-model='creationCtrl.targetName' placeholder="{{(creationCtrl.target=='knowledge'?'F001':'F002')|translate}}" remark="知識名稱|頻道名稱"/>
+					<h4 class="text-danger" ng-show="creationCtrl.errMsg!=undefined">{{creationCtrl.errMsg}}</h4>
+				</div>
+				<div class="modal-footer">
+					<a class="btn btn-primary" ng-click="creationCtrl.createTarget(creationCtrl.target)">
+						<span translate="F003" remark="建立"></span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div>
+		<div class="pull-right">
+			<a class="btn btn-primary" ng-click="creationCtrl.showCreateModal()">
+				<span translate="F004" remark="建立知識" ng-if="creationCtrl.target=='knowledge'"></span>
+				<span translate="F005" remark="建立頻道" ng-if="creationCtrl.target=='channel'"></span>
+			</a>
+		</div>
+
+		<div class="btn-group">
+			<a href="#!/create/knowledge" class="btn btn-default" ng-class="{'btn-primary': creationCtrl.target == 'knowledge', active: creationCtrl.target == 'knowledge'}">
+				<span translate="F006" remark="我的知識"></span>
+			</a>
+			<a href="#!/create/channel" class="btn btn-default" ng-class="{'btn-primary': creationCtrl.target == 'channel', active: creationCtrl.target == 'channel'}">
+				<span translate="F007" remark="我的頻道"></span>
+			</a>
+		</div>
+	</div>
+
+	<div style="margin-top:20px">
+		<div ng-if="creationCtrl.target=='knowledge'">
+			<div class="row">
+				<div class="col-xs-4" ng-repeat="item in creationCtrl.knowledges">
+					<div class="thumbnail" ng-click="creationCtrl.modifyKnowledge(item)">
+						<div class="card-hover" style="position:absolute"></div>
+						<img class="pull-left" style="width:96px;height:96px" ng-src="{{item.logo}}"/>
+						<div style="margin-left:96px;height:96px;padding:10px 15px">
+							<div style="font-size:15px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+							<div class="text-muted" style="margin-top:4px">
+								<span>
+									<i class="fa fa-star" ng-style="{'color': item.average_rate >= 1 ? '#eeb929' : '#cacaca'}"></i>
+									<i class="fa fa-star" ng-style="{'color': item.average_rate >= 2 ? '#eeb929' : '#cacaca'}"></i>
+									<i class="fa fa-star" ng-style="{'color': item.average_rate >= 3 ? '#eeb929' : '#cacaca'}"></i>
+									<i class="fa fa-star" ng-style="{'color': item.average_rate >= 4 ? '#eeb929' : '#cacaca'}"></i>
+									<i class="fa fa-star" ng-style="{'color': item.average_rate == 5 ? '#eeb929' : '#cacaca'}"></i>
+								</span>
+								<span ng-if="item.rate_count>0">({{item.rate_count}})</span>
+							</div>
+							<div style="margin-top:8px">
+								<span class="pull-right text-muted">
+									<i class="fa fa-fw fa-user"></i> {{item.readers}}
+								</span>
+								<span>
+									<span class="text-primary" ng-if="item.privacy"><span translate="F008" remark="公開"></span></span>
+									<span class="text-danger" ng-if="!item.privacy"><span translate="F009" remark="非公開"></span></span>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div ng-if="creationCtrl.target=='channel'">
+			<div class="row">
+				<div class="col-xs-4" ng-repeat="item in creationCtrl.channels">
+					<div class="thumbnail" ng-click="creationCtrl.modifyChannel(item)">
+						<div class="card-hover" style="position:absolute"></div>
+						<img class="pull-left" style="width:96px;height:96px" ng-src="{{item.logo}}"/>
+						<div style="margin-left:96px;height:96px;padding:20px 15px">
+							<div style="font-size:15px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+							<div style="margin-top:8px">
+								<span class="text-muted">
+									<i class="fa fa-fw fa-user"></i> {{item.reader}}
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

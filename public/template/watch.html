@@ -1,0 +1,730 @@
+<div>
+	<div id="errorMessageModal" class="modal fade" style="z-index:1480">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<h4 class="text-danger">{{watchCtrl.errMessage}}</h4>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="feedbackModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<table class="table table-bordered table-condensed table-striped">
+						<tbody>
+							<tr ng-repeat="item in watchCtrl.currentFeedbackUnit.feedback.uqid">
+								<td class="col-xs-3">
+									<a href="#!/join/group/{{item}}" target="_blank">
+										<div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{watchCtrl.currentFeedbackUnit.feedback.name[$index]}}</div>
+									</a>
+								</td>
+								<td class="col-xs-2">
+									{{watchCtrl.currentFeedbackUnit.feedback.score[$index]}}
+								</td>
+								<td class="col-xs-7">
+									{{watchCtrl.currentFeedbackUnit.feedback.comment[$index]}}
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="groupModal" class="modal fade" style="z-index:1480">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<label class="btn btn-default pull-right" style="border:none">
+						<input type="checkbox" ng-model="watchCtrl.shareAll" ng-change="watchCtrl.selectShareGroup()"/> <span translate="E001" remark="全部選取"></span>
+					</label>
+					<h4 translate="E002" remark="分享或張貼至群組"></h4>
+				</div>
+				<div class="modal-body" style="max-height:240px;overflow:auto">
+					<ul style="list-style-type:none;margin:0">
+						<li ng-repeat="item in watchCtrl.groups">
+							<label class="btn btn-default" style="border:none">
+								<input type="checkbox" ng-model="item.share"/>
+								<span>{{item.name}}</span>
+							</label>
+						</li>
+					</ul>
+				</div>
+				<div class="modal-footer">
+					<textarea rows="4" class="form-control" style="margin-bottom:8px" ng-model="watchCtrl.shareNote.share_content" ng-if="watchCtrl.shareNote.type=='text'"></textarea>
+					<a class="btn btn-primary" ng-click="watchCtrl.shareNoteToGroup()"><span translate="E003" remark="分享"></span></a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="subscriberModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 translate="E004" remark="訂閱公開筆記"></h4>
+				</div>
+				<div class="modal-body">
+					<ul style="list-style-type:none;margin:0" editor-list>
+						<li ng-repeat="item in watchCtrl.subscribers" style="border-bottom:1px solid #ddd;padding:4px">
+							<div class="pull-right">
+								<span>
+									<a class="btn btn-default btn-xs" style="border:none;font-size:14px" ng-click="watchCtrl.currentSubscriber=item;watchCtrl.currentSubscriber.deleteAlert=true">
+										<i class="fa fa-fw fa-trash-o text-danger"></i>
+									</a>
+								</span>
+							</div>
+							<div>
+								<a class="btn btn-link" style="padding:0" href="{{item.page}}" target="_blank">
+									<div style="max-width:480px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.full_name}} ({{item.email}})</div>
+								</a>
+							</div>
+						</li>
+					</ul>
+					<div class="alert alert-danger" style="margin:10px 0;padding:5px" ng-show="watchCtrl.currentSubscriber.deleteAlert">
+						<span translate="E005" remark="是否移除此訂閱的筆記"></span>
+						<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="watchCtrl.removeSubscriber()">
+							<span translate="E006" remark="確定"></span>
+						</a>
+						<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="watchCtrl.currentSubscriber.deleteAlert=false">
+							<span translate="E007" remark="取消"></span>
+						</a>
+					</div>
+					<div class="input-group" style="margin-top:20px">
+						<span class="input-group-addon"><span translate="E008" remark="加入訂閱的筆記"></span></span>
+						<input type="text" class="form-control" placeholder="{{'E022'|translate}}... (press enter)" remark="電子郵件" ng-model="watchCtrl.subscriberEmail" ng-keyup="watchCtrl.addSubscriber($event)"/>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div id="textNoteModal" class="modal fade" style="z-index:1480">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<textarea class="form-control" rows='8' ng-model='watchCtrl.currentNote.edit_content'></textarea>
+				</div>
+				<div class="modal-footer">
+					<div class="pull-left">
+						<input type="range" style="width:200px;margin-top:4px;display:inline-block" min="0" max="{{watchCtrl.currentUnit.content_time}}" step="1"
+							ng-model="watchCtrl.currentNote.edit_time" ng-change="watchCtrl.changeNoteVideoTime()"/>
+						<span class="text-info" style="font-size:18px">{{watchCtrl.currentNote.edit_time_desc}}</span>
+					</div>
+					<span class="input-prepend">
+						<a class='btn btn-primary' ng-click='watchCtrl.updateTextNote()'><i class='fa fa-fw fa-save'></i> <span translate="E009" remark="更新"></span></a>
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="deleteNoteModal" class="modal fade" style="z-index:1480">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<h4 translate="E010" remark="是否刪除此文字筆記" ng-if="watchCtrl.currentNote.type=='text'"></h4>
+					<h4 translate="E011" remark="是否刪除此塗鴉筆記" ng-if="watchCtrl.currentNote.type=='image'"></h4>
+				</div>
+				<div class="modal-footer">
+					<a class='btn btn-primary' ng-click='watchCtrl.deleteNote()'>
+						<span translate="E006" remark="確定"></span>
+					</a>
+					<a class='btn btn-danger' data-dismiss="modal" aria-hidden="true">
+						<span translate="E007" remark="取消"></span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="drawDescriptionModal" class="modal fade" style="z-index:1480">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div ng-bind-html="watchCtrl.currentUnit.content.description" style="width:100%;height:100%"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div ng-if="watchCtrl.layout=='knowledge'" class="container" style="margin:20px auto">
+		<div class="row">
+			<div class="col-xs-3">
+				<div class="panel" style="border:1px solid #ddd">
+					<div class="panel-body" style="padding:10px">
+						<div>
+							<a class="btn btn-success btn-block" ng-click="watchCtrl.changeLayout('learning')">
+								<span translate="E014" remark="開始學習"></span>
+							</a>
+						</div>
+						<div style="margin-top:10px">
+							<img ng-src="{{watchCtrl.target.logo}}" style="width:191px;height:191px"/>
+						</div>
+						<div ng-if="watchCtrl.contentType=='knowledge'">
+							<div style="margin-top:20px" ng-if="!watchCtrl.target.destroyed">
+								<div class="text-muted">
+									<span translate="E015" remark="編輯者"></span>
+								</div>
+								<div>
+									<ul class="nav">
+										<li ng-repeat="item in watchCtrl.target.editors">
+											<a href="{{item.page}}" target="_blank" style="padding:6px">
+												<img ng-src="{{item.photo}}" style="float:left;width:24px;height:24px;margin-top:-2px;border:1px solid #ddd"/>
+												<span style="padding:6px">{{item.full_name}}</span>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div style="margin-top:20px">
+								<div>
+									<span class="text-muted"><span translate="E004" remark="訂閱公開筆記"></span></span>
+									<a class="btn btn-link" style="padding:0" ng-click="watchCtrl.showSubscriberModal()">
+										<i class="fa fa-fw fa-edit"></i>
+									</a>
+								</div>
+								<div>
+									<ul class="nav">
+										<li ng-repeat="item in watchCtrl.subscribers">
+											<a href="{{item.page}}" target="_blank" style="padding:6px">
+												<img ng-src="{{item.photo}}" style="float:left;width:24px;height:24px;margin-top:-2px;border:1px solid #ddd"/>
+												<span style="padding:6px">{{item.full_name}}</span>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div style="margin-top:20px" ng-if="watchCtrl.target.groups.length>0">
+								<div>
+									<span class="text-muted"><span translate="E017" remark="加到我的群組"></span></span>
+								</div>
+								<div>
+									<ul class="nav">
+										<li ng-repeat="item in watchCtrl.target.groups">
+											<a ng-if="!item.joined" href="javascript:;" style="padding:0px" ng-click="watchCtrl.joinGroup(item)">
+												<div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+											</a>
+											<a ng-if="item.joined" href="javascript:;" style="padding:0px">
+												<div class="text-muted" style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div style="margin-top:20px">
+								<a class="btn btn-danger" ng-click="watchCtrl.target.unsubscribeAlert=true">
+									<span translate="E018" remark="取消訂閱"></span>
+								</a>
+								<div class="alert alert-danger" style="margin:10px 0;padding:5px" ng-show="watchCtrl.target.unsubscribeAlert">
+									<div translate="E019" remark="是否取消訂閱此知識"></div>
+									<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="watchCtrl.unsubscribe()">
+										<span translate="E006" remark="確定"></span>
+									</a>
+									<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="watchCtrl.target.unsubscribeAlert=false">
+										<span translate="E007" remark="取消"></span>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-9">
+				<div class="panel panel-default">
+					<div class="panel-body" style="padding:10px">
+						<div style="margin-bottom:20px">
+							<div class="pull-right">
+								<a class="btn btn-danger btn-sm" ng-click="mainCtrl.showShareModal(watchCtrl.target, 'knowledge')" ng-if="watchCtrl.contentType=='knowledge'">
+									<span translate="E003" remark="分享"></span>
+								</a>
+								<a class="btn btn-default btn-sm" href="#!/join/group/{{watchCtrl.target.group_uqid}}" ng-if="watchCtrl.contentType=='activity'">
+									<i class="fa fa-fw fa-sign-out text-muted"></i>
+								</a>
+							</div>
+							<h3 style="margin:0">{{watchCtrl.target.name}}</h3>
+						</div>
+						<div style="padding:10px">
+							<div class="btn-group">
+								<a class="btn btn-sm btn-default" ng-class="{active: watchCtrl.target.days == 0, 'btn-primary': watchCtrl.target.days == 0}" ng-click="watchCtrl.queryStudyHistory(0)">
+									<span translate="E023" remark="今天"></span>
+								</a>
+								<a class="btn btn-sm btn-default" ng-class="{active: watchCtrl.target.days == 7, 'btn-primary': watchCtrl.target.days == 7}" ng-click="watchCtrl.queryStudyHistory(7)">
+									<span translate="E024" remark="最近 7 天"></span>
+								</a>
+								<a class="btn btn-sm btn-default" ng-class="{active: watchCtrl.target.days == 30, 'btn-primary': watchCtrl.target.days == 30}" ng-click="watchCtrl.queryStudyHistory(30)">
+									<span translate="E025" remark="最近 30 天"></span>
+								</a>
+							</div>
+							<div id="chart_{{watchCtrl.target.uqid}}" style="min-width:100px;height:200px;margin:20px auto 0"></div>
+						</div>
+					</div>
+				</div>
+				<div style="margin-bottom:20px">
+					<div style="text-align:right">
+						<div class="btn-group pull-left" ng-if="watchCtrl.contentType=='knowledge'&&!watchCtrl.target.destroyed">
+							<a class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+								<i class="fa fa-fw fa-thumbs-o-up" ng-show="watchCtrl.target.rating==0"></i>
+								<i class="fa fa-fw fa-star" ng-show="watchCtrl.target.rating>=1"></i>
+								<i class="fa fa-fw fa-star" ng-show="watchCtrl.target.rating>=2"></i>
+								<i class="fa fa-fw fa-star" ng-show="watchCtrl.target.rating>=3"></i>
+								<i class="fa fa-fw fa-star" ng-show="watchCtrl.target.rating>=4"></i>
+								<i class="fa fa-fw fa-star" ng-show="watchCtrl.target.rating>=5"></i>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a ng-click="watchCtrl.rateKnowledge(1)"><i class="fa fa-fw fa-star"></i></a></li>
+								<li><a ng-click="watchCtrl.rateKnowledge(2)"><i class="fa fa-fw fa-star"></i><i class="fa fa-fw fa-star"></i></a></li>
+								<li><a ng-click="watchCtrl.rateKnowledge(3)"><i class="fa fa-fw fa-star"></i><i class="fa fa-fw fa-star"></i><i class="fa fa-fw fa-star"></i></a></li>
+								<li><a ng-click="watchCtrl.rateKnowledge(4)"><i class="fa fa-fw fa-star"></i><i class="fa fa-fw fa-star"></i><i class="fa fa-fw fa-star"></i><i class="fa fa-fw fa-star"></i></a></li>
+								<li><a ng-click="watchCtrl.rateKnowledge(5)"><i class="fa fa-fw fa-star"></i><i class="fa fa-fw fa-star"></i><i class="fa fa-fw fa-star"></i><i class="fa fa-fw fa-star"></i><i class="fa fa-fw fa-star"></i></a>
+								</li>
+							</ul>
+						</div>
+						<div>
+							<span class="btn btn-xs btn-default disabled" style="opacity:1" translate="E026" remark="未開始"></span>
+							<span class="btn btn-xs btn-warning disabled" style="opacity:1" translate="E027" remark="進行中"></span>
+							<span class="btn btn-xs btn-success disabled" style="opacity:1" translate="E028" remark="已完成"></span>
+						</div>
+					</div>
+				</div>
+				<div style="margin-top:10px">
+					<div ng-if="watchCtrl.contentType=='knowledge'">
+						<div class="panel panel-primary" ng-repeat="chapter in watchCtrl.chapters">
+							<div class="panel-heading">
+								<h3 class="panel-title">{{chapter.name}}</h3>
+							</div>
+							<div class="panel-body">
+								<table class="table table-condensed table-hover" style="margin:0">
+									<tbody>
+										<tr ng-repeat="unit in chapter.units">
+											<td style="width:140px;border:0;border-bottom:1px solid #ddd">
+												<a class="btn btn-xs btn-block"
+													ng-class="{'btn-success': unit.status == 4, 'btn-warning': unit.status == 2, 'btn-default': unit.status == 0}"
+													ng-click="watchCtrl.currentUnit=unit;watchCtrl.changeLayout('learning')">{{unit.spendTime}}</a>
+											</td>
+											<td style="width:20px;border:0;border-bottom:1px solid #ddd">
+												<span>
+													<i class="fa fa-fw" ng-class="{
+														'fa-film': unit.unit_type == 'video',
+														'fa-link': unit.unit_type == 'web',
+														'fa-code': unit.unit_type == 'embed',
+														'fa-pencil-square-o': unit.unit_type == 'quiz',
+														'fa-thumbs-o-up': unit.unit_type == 'poll',
+														'fa-question': unit.unit_type == 'qa',
+														'fa-picture-o': unit.unit_type == 'draw'
+														}"></i>
+												</span>
+											</td>
+											<td style="border:0;border-bottom:1px solid #ddd">
+												<a class="btn btn-link pull-right" style="padding:0;text-decoration:none" ng-if="unit.feedback.uqid.length>0&&unit.feedback.uqid[0]" ng-click="watchCtrl.showFeedbackModal(unit)"><i class="fa fa-fw fa-refresh"></i> {{unit.feedback.uqid.length}}</a>
+												<div style="width:440px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{unit.name}}</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div ng-if="watchCtrl.contentType=='activity'">
+						<div class="panel panel-primary">
+							<div class="panel-body">
+								<table class="table table-condensed table-hover" style="margin:0">
+									<tbody>
+										<tr ng-repeat="unit in watchCtrl.units">
+											<td style="width:140px;border:0;border-bottom:1px solid #ddd">
+												<a class="btn btn-xs btn-block"
+													ng-class="{'btn-success': unit.status == 4, 'btn-warning': unit.status == 2, 'btn-default': unit.status == 0}"
+													ng-click="watchCtrl.currentUnit=unit;watchCtrl.changeLayout('learning')">{{unit.spendTime}}</a>
+											</td>
+											<td style="width:20px;border:0;border-bottom:1px solid #ddd">
+												<span>
+													<i class="fa fa-fw" ng-class="{
+														'fa-film': unit.unit_type == 'video',
+														'fa-link': unit.unit_type == 'web',
+														'fa-code': unit.unit_type == 'embed',
+														'fa-pencil-square-o': unit.unit_type == 'quiz',
+														'fa-thumbs-o-up': unit.unit_type == 'poll',
+														'fa-question': unit.unit_type == 'qa',
+														'fa-picture-o': unit.unit_type == 'draw'
+														}"></i>
+												</span>
+											</td>
+											<td style="border:0;border-bottom:1px solid #ddd">
+												<a class="btn btn-link pull-right" style="padding:0;text-decoration:none" ng-if="unit.feedback.uqid.length>0&&unit.feedback.uqid[0]" ng-click="watchCtrl.showFeedbackModal(unit)"><i class="fa fa-fw fa-refresh"></i> {{unit.feedback.uqid.length}}</a>
+												<div style="width:440px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{unit.name}}</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default" ng-if="watchCtrl.target.description!=''">
+					<div class="panel-body">
+						<div ng-bind-html="watchCtrl.target.description"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div ng-if="watchCtrl.layout=='learning'">
+		<div id="videoQuizModal" class="modal fade" style="z-index:1480">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-body">
+						<div ng-bind-html="watchCtrl.currentUnit.currentQuiz.content"></div>
+						<div style="margin-top:20px">
+							<div ng-repeat="option in watchCtrl.currentUnit.currentQuiz.options">
+								<label class="checkbox" ng-if="watchCtrl.currentUnit.currentQuiz.quiz_type=='multi'" style="cursor:pointer">
+									<input type="checkbox" name="{{watchCtrl.currentUnit.currentQuiz.uqid}}" ng-model="option.answer"/>
+									<span ng-if="!option.latex">{{option.item}}</span>
+									<span ng-if="option.latex" mathjax-bind="option.item"></span>
+									<span ng-if="option.correct&&watchCtrl.currentUnit.currentQuiz.isCheck">(<i class="fa fa-fw fa-circle-o text-success"></i>)</span>
+								</label>
+								<label class="radio" ng-if="watchCtrl.currentUnit.currentQuiz.quiz_type=='single'" style="cursor:pointer">
+									<input type="radio" name="{{quiz.uqid}}" value="{{option.value}}" ng-model="watchCtrl.currentUnit.currentQuiz.single"/>
+									<span ng-if="!option.latex">{{option.item}}</span>
+									<span ng-if="option.latex" mathjax-bind="option.item"></span>
+									<span ng-if="option.correct&&watchCtrl.currentUnit.currentQuiz.isCheck">(<i class="fa fa-fw fa-circle-o text-success"></i>)</span>
+								</label>
+							</div>
+						</div>
+						<div style="margin:20px 0 0;padding:5px;border:2px dashed #ddd" ng-bind-html="watchCtrl.currentUnit.currentQuiz.solution" ng-if="watchCtrl.currentUnit.currentQuiz.isCheck&&watchCtrl.currentUnit.currentQuiz.solution"></div>
+						<div style="margin-top:20px">
+							<a class="btn btn-primary" ng-click="watchCtrl.checkQuizSolution()" ng-if="!watchCtrl.currentUnit.currentQuiz.isCheck">
+								<span translate="E039" remark="檢查答案"></span>
+							</a>
+							<a class="btn btn-primary" ng-click="watchCtrl.continueLearning()" ng-if="watchCtrl.currentUnit.currentQuiz.isCheck">
+								<span translate="E040" remark="繼續學習"></span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<nav class="navbar navbar-static-top navbar-inverse" style="min-width:880px;z-index:1280;padding:0 10px">
+			<div class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="javascript:;" style="padding:9px" ng-click="watchCtrl.preUnit()">
+							<i class="fa fa-fw fa-chevron-left"></i>
+						</a>
+					</li>
+					<li class="dropdown">
+						<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" style="padding:9px;width:360px">
+							<div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
+								<span>
+									<i class="fa fa-fw" ng-class="{
+										'fa-film': watchCtrl.currentUnit.unit_type == 'video',
+										'fa-link': watchCtrl.currentUnit.unit_type == 'web',
+										'fa-code': watchCtrl.currentUnit.unit_type == 'embed',
+										'fa-pencil-square-o': watchCtrl.currentUnit.unit_type == 'quiz',
+										'fa-thumbs-o-up': watchCtrl.currentUnit.unit_type == 'poll',
+										'fa-question': watchCtrl.currentUnit.unit_type == 'qa',
+										'fa-picture-o': watchCtrl.currentUnit.unit_type == 'draw'
+										}"></i>
+								</span>
+								<span>{{watchCtrl.currentUnit.name}}</span>
+							</div>
+						</a>
+						<ul class="dropdown-menu" style="width:360px;max-height:420px;overflow:auto">
+							<li>
+								<div class="text-info" style="font-size:16px;padding:5px 10px 0">{{watchCtrl.target.name}}</div>
+							</li>
+							<li class="divider"/>
+							<li ng-repeat="unit in watchCtrl.units">
+								<div ng-if="unit.unit_type=='chapter'" style="padding:5px 10px">
+									<span class="label label-danger">{{unit.name}}</span>
+								</div>
+								<a href="javascript:;" ng-if="unit.unit_type!='chapter'" ng-click="watchCtrl.chooseUnit(unit)">
+									<div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
+										<i class="text-success fa fa-fw fa-check" ng-show="unit.completed"></i>
+										<span>
+											<i class="fa fa-fw" ng-class="{
+												'fa-film': unit.unit_type == 'video',
+												'fa-link': unit.unit_type == 'web',
+												'fa-code': unit.unit_type == 'embed',
+												'fa-pencil-square-o': unit.unit_type == 'quiz',
+												'fa-thumbs-o-up': unit.unit_type == 'poll',
+												'fa-question': unit.unit_type == 'qa',
+												'fa-picture-o': unit.unit_type == 'draw'
+												}"></i>
+										</span>
+										<span>{{unit.name}}</span>
+									</div>
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;" style="padding:9px" ng-click="watchCtrl.nextUnit()">
+							<i class="fa fa-fw fa-chevron-right"></i>
+						</a>
+					</li>
+					<li ng-if="watchCtrl.currentUnit.unit_type=='video'">
+						<a href="javascript:;" style="padding:9px" ng-click="watchCtrl.seekBack30Sec()">
+							<i class="fa fa-fw fa-undo"></i> <span>30s</span>
+						</a>
+					</li>
+					<li ng-if="watchCtrl.currentUnit.unit_type=='web'">
+						<a href="{{watchCtrl.currentUnit.content_url}}" style="padding:9px" target="_blank">
+							<i class="fa fa-fw fa-share"></i> <span translate="E029" remark="新分頁"></span>
+						</a>
+					</li>
+					<li>
+						<a href="javascript:;" style="padding:9px" ng-click="watchCtrl.setCompleted()">
+							<i class="fa fa-fw" ng-class="{'fa-check-square-o': watchCtrl.currentUnit.completed, 'fa-square-o': !watchCtrl.currentUnit.completed}"></i>
+							<span translate="E030" remark="完成並繼續"></span>
+						</a>
+					</li>
+					<li>
+						<a href="javascript:;" style="padding:9px" ng-click="watchCtrl.openNoteBoard()">
+							<i class="fa fa-fw fa-picture-o"></i> <span translate="E031" remark="塗鴉筆記"></span>
+						</a>
+					</li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right" style="margin:0">
+					<li>
+						<div style="padding:9px">
+							<span class="label" ng-class="{'label-primary': watchCtrl.online, 'label-danger': !watchCtrl.online, 'saving': !watchCtrl.online}">{{watchCtrl.currentUnit.playTime}}</span>
+						</div>
+					</li>
+					<li class="dropdown">
+						<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" style="padding:9px">
+							<i class="fa fa-fw fa-cog"></i>
+							<span translate="E032" remark="設定"></span>
+						</a>
+						<ul class="dropdown-menu" style="overflow:auto;z-index:1280">
+							<li>
+								<a href="javascript:;" ng-click="watchCtrl.unitAutoplay=!watchCtrl.unitAutoplay">
+									<i class="fa fa-fw" ng-class="{'fa-check-square-o': watchCtrl.unitAutoplay, 'fa-square-o': !watchCtrl.unitAutoplay}"></i>
+									<span translate="E033" remark="自動播放"></span>
+								</a>
+							</li>
+							<li>
+								<a href="javascript:;" ng-click="watchCtrl.syncUnitNote=!watchCtrl.syncUnitNote">
+									<i class="fa fa-fw" ng-class="{'fa-check-square-o': watchCtrl.syncUnitNote, 'fa-square-o': !watchCtrl.syncUnitNote}"></i>
+									<span translate="E034" remark="同步顯示筆記"></span>
+								</a>
+							</li>
+							<li class="divider"/>
+							<li>
+								<a href="javascript:;" ng-click="watchCtrl.toggleUnitDesc()">
+									<i class="fa fa-fw" ng-class="{'fa-check-square-o': watchCtrl.showUnitDesc, 'fa-square-o': !watchCtrl.showUnitDesc}"></i>
+									<span translate="E035" remark="顯示補充教材"></span>
+								</a>
+							</li>
+							<li>
+								<a href="javascript:;" ng-click="watchCtrl.toggleMaximum()">
+									<i class="fa fa-fw" ng-class="{'fa-check-square-o': !watchCtrl.maximum, 'fa-square-o': watchCtrl.maximum}"></i>
+									<span translate="E036" remark="顯示右邊欄位"></span>
+								</a>
+							</li>
+							<li class="divider"/>
+							<li>
+								<a href="javascript:;" ng-click="watchCtrl.toggleNotePosition('right')">
+									<i class="fa fa-fw" ng-class="{'fa-check-square-o': watchCtrl.notePosition=='right', 'fa-square-o': watchCtrl.notePosition!='right'}"></i>
+									<span translate="E037" remark="筆記輸入顯示在右邊"></span>
+								</a>
+							</li>
+							<li>
+								<a href="javascript:;" ng-click="watchCtrl.toggleNotePosition('bottom')">
+									<i class="fa fa-fw" ng-class="{'fa-check-square-o': watchCtrl.notePosition=='bottom', 'fa-square-o': watchCtrl.notePosition!='bottom'}"></i>
+									<span translate="E038" remark="筆記輸入顯示在下面"></span>
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<a href="#!/learn/{{watchCtrl.contentType}}/{{watchCtrl.target.uqid}}" style="padding:9px" ng-click="watchCtrl.changeLayout('knowledge')">
+							<i class="fa fa-fw fa-sign-out"></i>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+
+		<div style="position:relative" style="min-width:880px">
+			<div class="down-animate" ng-show="watchCtrl.noteBoard.show" style="position:absolute;z-index:1080">
+				<div id="note-board" ng-style="{width:watchCtrl.noteWidth+'px', height:watchCtrl.noteHeight+'px'}" style="background:rgba(0,0,0,0);bottom:0">
+					<canvas></canvas>
+				</div>
+			</div>
+
+			<div style="display:table;background:#fff">
+				<div style="display:table-cell;vertical-align:top">
+					<div ng-style="{width:watchCtrl.contentWidth+'px', height:watchCtrl.leftContentHeight+'px'}">
+						<div ng-if="watchCtrl.currentUnit.unit_type=='video'" style="width:100%;height:100%;display:table">
+							<div ng-if="watchCtrl.currentUnit.sub_type=='audio'" ng-style="{width:watchCtrl.contentWidth+'px', height:(watchCtrl.leftContentHeight-90)+'px'}" style="word-break:break-all" ng-bind-html="watchCtrl.currentUnit.description"></div>
+							<div id="videoContainer"></div>
+						</div>
+						<div ng-if="watchCtrl.currentUnit.unit_type=='web'" style="width:100%;height:100%;overflow:auto;-webkit-overflow-scrolling:touch">
+							<iframe _sandbox="allow-popups allow-forms allow-same-origin allow-scripts"
+								ng-src="{{watchCtrl.currentUnit.content_url}}"
+								ng-style="{width:watchCtrl.contentWidth+'px', height:(watchCtrl.leftContentHeight-5)+'px'}"
+								frameborder="0"></iframe>
+						</div>
+						<div ng-if="watchCtrl.currentUnit.unit_type=='embed'" style="width:100%;height:100%;overflow:auto" ng-bind-html="watchCtrl.currentUnit.content"></div>
+						<div ng-if="watchCtrl.currentUnit.unit_type=='quiz'" style="width:100%;height:100%;overflow:auto;padding:10px">
+							<div class="panel panel-default" ng-repeat="quiz in watchCtrl.currentUnit.quizzes">
+								<div class="panel-body">
+									<span class="pull-left">
+										<span ng-if="quiz.correct!=null">(<i class="fa fa-fw" ng-class="{'fa-check text-success': quiz.correct, 'fa-times text-danger': !quiz.correct}"></i>)</span>
+										<span><span ng-if="$index<9">0</span>{{$index+1}}.</span>
+									</span>
+									<div ng-bind-html="quiz.content"></div>
+									<div style="margin-top:20px">
+										<div ng-repeat="option in quiz.options">
+											<label class="checkbox" ng-if="quiz.quiz_type=='multi'" style="cursor:pointer">
+												<input type="checkbox" name="{{quiz.uqid}}" ng-model="option.answer"/>
+												<span ng-if="!option.latex">{{option.item}}</span>
+												<span ng-if="option.latex" mathjax-bind="option.item"></span>
+											</label>
+											<label class="radio" ng-if="quiz.quiz_type=='single'" style="cursor:pointer">
+												<input type="radio" name="{{quiz.uqid}}" value="{{option.value}}" ng-model="quiz.single"/>
+												<span ng-if="!option.latex">{{option.item}}</span>
+												<span ng-if="option.latex" mathjax-bind="option.item"></span>
+											</label>
+										</div>
+									</div>
+									<div class="alert alert-danger" style="margin:20px 0 0;padding:5px" ng-bind-html="quiz.solution" ng-if="watchCtrl.currentUnit.showQuizSolution"></div>
+								</div>
+							</div>
+							<div style="margin:10px 0">
+								<a class="btn btn-primary" ng-click="watchCtrl.sendQuizResult()">
+									<span translate="E039" remark="檢查答案"></span>
+								</a>
+								<a class="btn btn-primary" ng-click="watchCtrl.showQuizSolution()" ng-if="watchCtrl.currentUnit.sendQuizResult">
+									<span translate="E050" remark="顯示答案"></span>
+								</a>
+								<span translate="E042" remark="資料已儲存" class="alert alert-success alert-animation" ng-if="watchCtrl.currentUnit.saving" style="padding:4px 8px;margin-left:8px"></span>
+							</div>
+						</div>
+						<div ng-if="watchCtrl.currentUnit.unit_type=='poll'" style="width:100%;height:100%;overflow:auto;padding:10px">
+							<h3 style="padding:30px">
+								<div ng-bind-html="watchCtrl.currentUnit.content.content"></div>
+								<div style="margin-top:20px">
+									<label class="checkbox" style="cursor:pointer" ng-repeat="option in watchCtrl.currentUnit.content.options">
+										<input type="checkbox" name="{{watchCtrl.currentUnit.uqid}}" ng-model="option.answer"/>
+										<span ng-if="!option.latex">{{option.item}}</span>
+										<span ng-if="option.latex" mathjax-bind="option.item"></span>
+									</label>
+								</div>
+							</h3>
+							<div style="margin:10px 0">
+								<a class="btn btn-primary" ng-click="watchCtrl.sendPollResult()">
+									<span translate="E041" remark="儲存"></span>
+								</a>
+								<span translate="E042" remark="資料已儲存" class="alert alert-success alert-animation" ng-if="watchCtrl.currentUnit.saving" style="padding:4px 8px;margin-left:8px"></span>
+							</div>
+						</div>
+						<div ng-if="watchCtrl.currentUnit.unit_type=='qa'" style="width:100%;height:100%;overflow:auto;padding:10px">
+							<h3><div ng-bind-html="watchCtrl.currentUnit.content"></div></h3>
+							<div style="margin-top:20px">
+								<div id="qa-result" style="height:200px"></div>
+							</div>
+							<div style="margin:10px 0">
+								<a class="btn btn-primary" ng-click="watchCtrl.sendQAResult()">
+									<span translate="E041" remark="儲存"></span>
+								</a>
+								<span translate="E042" remark="資料已儲存" class="alert alert-success alert-animation" ng-if="watchCtrl.currentUnit.saving" style="padding:4px 8px;margin-left:8px"></span>
+							</div>
+						</div>
+						<div ng-if="watchCtrl.currentUnit.unit_type=='draw'">
+							<div id="draw-board" ng-style="{width:watchCtrl.contentWidth+'px', height:watchCtrl.leftContentHeight+'px', background:watchCtrl.currentUnit.backgroundImage}" style="background:rgba(0,0,0,0);bottom:0">
+								<canvas></canvas>
+							</div>
+						</div>
+					</div>
+					<div style="padding:13px" ng-if="watchCtrl.notePosition=='bottom'">
+						<textarea class="form-control" rows="1" ng-model="watchCtrl.currentUnit.newNote" placeholder="{{'E016'|translate}}... (press enter)" remark="筆記" ng-keyup="watchCtrl.onAddTextNote($event)"></textarea>
+					</div>
+				</div>
+				<div style="display:table-cell;vertical-align:top" ng-if="!watchCtrl.maximum">
+					<div ng-style="{height:watchCtrl.rightContentHeight+'px'}" style="width:280px;border-left:1px solid #ddd;">
+						<div style="padding:10px;box-shadow:3px 3px 15px rgba(0,0,0,0.3)" ng-if="watchCtrl.notePosition=='right'">
+							<textarea class="form-control" rows="2" ng-model="watchCtrl.currentUnit.newNote" placeholder="{{'E016'|translate}}... (press enter)" remark="筆記" ng-keyup="watchCtrl.onAddTextNote($event)"></textarea>
+						</div>
+						<div id="notes" style="height:{{watchCtrl.textNoteHeight}}px;overflow:auto;padding:5px">
+							<div id="time-{{item.timeCeil}}" class="note-card" ng-style="{'background-color': item.color}" ng-repeat="item in watchCtrl.currentUnit.notes" ng-mouseover="item.showToolbar=true" ng-mouseleave="item.showToolbar=false">
+								<div ng-if="item.type=='text'" ng-bind-html="item.htmlContent"></div>
+								<div ng-if="item.type=='image'"><img ng-src="{{item.content.screenshot}}" style="width:200px"/></div>
+								<div style="margin-top:8px">
+									<div class="pull-right" ng-show="item.showToolbar">
+										<span ng-if="item.author.uqid!=mainCtrl.account.uqid">
+											<a class="btn btn-link" ng-click="watchCtrl.viewImageNote(item)" style="margin-left:2px;padding:0;text-decoration:none;;vertical-align:top" ng-if="item.type=='image'">
+												<i class="fa fa-fw fa-eye"></i>
+											</a>
+											<div class="text-muted" style="display:inline-block;max-width:100px;;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
+												{{item.author.full_name}}
+											</div>
+										</span>
+										<span ng-if="item.author.uqid==mainCtrl.account.uqid">
+											<a class="btn btn-link" ng-click="watchCtrl.showGroupModal(item)" style="margin-right:2px;padding:0;text-decoration:none">
+												<i class="fa fa-fw fa-share"></i>
+											</a>
+											<a class="btn btn-link" ng-click="watchCtrl.editNote(item)" style="margin-right:2px;padding:0;text-decoration:none">
+												<i class="fa fa-fw fa-pencil-square-o"></i>
+											</a>
+											<span class="btn-group" style="margin-right:2px">
+												<a class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" ng-style="{'background-color': item.color}">
+													<div style="width:12px;height:12px"></div>
+												</a>
+												<ul class="dropdown-menu" style="min-width:40px">
+													<li>
+														<a href="javascript:;" style="padding:5px" ng-click="item.color='#fff';watchCtrl.changeNoteColor(item)">
+															<div style="background-color:#fff;border:1px solid #ddd">&nbsp;</div>
+														</a>
+													</li>
+													<li>
+														<a href="javascript:;" style="padding:5px" ng-click="item.color='#dff0d8';watchCtrl.changeNoteColor(item)">
+															<div style="background-color:#dff0d8;border:1px solid #ddd">&nbsp;</div>
+														</a>
+													</li>
+													<li>
+														<a href="javascript:;" style="padding:5px" ng-click="item.color='#d9edf7';watchCtrl.changeNoteColor(item)">
+															<div style="background-color:#d9edf7;border:1px solid #ddd">&nbsp;</div>
+														</a>
+													</li>
+													<li>
+														<a href="javascript:;" style="padding:5px" ng-click="item.color='#fcf8e3';watchCtrl.changeNoteColor(item)">
+															<div style="background-color:#fcf8e3;border:1px solid #ddd">&nbsp;</div>
+														</a>
+													</li>
+													<li>
+														<a href="javascript:;" style="padding:5px" ng-click="item.color='#f2dede';watchCtrl.changeNoteColor(item)">
+															<div style="background-color:#f2dede;border:1px solid #ddd">&nbsp;</div>
+														</a>
+													</li>
+												</ul>
+											</span>
+											<a class="btn btn-link" ng-click="watchCtrl.changeNotePrivacy(item)" style="margin-right:2px;padding:0;text-decoration:none">
+												<span class="text-info" translate="E020" remark="公開" ng-if="item.privacy"></span>
+												<span class="text-danger" translate="E021" remark="非公開" ng-if="!item.privacy"></span>
+											</a>
+											<a class="btn btn-link" ng-click="watchCtrl.showDeleteNoteModal(item)" style="padding:0;text-decoration:none">
+												<i class="fa fa-fw fa-trash-o text-danger"></i>
+											</a>
+										</span>
+									</div>
+									<a class="btn btn-link" ng-click="watchCtrl.openNote(item)" style="padding:0;text-decoration:none">
+										<span class="text-primary" ng-if="watchCtrl.currentUnit.unit_type=='video'">{{item.timeDesc}}</span>
+										<span class="text-primary" ng-if="watchCtrl.currentUnit.unit_type!='video'">&nbsp;</span>
+									</a>
+								</div>
+							</div>
+						</div>
+						<div style="border-top:1px solid #ddd;height:240px;overflow:auto;padding:10px;word-break:break-all;box-shadow:0px -3px 15px rgba(0,0,0,0.3)" ng-if="watchCtrl.showUnitDesc" ng-bind-html="watchCtrl.currentUnit.description"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

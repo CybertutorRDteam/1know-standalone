@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html ng-app="1know">
+<head>
+  <title>1Know Console</title>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="cleartype" content="on" />
+
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="expires" content="0">
+
+  <link rel="stylesheet" href="/library/bootstrap/css/bootstrap.css" />
+  <link rel="stylesheet" href="/library/font-awesome/css/font-awesome.css" />
+  <link rel="stylesheet" href="/css/default.css">
+  <link rel="stylesheet" href="/css/standalone.css">
+
+  <script src="/library/jquery/jquery-1.11.0.min.js"></script>
+  <script src="/library/jquery/jquery-migrate-1.2.1.min.js"></script>
+
+  <script src="/library/jquery/jquery-ui.min.js"></script>
+  <script src="/library/jquery/jquery.autosize.min.js"></script>
+  <script src="/library/angularjs/angular.min.js"></script>
+  <script src="/library/angularjs/angular-animate.min.js"></script>
+  <script src="/library/angularjs/angular-route.min.js"></script>
+  <script src="/library/angularjs/angular-strap.min.js"></script>
+  <script src="/library/angularjs/angular-strap.tpl.min.js"></script>
+  <script src="/library/angularjs/angular-translate.min.js"></script>
+  <script src="/library/bootstrap/js/bootstrap.min.js"></script>
+  <script src="/library/bootstrap/js/validator.min.js"></script>
+
+  <style type="text/css">
+    body { padding-top: 70px; }
+    .code { font-family: monospace; }
+    .my-config-container {
+      padding: 15px 15px 0 15px;
+      border-style: solid;
+      background-color: #fff;
+      border-color: #ddd;
+      border-width: 1px;
+      border-radius: 4px 4px 0 0;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a href="/admin/index" class="navbar-brand" title="back to index">1Know Console</a>
+      </div>
+      <div class="collapse navbar-collapse navbar-right">
+        <span style="color:#ffffff;">Hi, <%= session[:admin_name] %> </span>
+        <a href="/admin/logout" class="btn btn-primary navbar-btn" title="back to index"><span translate="導覽列_登出"></span></a>
+      </div>
+    </div>
+  </header>
+  <main></main>
+  <% if session[:role] == 'superadmin' %>
+    <script src="/js/manager/super/language.js?<%=@APP_CONFIG['version']%>"></script>
+    <script src="/js/manager/super/main.js?<%=@APP_CONFIG['version']%>"></script>
+    <script src="/js/manager/super/accounts.js?<%=@APP_CONFIG['version']%>"></script>
+    <script src="/js/manager/super/config.js?<%=@APP_CONFIG['version']%>"></script>
+  <% elsif session[:role] == 'sysadmin' %>
+    <script src="/js/manager/sys/language.js?<%=@APP_CONFIG['version']%>"></script>
+    <script src="/js/manager/sys/main.js?<%=@APP_CONFIG['version']%>"></script>
+    <script src="/js/manager/sys/permission.js?<%=@APP_CONFIG['version']%>"></script>
+    <script src="/js/manager/sys/config.js?<%=@APP_CONFIG['version']%>"></script>
+  <% end %>
+</body>
+</html>

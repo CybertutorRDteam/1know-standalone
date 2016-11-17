@@ -1,0 +1,54 @@
+<div>
+    <form class="form-horizontal" id="myForm" ng-submit="configCtrl.saveConfig()">
+        <div class="my-config-container">
+            <div class="form-group">
+                <label for="web_name" class="col-sm-3 control-label" translate="系統配置_WebName">Web Name</label>
+                <div class="col-sm-9">
+                    <input id="web_name" name="web_name" type="text" class="form-control" autofocus ng-model="configCtrl.currentConfig.web_name" placeholder="1know">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label" translate="系統配置_Logo">Logo</label>
+                <div class="col-sm-9">
+                    <p>
+                        <a href="javascript:;" ng-click="configCtrl.editPicture('logo')">
+                            <span translate="系統配置_變更Logo"></span>
+                        </a>
+                        <span ng-show="configCtrl.currentConfig.logo">
+                            | <a href="javascript:;" ng-click="configCtrl.removePicture('logo')">
+                                <span translate="系統配置_移除Logo"></span>
+                            </a>
+                        </span>
+                    </p>
+                    <input type="file" id="input_logo" accept="image/*" style="display:none"/>
+                    <img ng-show="configCtrl.currentConfig.logo" ng-src="{{configCtrl.currentConfig.logo}}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="copyright" class="col-sm-3 control-label" translate="系統配置_Copyright">Copyright</label>
+                <div class="col-sm-9">
+                    <input id="copyright" name="copyright" type="text" class="form-control" ng-model="configCtrl.currentConfig.copyright" placeholder="澔學學習系統有限公司 www.ischool.com.tw">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="service_email" class="col-sm-3 control-label" translate="系統配置_問題反應信箱">問題反應信箱</label>
+                <div class="col-sm-9">
+                    <input id="service_email" name="service_email" type="email" class="form-control" ng-model="configCtrl.currentConfig.service_email" placeholder="support@ischool.com.tw">
+                </div>
+            </div>
+        </div>
+        <div class="text-center" style="margin: 5px;">
+            <input class="btn btn-primary" name="commit" type="submit" value="{{'系統配置_儲存'|translate}}">
+        </div>
+    </form>
+</div>
+
+<div id="errorMessageModal" class="modal fade" style="z-index:1480">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h4 class="text-danger" translate="{{configCtrl.errMessage}}"></h4>
+            </div>
+        </div>
+    </div>
+</div>

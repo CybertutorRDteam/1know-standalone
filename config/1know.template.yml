@@ -1,0 +1,21 @@
+#add by Aaron @ 2014/10/9
+
+#ischoolcenter oauth
+client_id: f0a47e722f22ea90c3c336d53a1825d8
+client_secret: feb1bb7ef3deb65fbe9ee23232f44763f09d778ae7b027cba0373476a2f0e2cb
+redirect_uri: http://140.126.57.223/oauth/ischool
+
+host_name: http://140.126.57.223
+
+upload_path:
+ -
+  video: /opt/1know_standalone_upload_file/video
+  doc: /opt/1know_standalone_upload_file/doc
+  image: /opt/1know_standalone_upload_file/image
+
+konzesys:
+ -
+  activate: 1
+  url: http://218.56.8.86:8080/api.php?action=
+
+need_activation: false

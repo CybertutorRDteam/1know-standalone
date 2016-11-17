@@ -1,0 +1,1332 @@
+<div>
+	<div id="embedModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<h3 translate="G006" remark="嵌入碼"></h3>
+					<textarea rows="4" class="form-control" ng-model="modifyKnowledgeCtrl.target.embed_code"></textarea>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="errorMessageModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<h4 class="text-danger">{{modifyKnowledgeCtrl.errMessage}}</h4>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="editorModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<a class="btn btn-sm btn-primary pull-right" ng-click="modifyKnowledgeCtrl.sortableEditor()">
+						<i class="fa fa-fw fa-bars"></i>
+					</a>
+					<h4 translate="G007" remark="編輯者"></h4>
+				</div>
+				<div class="modal-body" style="max-height:320px;overflow:auto">
+					<ul style="list-style-type:none;margin:0;padding:0" editor-list>
+						<li ng-repeat="item in modifyKnowledgeCtrl.editors" style="border-bottom:1px solid #ddd;padding:4px" ng-style="{'cursor':modifyKnowledgeCtrl.target.sortableEditor?'move':'default'}">
+							<div class="pull-right">
+								<span ng-hide="item.role=='owner'||modifyKnowledgeCtrl.account.uqid==item.user_uqid">
+									<a class="btn btn-default btn-xs" style="border:none;font-size:14px" ng-click="modifyKnowledgeCtrl.currentEditor=item;modifyKnowledgeCtrl.currentEditor.deleteAlert=true">
+										<i class="fa fa-fw fa-trash-o text-danger"></i>
+									</a>
+								</span>
+								<a ng-if="item.show" class="btn btn-default btn-xs" style="border:none;font-size:14px" ng-click="modifyKnowledgeCtrl.updateEditor(item, item.order, false)">
+									<span class="text-info" translate="G008" remark="顯示"></span>
+								</a>
+								<a ng-if="!item.show" class="btn btn-default btn-xs" style="border:none;font-size:14px" ng-click="modifyKnowledgeCtrl.updateEditor(item, item.order, true)">
+									<span class="text-danger" translate="G009" remark="隱藏"></span>
+								</a>
+							</div>
+							<div>
+								<span style="margin-right:8px" ng-if="modifyKnowledgeCtrl.target.sortableEditor">
+									<i class="fa fa-fw fa-sort"></i>
+								</span>
+								<a class="btn btn-link" style="padding:0" href="{{item.page}}" target="_blank">
+									<div style="max-width:480px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.full_name}}</div>
+								</a>
+							</div>
+						</li>
+					</ul>
+					<div class="alert alert-danger" style="margin:10px 0;padding:5px" ng-show="modifyKnowledgeCtrl.currentEditor.deleteAlert">
+						<span translate="G010" remark="是否移除此編輯者"></span>
+						<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="modifyKnowledgeCtrl.removeEditor()">
+							<span translate="G003" remark="確定"></span>
+						</a>
+						<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="modifyKnowledgeCtrl.currentEditor.deleteAlert=false">
+							<span translate="G004" remark="取消"></span>
+						</a>
+					</div>
+					<div class="input-group" style="margin-top:20px">
+						<span class="input-group-addon"><span translate="G013" remark="加入編輯者"></span></span>
+						<input type="text" class="form-control" placeholder="{{'G027'|translate}}... (press enter)" remark="電子郵件" ng-model="modifyKnowledgeCtrl.editorEmail" ng-keyup="modifyKnowledgeCtrl.addEditor($event)"/>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="cloneUnitModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header" ng-if="modifyKnowledgeCtrl.clone.type=='clone'">
+					<div class="btn-group">
+						<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="width:320px">
+							<div style="text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{modifyKnowledgeCtrl.clone.target.name}}</div>
+						</a>
+						<ul class="dropdown-menu" style="width:320px;height:400px;overflow:auto;text-align:left">
+							<li ng-repeat="item in modifyKnowledgeCtrl.clone.knowledges">
+								<a href="javascript:;" ng-click="modifyKnowledgeCtrl.selectCloneKnowledge(item)">
+									<div style="text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="modal-body" style="max-height:320px;overflow:auto">
+					<ul style="list-style-type:none;margin:0;padding:0" ng-if="modifyKnowledgeCtrl.clone.type=='clone'">
+						<li ng-repeat="item in modifyKnowledgeCtrl.clone.items" style="border-bottom:1px solid #ddd;padding:4px">
+							<label class="btn btn-danger btn-sm" ng-if="item.unit_type=='chapter'">
+								<input type="checkbox" ng-model="item.check" ng-change="modifyKnowledgeCtrl.selectCloneItem(item)"/>
+								<span>{{item.name}}</span>
+							</label>
+							<div ng-if="item.unit_type!='chapter'">
+								<label style="cursor:pointer;margin:0">
+									<input type="checkbox" ng-model="item.check"/>
+									<div style="vertical-align:top;width:480px;display:inline-block;padding:2px 5px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+								</label>
+							</div>
+						</li>
+					</ul>
+					<ul style="list-style-type:none;margin:0;padding:0" ng-if="modifyKnowledgeCtrl.clone.type=='remove'">
+						<li ng-repeat="item in modifyKnowledgeCtrl.clone.items" style="border-bottom:1px solid #ddd;padding:4px">
+							<label style="cursor:pointer;margin:0">
+								<input type="checkbox" ng-model="item.check"/>
+								<div style="vertical-align:top;width:480px;display:inline-block;padding:2px 5px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+							</label>
+						</li>
+					</ul>
+				</div>
+				<div class="modal-footer">
+					<label class="btn btn-default pull-left" style="border:none">
+						<input type="checkbox" ng-model="modifyKnowledgeCtrl.clone.checkAll" ng-change="modifyKnowledgeCtrl.selectCloneItem()"/> <span translate="G014" remark="全部選取"></span>
+					</label>
+					<a class="btn btn-primary" ng-click="modifyKnowledgeCtrl.cloneUnit()" ng-if="modifyKnowledgeCtrl.clone.type=='clone'"><span translate="G015" remark="複製"></span></a>
+					<a class="btn btn-primary" ng-click="modifyKnowledgeCtrl.clone.removeAlert=true" ng-if="modifyKnowledgeCtrl.clone.type=='remove'"><span translate="G016" remark="刪除"></span></a>
+					<div class="alert alert-danger" style="margin-top:10px;padding:5px;text-align:left" ng-show="modifyKnowledgeCtrl.clone.removeAlert">
+						<span translate="G017" remark="是否批次刪除選取的單元"></span>
+						<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="modifyKnowledgeCtrl.removeUnit()">
+							<span translate="G003" remark="確定"></span>
+						</a>
+						<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="modifyKnowledgeCtrl.clone.removeAlert=false">
+							<span translate="G004" remark="取消"></span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="youtubePlaylistModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4>{{modifyKnowledgeCtrl.modifyTarget.name}}</h4>
+				</div>
+				<div class="modal-body" style="max-height:320px;overflow:auto">
+					<h4><span translate="G020" remark="播放清單"></span></h4>
+					<div class="input-group">
+						<input type="text" class="form-control" ng-model="modifyKnowledgeCtrl.modifyTarget.playlist" ng-change="modifyKnowledgeCtrl.parsePlaylist()">
+						<span class="input-group-btn">
+							<a class="btn btn-primary" ng-click="modifyKnowledgeCtrl.parsePlaylist()"><i class="fa fa-fw fa-refresh"></i></a>
+						</span>
+					</div>
+					<div>
+						<label class="pull-right" style="margin:12px;cursor:pointer">
+							<span translate="G021" remark="全部預覽"></span> <input type="checkbox" ng-model="modifyKnowledgeCtrl.modifyTarget.check_all_preview" ng-change="modifyKnowledgeCtrl.checkAllPreview()"/>
+						</label>
+						<label style="margin:12px;cursor:pointer">
+							<input type="checkbox" ng-model="modifyKnowledgeCtrl.modifyTarget.check_all_entry" ng-change="modifyKnowledgeCtrl.checkAllEntry()"/> <span translate="G022" remark="全部儲存"></span>
+						</label>
+					</div>
+					<div class="input-group" ng-repeat="entry in modifyKnowledgeCtrl.modifyTarget.playlist_entry" style="margin:4px 0">
+						<span class="input-group-addon">
+							<input type="checkbox" ng-model="entry.create"/>
+						</span>
+						<input type="text" class="form-control" ng-model="entry.name"/>
+						<span class="input-group-addon" style="min-width:100px;background-color:transparent">
+							<span class="text-danger" ng-hide="entry.upload!=undefined"><i class="fa fa-fw fa-clock-o"></i> {{entry.time_desc}}</span>
+							<span class="text-success" ng-show="entry.upload!=undefined"><i class="fa fa-fw fa-check"></i> OK</span>
+						</span>
+						<span class="input-group-addon">
+							<input type="checkbox" ng-model="entry.preview"/>
+						</span>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<a class="btn btn-primary" ng-click="modifyKnowledgeCtrl.savePlaylist(0)" ng-hide="modifyKnowledgeCtrl.modifyTarget.loadPlaylist">
+						<i class="fa fa-fw fa-save"></i> <span translate="G023" remark="儲存"></span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="latexModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<h4 translate="G024" remark="MathJax 數學函數"></h4>
+					<textarea rows="3" class="form-control" ng-model="modifyKnowledgeCtrl.modifyTarget.input_content"></textarea>
+					<div style="margin-top:10px;padding:10px;border:2px dashed #ddd">
+						<span id="mathjax-output" mathjax-bind="modifyKnowledgeCtrl.modifyTarget.input_content"></span>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<!-- <a class="btn btn-warning pull-left" href="http://docs.mathjax.org/en/latest/index.html" target="_blank">
+						<span translate="G025" remark="MathJax Documentation"></span>
+					</a> -->
+					<a class="btn btn-warning pull-left" href="http://www.mathjq.com/math-editor/" target="_blank">
+						<span>在线Latex编辑器</span>
+					</a>
+					<a class="btn btn-primary" ng-click="modifyKnowledgeCtrl.addLaTex()">
+						<span translate="G026" remark="加入"></span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="container" style="margin:20px auto">
+		<!-- modify knowledge -->
+		<div ng-if="!modifyKnowledgeCtrl.preview">
+			<div class="row">
+				<div class="col-xs-3">
+					<div class="panel panel-default">
+						<div class="panel-body" style="padding:10px">
+							<div>
+								<img ng-src="{{modifyKnowledgeCtrl.target.logo}}" style="width:191px;height:191px"/>
+							</div>
+							<div style="margin-top:8px">
+								<span class="btn-group pull-right">
+									<a class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" style="border:none">
+										<i class="fa fa-fw fa-cog text-muted"></i>
+									</a>
+									<ul class="dropdown-menu pull-right">
+										<li ng-if="modifyKnowledgeCtrl.target.release">
+											<a href="javascript:;" ng-click="mainCtrl.showShareModal(modifyKnowledgeCtrl.target, 'knowledge')">
+												<span translate="G030" remark="分享知識"></span>
+											</a>
+										</li>
+										<li class="divider" ng-if="modifyKnowledgeCtrl.target.release"></li>
+										<li>
+											<a href="javascript:;" ng-click="modifyKnowledgeCtrl.editKnowledge()">
+												<span translate="G031" remark="編輯知識"></span>
+											</a>
+										</li>
+										<li>
+											<a href="javascript:;" ng-click="modifyKnowledgeCtrl.editPicture()">
+												<span translate="G032" remark="編輯圖片"></span>
+											</a>
+										</li>
+										<li>
+											<a href="javascript:;" ng-click="modifyKnowledgeCtrl.showEditorModal()">
+												<span translate="G033" remark="編輯作者"></span>
+											</a>
+										</li>
+										<li class="divider"></li>
+										<li>
+											<a href="javascript:;" ng-click="modifyKnowledgeCtrl.target.resetCodeAlert=true" ng-if="modifyKnowledgeCtrl.target.code!=null">
+												<span translate="G034" remark="重設代碼"></span>
+											</a>
+											<a href="javascript:;" ng-click="modifyKnowledgeCtrl.resetCode()" ng-if="modifyKnowledgeCtrl.target.code==null">
+												<span translate="G035" remark="產生代碼"></span>
+											</a>
+										</li>
+										<li class="divider"></li>
+										<li>
+											<a href="javascript:;" ng-click="modifyKnowledgeCtrl.target.deleteAlert=true">
+												<span translate="G036" remark="刪除知識"></span>
+											</a>
+										</li>
+									</ul>
+								</span>
+								<span class="text-muted">
+									<i class="fa fa-fw fa-barcode"></i>
+									<span>{{modifyKnowledgeCtrl.target.code}}</span>
+								</span>
+							</div>
+							<div style="margin-top:20px">
+								<span class="text-muted">
+									<span class="text-muted"><span translate="G007" remark="編輯者"></span></span>
+								</span>
+								<div>
+									<ul class="nav">
+										<li ng-repeat="item in modifyKnowledgeCtrl.editors">
+											<a href="{{item.page}}" target="_blank" style="padding:6px">
+												<img ng-src="{{item.photo}}" style="float:left;width:24px;height:24px;margin-top:-2px;border:1px solid #ddd" ng-if="item.show"/>
+												<img ng-src="{{item.photo}}" style="float:left;width:24px;height:24px;margin-top:-2px;border:1px solid #f00" ng-if="!item.show"/>
+												<span style="padding:6px">{{item.full_name}}</span>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div style="margin-top:20px" ng-if="modifyKnowledgeCtrl.target.groups.length>0">
+								<span>
+									<span class="text-muted"><span translate="G038" remark="加到我的群組"></span></span>
+								</span>
+								<div>
+									<ul class="nav">
+										<li ng-repeat="item in modifyKnowledgeCtrl.target.groups">
+											<a ng-if="!item.joined" href="javascript:;" style="padding:0px" ng-click="modifyKnowledgeCtrl.joinGroup(item)">
+												<div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+											</a>
+											<a ng-if="item.joined" href="javascript:;" style="padding:0px">
+												<div class="text-muted" style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div style="margin-top:20px;padding-top:10px;border-top:1px solid #ddd" ng-if="modifyKnowledgeCtrl.target.release">
+								<a class="btn btn-success btn-block" href="/package/{{modifyKnowledgeCtrl.target.uqid}}" target="_blank">
+									<span translate="G039" remark="打包下載"></span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-xs-9">
+					<div ng-if="modifyKnowledgeCtrl.layout=='content'">
+						<div class="panel panel-default">
+							<div class="panel-body">
+								<h2 style="margin:0">{{modifyKnowledgeCtrl.target.name}}</h2>
+								<div style="margin-top:20px" ng-bind-html="modifyKnowledgeCtrl.target.description"></div>
+								<div style="margin-top:10px">
+									<span translate="G040" remark="上次發佈時間"></span>
+									<span class="text-danger" style="margin-left:8px" ng-if="modifyKnowledgeCtrl.target.release">{{modifyKnowledgeCtrl.target.release_time.substr(0, 10)}}</span>
+								</div>
+							</div>
+						</div>
+						<div>
+							<div style="margin-bottom:10px">
+								<div class="pull-right">
+									<span class="btn-group">
+										<a class="btn btn-primary btn-sm" ng-click="modifyKnowledgeCtrl.showAllUnit()">
+											<span ng-if="!modifyKnowledgeCtrl.showChapterUnit"><span translate="G041" remark="顯示單元"></span> <i class="fa fa-fw fa-chevron-down"></i></span>
+											<span ng-if="modifyKnowledgeCtrl.showChapterUnit"><span translate="G042" remark="隱藏單元"></span> <i class="fa fa-fw fa-chevron-up"></i></span>
+										</a>
+										<a class="btn btn-primary btn-sm" ng-click="modifyKnowledgeCtrl.addChapter()"><span translate="G043" remark="新增章節"></span></a>
+										<a class="btn btn-primary btn-sm" ng-click="modifyKnowledgeCtrl.sortableChapter()">
+											<span><i class="fa fa-fw fa-bars"></i></span>
+										</a>
+									</span>
+								</div>
+								<div class="btn-group">
+									<a class="btn btn-primary btn-sm" ng-click="modifyKnowledgeCtrl.togglePreview()">
+										<span translate="G044" remark="預覽"></span>
+									</a>
+									<a class="btn btn-primary btn-sm" ng-click="modifyKnowledgeCtrl.target.publishAlert=true" ng-if="!modifyKnowledgeCtrl.onPublish">
+										<span translate="G005" remark="發佈"></span>
+									</a>
+								</div>
+								<span>
+									<a class="btn btn-primary btn-sm" ng-if="modifyKnowledgeCtrl.target.privacy" ng-click="modifyKnowledgeCtrl.changePrivacy(false)">
+										<span translate="G047" remark="公開"></span>
+									</a>
+									<a class="btn btn-danger btn-sm" ng-if="!modifyKnowledgeCtrl.target.privacy" ng-click="modifyKnowledgeCtrl.changePrivacy(true)">
+										<span translate="G048" remark="非公開"></span>
+									</a>
+								</span>
+								<div class="alert alert-danger" style="margin:10px 0;padding:5px" ng-show="modifyKnowledgeCtrl.target.publishAlert">
+									<span translate="G049" remark="是否發佈此知識"></span>
+									<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="modifyKnowledgeCtrl.publish()">
+										<span translate="G003" remark="確定"></span>
+									</a>
+									<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="modifyKnowledgeCtrl.target.publishAlert=false">
+										<span translate="G004" remark="取消"></span>
+									</a>
+								</div>
+								<div class="alert alert-danger" style="margin:10px 0;padding:5px" ng-if="modifyKnowledgeCtrl.target.deleteAlert">
+									<div translate="G052" remark="是否刪除此知識"></div>
+									<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="modifyKnowledgeCtrl.deleteKnowledge()">
+										<span translate="G003" remark="確定"></span>
+									</a>
+									<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="modifyKnowledgeCtrl.target.deleteAlert=false">
+										<span translate="G004" remark="取消"></span>
+									</a>
+								</div>
+								<div class="alert alert-danger" style="margin:10px 0;padding:5px" ng-if="modifyKnowledgeCtrl.target.resetCodeAlert">
+									<div translate="G055" remark="是否重設此知識代碼"></div>
+									<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="modifyKnowledgeCtrl.resetCode()">
+										<span translate="G003" remark="確定"></span>
+									</a>
+									<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="modifyKnowledgeCtrl.target.resetCodeAlert=false">
+										<span translate="G004" remark="取消"></span>
+									</a>
+								</div>
+							</div>
+							<ul style="list-style-type:none;margin:0;padding:0" chapter-list>
+								<li class="panel panel-primary" ng-repeat="chapter in modifyKnowledgeCtrl.chapters">
+									<div class="panel-heading">
+										<div class="btn-group pull-right" style="margin-top:-6px">
+											<a class="btn btn-primary btn-sm" style="border:none;font-size:13px" ng-click="chapter.showUnit=!chapter.showUnit">
+												<span ng-if="!chapter.showUnit"><span translate="G041" remark="顯示單元"></span> <i class="fa fa-fw fa-chevron-down"></i></span>
+												<span ng-if="chapter.showUnit"><span translate="G042" remark="隱藏單元"></span> <i class="fa fa-fw fa-chevron-up"></i></span>
+											</a>
+											<a class="btn btn-primary btn-sm" style="border:none;font-size:13px" ng-click="modifyKnowledgeCtrl.addUnit(chapter)">
+												<span translate="G060" remark="新增單元"></span>
+											</a>
+											<a class="btn btn-primary btn-sm" style="border:none;font-size:13px" ng-click="modifyKnowledgeCtrl.sortableUnit(chapter)">
+												<span><i class="fa fa-fw fa-bars"></i></span>
+											</a>
+											<span class="btn-group">
+												<a class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" style="border:none;font-size:13px">
+													<i class="fa fa-fw fa-cog"></i>
+												</a>
+												<ul class="dropdown-menu pull-right">
+													<!-- <li>
+														<a href="javascript:;" ng-click="modifyKnowledgeCtrl.showParsePlaylist(chapter)">
+															<span translate="G061" remark="YouTube 播放清單"></span>
+														</a>
+													</li>
+													<li class="divider"></li> -->
+													<li>
+														<a href="javascript:;" ng-click="modifyKnowledgeCtrl.showCloneModal(chapter, 'clone')">
+															<span translate="G062" remark="批次複製單元"></span>
+														</a>
+													</li>
+													<li>
+														<a href="javascript:;" ng-click="modifyKnowledgeCtrl.showCloneModal(chapter, 'remove')">
+															<span translate="G063" remark="批次刪除單元"></span>
+														</a>
+													</li>
+													<li class="divider"></li>
+													<li>
+														<a href="javascript:;" ng-click="modifyKnowledgeCtrl.editChapter(chapter)">
+															<span translate="G064" remark="編輯章節"></span>
+														</a>
+													</li>
+												</ul>
+											</span>
+										</div>
+										<h3 class="panel-title" ng-style="{'cursor':modifyKnowledgeCtrl.target.sortableChapter?'move':'default'}">
+											<i class="fa fa-fw fa-sort" ng-if="modifyKnowledgeCtrl.target.sortableChapter"></i>
+											<span>{{chapter.name}}</span>
+										</h3>
+									</div>
+									<div class="panel-body">
+										<ul style="list-style-type:none;margin:0;padding:0" ng-show="chapter.showUnit" unit-list="{{chapter.uqid}}">
+											<li ng-repeat="unit in chapter.units" style="border-bottom:1px solid #ddd;margin:4px 0;padding:4px 0" chapter-index="{{$parent.$index}}" ng-style="{'cursor':chapter.sortableUnit?'move':'default'}">
+												<div class="pull-left">
+													<span style="margin-right:4px" ng-if="chapter.sortableUnit">
+														<i class="fa fa-fw fa-sort"></i>
+													</span>
+													<span style="margin-right:4px">
+														<i class="fa fa-fw" ng-class="{
+															'fa-film': unit.unit_type == 'video',
+															'fa-link': unit.unit_type == 'web',
+															'fa-code': unit.unit_type == 'embed',
+															'fa-pencil-square-o': unit.unit_type == 'quiz',
+															'fa-thumbs-o-up': unit.unit_type == 'poll',
+															'fa-question': unit.unit_type == 'qa',
+															'fa-picture-o': unit.unit_type == 'draw'
+															}"></i>
+													</span>
+												</div>
+												<div class="pull-right" style="margin-left:20px">
+													<span class="text-danger" ng-if="unit.unit_type=='video'">{{timeToFormat(unit.content_time)}}</span>
+													<span class="btn-group" style="margin-top:-6px">
+														<a class="btn btn-default btn-xs" style="border:none;font-size:14px" ng-click="modifyKnowledgeCtrl.changeUnitPreview(unit)">
+															<span><i class="fa fa-fw" ng-class="{'text-info': unit.preview, 'fa-eye': unit.preview, 'text-danger': !unit.preview, 'fa-eye-slash': !unit.preview}"></i></span>
+														</a>
+														<a class="btn btn-default btn-xs" style="border:none;font-size:14px" ng-click="modifyKnowledgeCtrl.editUnit(unit)">
+															<span><i class="fa fa-fw fa-edit text-info"></i></span> <!-- <span class="text-info" translate="編輯"></span> -->
+														</a>
+													</span>
+												</div>
+												<div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{unit.name}}</div>
+											</li>
+										</ul>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+
+					<div ng-if="modifyKnowledgeCtrl.layout=='picture'" class="panel panel-primary">
+						<div class="panel-heading">
+							<a class="btn btn-primary btn-sm pull-right" style="border:none;margin:-5px 0" ng-click="modifyKnowledgeCtrl.changeLayout('content')">
+								<i class="fa fa-fw fa-times"></i>
+							</a>
+							<h3 class="panel-title" translate="G032" remark="編輯圖片"></h3>
+						</div>
+						<div class="panel-body">
+							<div id="picture_content"></div>
+						</div>
+						<div class="panel-footer">
+							<a class="btn btn-primary pull-right" ng-click="modifyKnowledgeCtrl.savePicture()">
+								<i class="fa fa-fw fa-save"></i> <span translate="G023" remark="儲存"></span>
+							</a>
+							<input type="file" id="input_knowledge_logo" accept="image/*"/>
+							<div class="text-danger" style="margin-top:4px"><span translate="G067" remark="圖片最大尺寸"></span> <span>(200x200)</span></div>
+						</div>
+					</div>
+
+					<div ng-if="modifyKnowledgeCtrl.layout=='knowledge'" class="panel panel-primary">
+						<div class="panel-heading">
+							<a class="btn btn-primary btn-sm pull-right" style="border:none;margin:-5px 0" ng-click="modifyKnowledgeCtrl.changeLayout('content')">
+								<i class="fa fa-fw fa-times"></i>
+							</a>
+							<h3 class="panel-title">{{modifyKnowledgeCtrl.target.name}}</h3>
+						</div>
+						<div class="panel-body">
+							<form class="form-horizontal" role="form">
+								<div class="form-group">
+									<label class="col-xs-2 control-label">
+									</label>
+									<div class="col-xs-10">
+										<label class="btn btn-sm btn-default" style="border:none">
+											<input type="checkbox" ng-model="modifyKnowledgeCtrl.target.edit_privacy" style="margin:0 2px 2px"/>
+											<span translate="G047" remark="公開"></span>
+										</label>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-xs-2 control-label">
+										<span translate="G069" remark="名稱"></span>
+									</label>
+									<div class="col-xs-10">
+										<input type="text" class="form-control" ng-model="modifyKnowledgeCtrl.target.edit_name">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-xs-2 control-label">
+										<span translate="G070" remark="簡介"></span>
+									</label>
+									<div class="col-xs-10">
+										<div id="knowledge-description" style="height:140px"></div>
+									</div>
+								</div>
+							</form>
+						</div>
+						<div class="panel-footer" style="text-align:right">
+							<a class="btn btn-primary" ng-click="modifyKnowledgeCtrl.saveKnowledge()">
+								<i class="fa fa-fw fa-save"></i> <span translate="G023" remark="儲存"></span>
+							</a>
+						</div>
+					</div>
+
+					<div ng-if="modifyKnowledgeCtrl.layout=='chapter'" class="panel panel-primary">
+						<div class="panel-heading">
+							<a class="btn btn-primary btn-sm pull-right" style="border:none;margin:-5px 0" ng-click="modifyKnowledgeCtrl.changeLayout('content')">
+								<i class="fa fa-fw fa-times"></i>
+							</a>
+							<h3 class="panel-title">
+								<span ng-if="modifyKnowledgeCtrl.modifyTarget.edit_type=='create'" translate="G043" remark="新增章節"></span>
+								<span ng-if="modifyKnowledgeCtrl.modifyTarget.edit_type=='update'">{{modifyKnowledgeCtrl.modifyTarget.name}}</span>
+							</h3>
+						</div>
+						<div class="panel-body">
+							<form class="form-horizontal" role="form">
+								<div class="form-group">
+									<label class="col-xs-2 control-label">
+										<span translate="G073" remark="章節名稱"></span>
+									</label>
+									<div class="col-xs-10">
+										<input type="text" class="form-control" ng-model="modifyKnowledgeCtrl.modifyTarget.edit_name">
+									</div>
+								</div>
+								<div class="form-group" ng-show="modifyKnowledgeCtrl.modifyTarget.edit_type=='update'">
+									<label class="col-xs-2 control-label">
+										<span translate="G074" remark="排序"></span>
+									</label>
+									<div class="col-xs-10">
+										<div class="btn-group">
+											<a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" style="width:60px">
+												<div>{{modifyKnowledgeCtrl.modifyTarget.edit_priority}}</div>
+											</a>
+											<ul class="dropdown-menu">
+												<li ng-repeat="priority in modifyKnowledgeCtrl.modifyTarget.priorities">
+													<a href="javascript:;" ng-click="modifyKnowledgeCtrl.modifyTarget.edit_priority=priority">
+														<div>{{priority}}</div>
+													</a>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</form>
+							<div class="alert alert-danger" style="margin:0;padding:5px" ng-show="modifyKnowledgeCtrl.modifyTarget.saveMsg!=undefined">
+								<span ng-bind-html="modifyKnowledgeCtrl.modifyTarget.saveMsg"></span>
+							</div>
+							<div class="alert alert-danger" style="margin:0;padding:5px" ng-show="modifyKnowledgeCtrl.modifyTarget.deleteAlert">
+								<span translate="G075" remark="是否刪除此章節"></span>
+								<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="modifyKnowledgeCtrl.deleteChapter()">
+									<span translate="G003" remark="確定"></span>
+								</a>
+								<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="modifyKnowledgeCtrl.modifyTarget.deleteAlert=false">
+									<span translate="G004" remark="取消"></span>
+								</a>
+							</div>
+						</div>
+						<div class="panel-footer" style="text-align:right">
+							<a class="btn btn-danger" ng-click="modifyKnowledgeCtrl.modifyTarget.deleteAlert=true" ng-show="modifyKnowledgeCtrl.modifyTarget.edit_type=='update'">
+								<i class="fa fa-fw fa-trash-o"></i> <span translate="G016" remark="刪除"></span>
+							</a>
+							<a class="btn btn-primary" ng-click="modifyKnowledgeCtrl.saveChapter()">
+								<i class="fa fa-fw fa-save"></i> <span translate="G023" remark="儲存"></span>
+							</a>
+						</div>
+					</div>
+
+					<div ng-if="modifyKnowledgeCtrl.layout=='unit'" class="panel panel-primary">
+						<div class="panel-heading">
+							<a class="btn btn-primary btn-sm pull-right" style="border:none;margin:-5px 0" ng-click="modifyKnowledgeCtrl.changeLayout('content')">
+								<i class="fa fa-fw fa-times"></i>
+							</a>
+							<h3 class="panel-title">
+								<span ng-if="modifyKnowledgeCtrl.modifyTarget.edit_type=='create'" translate="G060" remark="新增單元"></span>
+								<span ng-if="modifyKnowledgeCtrl.modifyTarget.edit_type=='update'">{{modifyKnowledgeCtrl.modifyTarget.name}}</span>
+							</h3>
+						</div>
+						<div class="panel-body">
+							<div>
+								<form class="form-horizontal" role="form">
+									<!-- <div class="form-group">
+										<label class="col-xs-2 control-label">
+										</label>
+										<div class="col-xs-10">
+											<a class="btn btn-sm btn-default" ng-click="modifyKnowledgeCtrl.modifyTarget.edit_preview=!modifyKnowledgeCtrl.modifyTarget.edit_preview">
+												<i class="fa fa-fw" ng-class="{'fa-check-square-o':modifyKnowledgeCtrl.modifyTarget.edit_preview,'fa-square-o':!modifyKnowledgeCtrl.modifyTarget.edit_preview}"></i> <span translate="預覽"></span>
+											</a>
+										</div>
+									</div> -->
+									<div class="form-group">
+										<label class="col-xs-2 control-label">
+											<span translate="G081" remark="章節"></span>
+										</label>
+										<div class="col-xs-10">
+											<div class="btn-group">
+												<a class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:320px">
+													<div style='text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden'>{{modifyKnowledgeCtrl.modifyTarget.edit_ch_name}}</div>
+												</a>
+												<ul class="dropdown-menu" style="width:320px;max-height:200px;overflow:auto">
+													<li ng-repeat="chapter in modifyKnowledgeCtrl.chapters">
+														<a href="javascript:;" ng-click="modifyKnowledgeCtrl.changeChapter(chapter)">
+															<div style='text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden'>{{chapter.name}}</div>
+														</a>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</div>
+									<div class="form-group" ng-class="{'has-error': !modifyKnowledgeCtrl.modifyTarget.edit_name}">
+										<label class="col-xs-2 control-label">
+											<span translate="G082" remark="單元名稱"></span>
+										</label>
+										<div class="col-xs-10">
+											<input type="text" class="form-control" ng-model="modifyKnowledgeCtrl.modifyTarget.edit_name" id="modifyTarget_edit_name" placeholder="请先输入单元名称">
+										</div>
+									</div>
+									<div class="form-group" ng-show="modifyKnowledgeCtrl.modifyTarget.edit_type=='update'">
+										<label class="col-xs-2 control-label">
+											<span translate="G074" remark="排序"></span>
+										</label>
+										<div class="col-xs-10">
+											<div class="btn-group">
+												<a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" style="width:60px">
+													<div>{{modifyKnowledgeCtrl.modifyTarget.edit_priority}}</div>
+												</a>
+												<ul class="dropdown-menu">
+													<li ng-repeat="priority in modifyKnowledgeCtrl.modifyTarget.priorities">
+														<a href="javascript:;" ng-click="modifyKnowledgeCtrl.modifyTarget.edit_priority=priority">
+															<div>{{priority}}</div>
+														</a>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-xs-2 control-label">
+											<span translate="G076" remark="補充教材"></span>
+										</label>
+										<div class="col-xs-10">
+											<div id="unit-description" style="height:140px"></div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-xs-2 control-label">
+											<span translate="G077" remark="單元類型"></span>
+										</label>
+										<div class="col-xs-10">
+											<div class="btn-group">
+												<a class="btn btn-sm btn-default" ng-class="{'btn-primary': modifyKnowledgeCtrl.modifyTarget.edit_unit_type == 'video', active: modifyKnowledgeCtrl.modifyTarget.edit_unit_type == 'video'}" ng-click="modifyKnowledgeCtrl.toggleUnitType('video')">
+													<i class="fa fa-fw fa-film"></i> <span translate="G078" remark="影片"></span>
+												</a>
+												<a class="btn btn-sm btn-default" ng-class="{'btn-primary': modifyKnowledgeCtrl.modifyTarget.edit_unit_type == 'web', active: modifyKnowledgeCtrl.modifyTarget.edit_unit_type == 'web'}" ng-click="modifyKnowledgeCtrl.toggleUnitType('web')">
+													<i class="fa fa-fw fa-link"></i> <span translate="G079" remark="網頁"></span>
+												</a>
+												<a class="btn btn-sm btn-default" ng-class="{'btn-primary': modifyKnowledgeCtrl.modifyTarget.edit_unit_type == 'embed', active: modifyKnowledgeCtrl.modifyTarget.edit_unit_type == 'embed'}" ng-click="modifyKnowledgeCtrl.toggleUnitType('embed')">
+													<i class="fa fa-fw fa-code"></i> <span translate="G080" remark="嵌入"></span>
+												</a>
+												<a class="btn btn-sm btn-default" ng-class="{'btn-primary': modifyKnowledgeCtrl.modifyTarget.edit_unit_type == 'quiz', active: modifyKnowledgeCtrl.modifyTarget.edit_unit_type == 'quiz'}" ng-click="modifyKnowledgeCtrl.toggleUnitType('quiz')">
+													<i class="fa fa-fw fa-pencil-square-o"></i> <span translate="G071" remark="練習"></span>
+												</a>
+												<a class="btn btn-sm btn-default" ng-class="{'btn-primary': modifyKnowledgeCtrl.modifyTarget.edit_unit_type == 'poll', active: modifyKnowledgeCtrl.modifyTarget.edit_unit_type == 'poll'}" ng-click="modifyKnowledgeCtrl.toggleUnitType('poll')">
+													<i class="fa fa-fw fa-thumbs-o-up"></i> <span translate="G072" remark="投票"></span>
+												</a>
+												<a class="btn btn-sm btn-default" ng-class="{'btn-primary': modifyKnowledgeCtrl.modifyTarget.edit_unit_type == 'qa', active: modifyKnowledgeCtrl.modifyTarget.edit_unit_type == 'qa'}" ng-click="modifyKnowledgeCtrl.toggleUnitType('qa')">
+													<i class="fa fa-fw fa-question"></i> <span translate="G065" remark="問答"></span>
+												</a>
+												<a class="btn btn-sm btn-default" ng-class="{'btn-primary': modifyKnowledgeCtrl.modifyTarget.edit_unit_type == 'draw', active: modifyKnowledgeCtrl.modifyTarget.edit_unit_type == 'draw'}" ng-click="modifyKnowledgeCtrl.toggleUnitType('draw')">
+													<i class="fa fa-fw fa-picture-o"></i> <span translate="G066" remark="塗鴉"></span>
+												</a>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div ng-if="modifyKnowledgeCtrl.modifyTarget.edit_unit_type=='video'" class="form-group">
+											<label class="col-xs-2 control-label">
+												<span translate="G053" remark="影片網址"></span>
+												<a href="javascript:;" data-html="true" data-title="{{modifyKnowledgeCtrl.modifyTarget.video_tooltip}}" data-toggle="tooltip" video-tooltip>(?)</a>
+												<div id="html5-video-preload"></div>
+											</label>
+											<div class="col-xs-10">
+												<div class="input-group">
+													<input type="text" class="form-control" ng-model="modifyKnowledgeCtrl.modifyTarget.edit_content_url" ng-change="modifyKnowledgeCtrl.parseUnitContent()">
+													<span ng-click="modifyKnowledgeCtrl.uploadVideo()" class="input-group-addon upload_video_button" style="background-color:transparent">
+														<i class="fa fa-fw fa-film"></i>上传
+													</span>
+													<span class="input-group-addon" style="background-color:transparent">
+														<i class="fa fa-fw fa-clock-o text-danger"></i> <span class="text-danger">{{modifyKnowledgeCtrl.modifyTarget.edit_content_time_desc}}</span>
+													</span>
+												</div>
+											</div>
+										</div>
+										<div ng-if="modifyKnowledgeCtrl.modifyTarget.edit_unit_type=='web'" class="form-group">
+											<label class="col-xs-2 control-label">
+												<span translate="G054" emark="網頁網址"></span>
+											</label>
+											<div class="col-xs-10">
+												<div class="input-group">
+													<input type="text" class="form-control" ng-model="modifyKnowledgeCtrl.modifyTarget.edit_content_url" ng-change="modifyKnowledgeCtrl.parseUnitContent()">
+													<span ng-click="modifyKnowledgeCtrl.uploadDoc()" class="input-group-addon upload_video_button" style="background-color:transparent"><i class="fa fa-fw fa-file-pdf-o"></i>上传</span>
+												</div>
+											</div>
+
+										</div>
+										<div ng-if="modifyKnowledgeCtrl.modifyTarget.edit_unit_type=='embed'">
+											<div class="form-group">
+												<label class="col-xs-2 control-label">
+													<span translate="G006" remark="嵌入碼"></span>
+												</label>
+												<div class="col-xs-10">
+													<div id="embed-content" style="height:200px"></div>
+												</div>
+											</div>
+										</div>
+										<div ng-if="modifyKnowledgeCtrl.modifyTarget.edit_unit_type=='video'||modifyKnowledgeCtrl.modifyTarget.edit_unit_type=='quiz'" class="form-group">
+											<label class="col-xs-2 control-label">
+												<span translate="G056" remark="隨機問題"></span>
+											</label>
+											<div class="col-xs-10">
+												<div>
+													<a class="btn btn-xs btn-primary pull-right" ng-click="modifyKnowledgeCtrl.sortableQuiz(modifyKnowledgeCtrl.modifyTarget)" ng-if="modifyKnowledgeCtrl.modifyTarget.quizzes.length>1">
+														<i class="fa fa-fw fa-bars"></i>
+													</a>
+													<a class="btn btn-sm btn-primary" ng-click="modifyKnowledgeCtrl.addQuiz(modifyKnowledgeCtrl.modifyTarget)">
+														<span translate="G057" remark="新增題目"></span>
+													</a>
+												</div>
+												<ul style="list-style-type:none;margin:8px 0;padding:0" quiz-list="{{modifyKnowledgeCtrl.modifyTarget.uqid}}">
+													<li ng-repeat="quiz in modifyKnowledgeCtrl.modifyTarget.quizzes" style="border-bottom:1px solid #ddd;padding:4px 0" ng-style="{'cursor':modifyKnowledgeCtrl.modifyTarget.sortableQuiz?'move':'default'}">
+														<div class="pull-right" style="margin-top:-2px">
+															<span class="text-primary" style="margin-right:8px" ng-if="modifyKnowledgeCtrl.modifyTarget.edit_unit_type=='video'">{{quiz.video_time_desc}}</span>
+															<a class="btn btn-default btn-xs" style="border:none;font-size:14px" ng-click="modifyKnowledgeCtrl.editQuiz(quiz)">
+																<span><i class="fa fa-fw fa-edit text-info"></i></span> <!-- <span class="text-info" translate="編輯"></span> -->
+															</a>
+														</div>
+														<div class="pull-left">
+															<span style="margin-right:4px" ng-if="modifyKnowledgeCtrl.modifyTarget.sortableQuiz">
+																<i class="fa fa-fw fa-sort"></i>
+															</span>
+														</div>
+														<div ng-style="{'max-width':modifyKnowledgeCtrl.modifyTarget.edit_unit_type=='quiz'?'480px':'420px'}" style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{quiz.full_content(quiz)}}</div>
+													</li>
+												</ul>
+											</div>
+										</div>
+										<div ng-if="modifyKnowledgeCtrl.modifyTarget.edit_unit_type=='poll'">
+											<div class="form-group">
+												<label class="col-xs-2 control-label">
+													<span translate="G058" remark="題目"></span>
+												</label>
+												<div class="col-xs-10">
+													<div id="poll-content" style="height:200px"></div>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-xs-2 control-label">
+												</label>
+												<div class="col-xs-10">
+													<div style="margin-bottom:10px">
+														<a class="btn btn-sm btn-primary" ng-click="modifyKnowledgeCtrl.addPollOption()">
+															<span translate="G059" remark="加入選項"></span>
+														</a>
+													</div>
+													<div ng-repeat="option in modifyKnowledgeCtrl.modifyTarget.edit_content_poll.options" style="margin-bottom:4px">
+														<div class="pull-right">
+															<label class="btn btn-default btn-sm">
+																<input type="checkbox" ng-model="option.latex"/>
+																<span>MathJax</span>
+															</label>
+															<a class="btn btn-danger btn-sm" ng-click="modifyKnowledgeCtrl.removePollOption(option)">
+																<i class="fa fa-fw fa-trash-o"></i>
+															</a>
+														</div>
+														<input type="text" class="form-control" style="width:400px" placeholder="{{'G028'|translate}}..." remark="選項" ng-model="option.item">
+													</div>
+												</div>
+											</div>
+										</div>
+										<div ng-if="modifyKnowledgeCtrl.modifyTarget.edit_unit_type=='qa'">
+											<div class="form-group">
+												<label class="col-xs-2 control-label">
+													<span translate="G058" remark="題目"></span>
+												</label>
+												<div class="col-xs-10">
+													<div id="qa-content" style="height:200px"></div>
+												</div>
+											</div>
+										</div>
+										<div ng-if="modifyKnowledgeCtrl.modifyTarget.edit_unit_type=='draw'">
+											<div class="form-group">
+												<label class="col-xs-2 control-label">
+													<span translate="G068" remark="背景圖片"></span>
+												</label>
+												<div class="col-xs-10">
+													<div class="input-group">
+														<input type="text" class="form-control" placeholder="{{'G029'|translate}}..." remark="圖片網址" ng-model="modifyKnowledgeCtrl.modifyTarget.edit_content_draw.background">
+														<!-- <span class="input-group-btn">
+															<a class="btn btn-primary" ng-click="modifyKnowledgeCtrl.chooseDrawBackgroundImage('draw-background')">
+																<i class="fa fa-fw fa-dropbox"></i> <span>Dropbox</span>
+															</a>
+														</span> -->
+														<span ng-click="modifyKnowledgeCtrl.uploadImage()" class="input-group-addon upload_video_button" style="background-color:transparent">
+														<i class="fa fa-fw fa-file-image-o"></i>上传</span>
+													</div>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-xs-2 control-label">
+													<span translate="G050" remark="塗鴉說明"></span>
+												</label>
+												<div class="col-xs-10">
+													<div id="draw-description" style="height:140px"></div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+							<div>
+								<div class="alert alert-danger" style="margin:0;padding:5px" ng-show="modifyKnowledgeCtrl.modifyTarget.saveMsg!=undefined">
+									<span ng-bind-html="modifyKnowledgeCtrl.modifyTarget.saveMsg"></span>
+								</div>
+								<div class="alert alert-danger" style="margin:0;padding:5px" ng-show="modifyKnowledgeCtrl.modifyTarget.deleteAlert">
+									<span translate="G051" remark="是否刪除此單元"></span>
+									<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="modifyKnowledgeCtrl.deleteUnit()">
+										<span translate="G003" remark="確定"></span>
+									</a>
+									<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="modifyKnowledgeCtrl.modifyTarget.deleteAlert=false">
+										<span translate="G004" remark="取消"></span>
+									</a>
+								</div>
+							</div>
+						</div>
+						<div class="panel-footer" style="text-align:right">
+							<a class="btn btn-default pull-left" ng-click="modifyKnowledgeCtrl.previewUnit()">
+								<i class="fa fa-fw fa-eye"></i> <span translate="G044" remark="預覽"></span>
+							</a>
+							<a class="btn btn-danger" ng-click="modifyKnowledgeCtrl.modifyTarget.deleteAlert=true" ng-show="modifyKnowledgeCtrl.modifyTarget.edit_type=='update'">
+								<i class="fa fa-fw fa-trash-o"></i> <span translate="G016" remark="刪除"></span>
+							</a>
+							<a class="btn btn-primary" ng-click="modifyKnowledgeCtrl.saveUnit()">
+								<i class="fa fa-fw fa-save"></i> <span translate="G023" remark="儲存"></span>
+							</a>
+						</div>
+					</div>
+					<div class="panel panel-default" ng-if="modifyKnowledgeCtrl.modifyTarget.previewUnit&&modifyKnowledgeCtrl.layout=='unit'">
+						<div class="panel-body">
+							<div ng-if="modifyKnowledgeCtrl.modifyTarget.edit_unit_type=='video'" style="height:374px" ng-bind-html="modifyKnowledgeCtrl.modifyTarget.edit_video_content"></div>
+							<div ng-if="modifyKnowledgeCtrl.modifyTarget.edit_unit_type=='web'" style="overflow:scroll;-webkit-overflow-scrolling:touch;height:374px">
+								<iframe _sandbox="allow-popups allow-forms allow-same-origin allow-scripts"
+									ng-src="{{modifyKnowledgeCtrl.modifyTarget.edit_content_url}}"
+									width="100%" height="99%" frameborder="0"></iframe>
+							</div>
+							<div ng-if="modifyKnowledgeCtrl.modifyTarget.edit_unit_type=='embed'">
+								<div style="height:374px" ng-bind-html="modifyKnowledgeCtrl.modifyTarget.edit_content_embed"></div>
+							</div>
+							<div ng-if="modifyKnowledgeCtrl.modifyTarget.edit_unit_type=='quiz'" style="overflow:auto;height:374px">
+								<div style="border:1px solid #ddd;padding:10px;margin:10px" ng-repeat="quiz in modifyKnowledgeCtrl.modifyTarget.quizzes">
+									<span class="pull-left">
+										<span ng-if="quiz.correct!=null">
+											(<i class="fa fa-fw" ng-class="{'fa-check text-success': quiz.correct, 'fa-times text-danger': !quiz.correct}"></i>)
+										</span>
+										<span><span ng-if="$index<9">0</span>{{$index+1}}.</span>
+									</span>
+									<div ng-bind-html="quiz.content"></div>
+									<div style="margin-top:20px">
+										<div ng-repeat="option in quiz.options">
+											<label class="checkbox" ng-if="quiz.quiz_type=='multi'" style="font-size:16px;cursor:pointer">
+												<input type="checkbox" name="{{quiz.uqid}}" ng-model="option.answer"/>
+												<span ng-if="!option.latex">{{option.item}}</span>
+												<span ng-if="option.latex" mathjax-bind="option.item"></span>
+											</label>
+											<label class="radio" ng-if="quiz.quiz_type=='single'" style="font-size:16px;cursor:pointer">
+												<input type="radio" name="{{quiz.uqid}}" value="{{option.value}}" ng-model="quiz.single"/>
+												<span ng-if="!option.latex">{{option.item}}</span>
+												<span ng-if="option.latex" mathjax-bind="option.item"></span>
+											</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div ng-if="modifyKnowledgeCtrl.modifyTarget.edit_unit_type=='poll'" style="overflow:auto;height:374px">
+								<div style="padding:10px">
+									<div ng-bind-html="modifyKnowledgeCtrl.modifyTarget.edit_content_poll.content"></div>
+									<div style="padding:10px">
+										<div ng-repeat="option in modifyKnowledgeCtrl.modifyTarget.edit_content_poll.options">
+											<label class="radio">
+												<input type="radio"/>
+												<span ng-if="!option.latex">{{option.item}}</span>
+												<span ng-if="option.latex" mathjax-bind="option.item"></span>
+											</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div ng-if="modifyKnowledgeCtrl.modifyTarget.edit_unit_type=='qa'" style="overflow:auto;height:374px">
+								<div ng-bind-html="modifyKnowledgeCtrl.modifyTarget.edit_content_qa"></div>
+							</div>
+							<div ng-if="modifyKnowledgeCtrl.modifyTarget.edit_unit_type=='draw'">
+								<div id="draw-board" style="height:374px;background:url({{modifyKnowledgeCtrl.modifyTarget.edit_content_draw.background}}) no-repeat">
+									<canvas></canvas>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div ng-if="modifyKnowledgeCtrl.layout=='quiz'" class="panel panel-primary">
+						<div class="panel-heading">
+							<a class="btn btn-primary btn-sm pull-right" style="border:none;margin:-5px 0" ng-click="modifyKnowledgeCtrl.editUnit(modifyKnowledgeCtrl.modifyTarget.parentUnit)">
+								<i class="fa fa-fw fa-times"></i>
+							</a>
+							<h3 class="panel-title">{{modifyKnowledgeCtrl.modifyTarget.parentUnit.name}}</h3>
+						</div>
+						<div class="panel-body">
+							<div>
+								<form class="form-horizontal">
+									<div class="form-group">
+										<label class="col-xs-2 control-label">
+											<span translate="G058" remark="題目"></span>
+										</label>
+										<div class="col-xs-10">
+											<div id="quiz-content" style="height:140px"></div>
+										</div>
+									</div>
+									<div class="form-group" ng-if="modifyKnowledgeCtrl.modifyTarget.parentUnit.edit_unit_type=='video'">
+										<label class="col-xs-2 control-label">
+											<span translate="G045" remark="影片時間"></span>
+										</label>
+										<div class="col-xs-10">
+											<input type="range" style="width:120px;vertical-align:middle;display:inline-block;margin-right:8px" min="0" max="{{(modifyKnowledgeCtrl.modifyTarget.parentUnit.content_time > 0) ? modifyKnowledgeCtrl.modifyTarget.parentUnit.content_time : modifyKnowledgeCtrl.modifyTarget.parentUnit.edit_content_time}}" step="1"
+												ng-model="modifyKnowledgeCtrl.modifyTarget.edit_video_time" ng-change="modifyKnowledgeCtrl.changeQuizVideoTime()"/>
+											<input type="text" style="width:30px;vertical-align:middle;display:inline-block"
+												ng-model="modifyKnowledgeCtrl.modifyTarget.edit_video_time_h" ng-change="modifyKnowledgeCtrl.changeQuizVideoTime2()"/>
+											<span>:</span>
+											<input type="text" style="width:30px;vertical-align:middle;display:inline-block"
+												ng-model="modifyKnowledgeCtrl.modifyTarget.edit_video_time_m" ng-change="modifyKnowledgeCtrl.changeQuizVideoTime2()"/>
+											<span>:</span>
+											<input type="text" style="width:30px;vertical-align:middle;display:inline-block"
+												ng-model="modifyKnowledgeCtrl.modifyTarget.edit_video_time_s" ng-change="modifyKnowledgeCtrl.changeQuizVideoTime2()"/>
+											<!-- <span class="text-info" style="font-size:16px;margin-left:8px">{{modifyKnowledgeCtrl.modifyTarget.edit_video_time_desc}}</span> -->
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-xs-2 control-label">
+											<span translate="G046" remark="解答"></span>
+										</label>
+										<div class="col-xs-10">
+											<div id="quiz-solution" style="height:140px"></div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-xs-2 control-label">
+										</label>
+										<div class="col-xs-10">
+											<div style="margin-bottom:10px">
+												<a class="btn btn-sm btn-primary" ng-click="modifyKnowledgeCtrl.addQuizOption()">
+													<span translate="G059" remark="加入選項"></span>
+												</a>
+											</div>
+											<div ng-repeat="option in modifyKnowledgeCtrl.modifyTarget.edit_options" style="margin-bottom:4px">
+												<div class="pull-right">
+													<label class="btn btn-default btn-sm">
+														<input type="checkbox" ng-model="option.correct"/>
+														<span translate="G018" remark="正解"></span>
+													</label>
+													<label class="btn btn-default btn-sm">
+														<input type="checkbox" style="margin-right:4px" ng-model="option.latex"/>
+														<span>MathJax</span>
+													</label>
+													<a class="btn btn-danger btn-sm" ng-click="modifyKnowledgeCtrl.removeQuizOption(option)">
+														<i class="fa fa-fw fa-trash-o"></i>
+													</a>
+												</div>
+												<input type="text" class="form-control" style="width:320px" placeholder="{{'G028'|translate}}..." remark="選項" ng-model="option.item">
+											</div>
+										</div>
+									</div>
+									<!-- <div class="form-group" ng-show="modifyKnowledgeCtrl.modifyTarget.edit_type=='update'">
+										<label class="col-xs-2 control-label">
+											<span translate="排序"></span>
+										</label>
+										<div class="col-xs-10">
+											<div class="btn-group">
+												<a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" style="width:60px">
+													<div>{{modifyKnowledgeCtrl.modifyTarget.edit_priority}}</div>
+												</a>
+												<ul class="dropdown-menu">
+													<li ng-repeat="priority in modifyKnowledgeCtrl.modifyTarget.priorities">
+														<a href="javascript:;" ng-click="modifyKnowledgeCtrl.modifyTarget.edit_priority=priority">
+															<div>{{priority}}</div>
+														</a>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</div> -->
+								</form>
+							</div>
+							<div>
+								<div class="alert alert-danger" style="margin:0;padding:5px" ng-show="modifyKnowledgeCtrl.modifyTarget.saveMsg!=undefined">
+									<span ng-bind-html="modifyKnowledgeCtrl.modifyTarget.saveMsg"></span>
+								</div>
+								<div class="alert alert-danger" style="margin:0;padding:5px" ng-show="modifyKnowledgeCtrl.modifyTarget.deleteAlert">
+									<span translate="G019" remark="是否刪除此題目"></span>
+									<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="modifyKnowledgeCtrl.deleteQuiz()">
+										<span translate="G003" remark="確定"></span>
+									</a>
+									<a class="btn btn-link" style="padding:0;margin-left:4px" ng-click="modifyKnowledgeCtrl.modifyTarget.deleteAlert=false">
+										<span translate="G004" remark="取消"></span>
+									</a>
+								</div>
+							</div>
+						</div>
+						<div class="panel-footer" style="text-align:right">
+							<a class="btn btn-default pull-left" ng-click="modifyKnowledgeCtrl.previewQuizContent()"><i class="fa fa-fw fa-eye"></i> <span translate="G044" remark="預覽"></span></a>
+							<a class="btn btn-danger" ng-click="modifyKnowledgeCtrl.modifyTarget.deleteAlert=true" ng-show="modifyKnowledgeCtrl.modifyTarget.edit_type=='update'">
+								<i class="fa fa-fw fa-trash-o"></i> <span translate="G016" remark="刪除"></span>
+							</a>
+							<a class="btn btn-primary" ng-click="modifyKnowledgeCtrl.saveQuiz()">
+								<i class="fa fa-fw fa-save"></i> <span translate="G023" remark="儲存"></span>
+							</a>
+						</div>
+					</div>
+					<div class="panel panel-default" ng-if="modifyKnowledgeCtrl.modifyTarget.previewQuiz">
+						<div class="panel-body">
+							<div ng-bind-html="modifyKnowledgeCtrl.modifyTarget.edit_content"></div>
+							<div ng-repeat="option in modifyKnowledgeCtrl.modifyTarget.edit_options">
+								<label class="checkbox" ng-if="modifyKnowledgeCtrl.modifyTarget.quiz_type=='multi'">
+									<input type="checkbox"/>
+									<span ng-if="!option.latex">{{option.item}}</span>
+									<span ng-if="option.latex" mathjax-bind="option.item"></span>
+								</label>
+								<label class="radio" ng-if="modifyKnowledgeCtrl.modifyTarget.quiz_type=='single'">
+									<input type="radio"/>
+									<span ng-if="!option.latex">{{option.item}}</span>
+									<span ng-if="option.latex" mathjax-bind="option.item"></span>
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- preview knowledge -->
+		<div ng-if="modifyKnowledgeCtrl.preview">
+			<div id="drawDescriptionModal" class="modal fade" style="z-index:1480">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-body">
+							<div ng-bind-html="modifyKnowledgeCtrl.previewTarget.content.description" style="width:100%;height:100%"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="previewModal" class="modal fade bs-modal-lg">
+				<div class="modal-dialog modal-lg" style="height:90%">
+					<div class="modal-content" style="height:100%">
+						<div style="height:100%">
+							<div ng-if="modifyKnowledgeCtrl.previewTarget.unit_type=='video'" style="height:100%">
+								<div ng-if="modifyKnowledgeCtrl.previewTarget.sub_type=='audio'" style="word-break:break-all;height:calc(100% - 90px)" ng-bind-html="modifyKnowledgeCtrl.previewTarget.description"></div>
+								<div id="previewUnitVideoContainer" style="height:100%"></div>
+							</div>
+							<div ng-if="modifyKnowledgeCtrl.previewTarget.unit_type=='web'" style="height:100%;overflow:auto;-webkit-overflow-scrolling:touch">
+								<iframe _sandbox="allow-popups allow-forms allow-same-origin allow-scripts"
+									ng-src="{{modifyKnowledgeCtrl.previewTarget.content_url}}"
+									width="100%" height="99%" frameborder="0"></iframe>
+							</div>
+							<div ng-if="modifyKnowledgeCtrl.previewTarget.unit_type=='embed'" style="height:100%;overflow:auto;-webkit-overflow-scrolling:touch" ng-bind-html="modifyKnowledgeCtrl.previewTarget.content"></div>
+							<div ng-if="modifyKnowledgeCtrl.previewTarget.unit_type=='quiz'" style="height:100%;overflow:auto">
+								<div style="padding:10px">
+									<div style="border:1px solid #ddd;margin-bottom:10px;padding:10px" ng-repeat="quiz in modifyKnowledgeCtrl.previewTarget.quizzes">
+										<span class="pull-left">
+											<span ng-if="quiz.correct!=null">
+												(<i class="fa fa-fw" ng-class="{'fa-check text-success': quiz.correct, 'fa-times text-danger': !quiz.correct}"></i>)
+											</span>
+											<span><span ng-if="$index<9">0</span>{{$index+1}}.</span>
+										</span>
+										<div ng-bind-html="quiz.content"></div>
+										<div style="margin-top:20px">
+											<div ng-repeat="option in quiz.options">
+												<label class="checkbox" ng-if="quiz.quiz_type=='multi'" style="font-size:16px;cursor:pointer">
+													<input type="checkbox" name="{{quiz.uqid}}" ng-model="option.answer"/>
+													<span ng-if="!option.latex">{{option.item}}</span>
+													<span ng-if="option.latex" mathjax-bind="option.item"></span>
+												</label>
+												<label class="radio" ng-if="quiz.quiz_type=='single'" style="font-size:16px;cursor:pointer">
+													<input type="radio" name="{{quiz.uqid}}" value="{{option.value}}" ng-model="quiz.single"/>
+													<span ng-if="!option.latex">{{option.item}}</span>
+													<span ng-if="option.latex" mathjax-bind="option.item"></span>
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div ng-if="modifyKnowledgeCtrl.previewTarget.unit_type=='poll'" style="height:100%;overflow:auto">
+								<div style="padding:10px">
+									<h3 style="padding:30px">
+										<div ng-bind-html="modifyKnowledgeCtrl.previewTarget.content.content"></div>
+										<div style="margin-top:20px">
+											<label class="checkbox" style="cursor:pointer" ng-repeat="option in modifyKnowledgeCtrl.previewTarget.content.options">
+												<input type="checkbox" name="{{modifyKnowledgeCtrl.previewTarget.uqid}}" ng-model="option.answer"/>
+												<span ng-if="!option.latex">{{option.item}}</span>
+												<span ng-if="option.latex" mathjax-bind="option.item"></span>
+											</label>
+										</div>
+									</h3>
+								</div>
+							</div>
+							<div ng-if="modifyKnowledgeCtrl.previewTarget.unit_type=='qa'" style="height:100%;overflow:auto">
+								<div style="padding:10px">
+									<h3><div ng-bind-html="modifyKnowledgeCtrl.previewTarget.content"></div></h3>
+									<div style="margin-top:20px">
+										<div id="qa-result" style="height:200px"></div>
+									</div>
+								</div>
+							</div>
+							<div ng-if="modifyKnowledgeCtrl.previewTarget.unit_type=='draw'" style="width:100%;height:100%">
+								<div id="draw-board" ng-style="{background:modifyKnowledgeCtrl.previewTarget.backgroundImage}" style="width:100%;height:100%;background:rgba(0,0,0,0);bottom:0">
+									<canvas></canvas>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-xs-3">
+					<div class="panel panel-default">
+						<div class="panel-body" style="padding:10px">
+							<div>
+								<img ng-src="{{modifyKnowledgeCtrl.target.logo}}" style="width:191px;height:191px"/>
+							</div>
+							<div style="margin-top:10px">
+								<a class="btn btn-danger btn-block">
+									<span translate="G012" remark="訂閱"></span>
+								</a>
+							</div>
+							<div style="margin-top:10px;padding:10px">
+								<img src="http://chart.apis.google.com/chart?cht=qr&chl={{modifyKnowledgeCtrl.target.share_page}}&chs=170x170"/>
+								<div style="font-size:16px;margin-left:20px">
+									<h4><i class="fa fa-fw fa-user"></i> 999</h4>
+									<div class="text-success">
+										<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+										<span style="margin-left:16px">111</span>
+									</div>
+									<div class="text-info">
+										<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i>
+										<span style="margin-left:16px">222</span>
+									</div>
+									<div class="text-primary">
+										<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>
+										<span style="margin-left:16px">333</span>
+									</div>
+									<div class="text-warning">
+										<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>
+										<span style="margin-left:16px">444</span>
+									</div>
+									<div class="text-danger">
+										<i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>
+										<span style="margin-left:16px">555</span>
+									</div>
+								</div>
+							</div>
+							<div style="margin-top:20px">
+								<span>
+									<span class="text-muted"><span translate="G007" remark="編輯者"></span></span>
+								</span>
+								<div>
+									<ul class="nav">
+										<li ng-repeat="item in modifyKnowledgeCtrl.editors">
+											<a href="{{item.page}}" target="_blank" style="padding:6px">
+												<img ng-src="{{item.photo}}" style="float:left;width:24px;height:24px;margin-top:-2px;border:1px solid #ddd" ng-if="item.show"/>
+												<img ng-src="{{item.photo}}" style="float:left;width:24px;height:24px;margin-top:-2px;border:1px solid #f00" ng-if="!item.show"/>
+												<span style="padding:6px">{{item.full_name}}</span>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div style="margin-top:20px" ng-show="modifyKnowledgeCtrl.target.groups.length>0">
+								<span>
+									<span class="text-muted"><span translate="G038" remark="加到我的群組"></span></span>
+								</span>
+								<div>
+									<ul class="nav">
+										<li ng-repeat="item in modifyKnowledgeCtrl.target.groups">
+											<a href="javascript:;" style="padding:1px 6px">
+												<div class="text-muted" style=";text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-xs-9">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<h2 style="margin:0">{{modifyKnowledgeCtrl.target.name}}</h2>
+							<div style="margin-top:20px" ng-bind-html="modifyKnowledgeCtrl.target.description"></div>
+						</div>
+					</div>
+					<div>
+						<div>
+							<a class="btn btn-primary btn-sm" ng-click="modifyKnowledgeCtrl.togglePreview()">
+								<span translate="G037" remark="編輯"></span>
+							</a>
+							<div class="btn-group pull-right">
+								<a class="btn btn-sm btn-default" ng-class="{'btn-primary': modifyKnowledgeCtrl.viewType=='thumbnail'}" ng-click="modifyKnowledgeCtrl.viewType='thumbnail'"><i class="fa fa-fw fa-th-large"></i></a>
+								<a class="btn btn-sm btn-default" ng-class="{'btn-primary': modifyKnowledgeCtrl.viewType=='list'}" ng-click="modifyKnowledgeCtrl.viewType='list'"><i class="fa fa-fw fa-th-list"></i></a>
+							</div>
+						</div>
+						<div style="margin-top:10px" ng-if="modifyKnowledgeCtrl.viewType=='thumbnail'">
+							<div class="panel panel-primary" ng-repeat="chapter in modifyKnowledgeCtrl.chapters">
+								<div class="panel-heading">
+									<h3 class="panel-title">{{chapter.name}}</h3>
+								</div>
+								<div class="panel-body">
+									<div class="row">
+										<div class="col-xs-4" ng-repeat="unit in chapter.units">
+											<div class="thumbnail" ng-if="unit.preview">
+												<div class="cover" style="width:200px;height:150px;position:absolute" ng-click="modifyKnowledgeCtrl.openPreviewTarget(unit)"></div>
+												<div ng-if="unit.unit_type=='video'">
+													<img style="width:100%;height:150px" ng-src="{{unit.thumbnail_image}}" ng-if="unit.thumbnail_image!=undefined"/>
+													<img style="width:100%;height:150px" ng-src="{{unit.content_url2}}" ng-if="unit.thumbnail_image==undefined"/>
+												</div>
+												<div style="height:150px;text-align:center" ng-if="unit.unit_type=='web'">
+													<img style="width:100%;height:150px" ng-src="{{unit.content_url2}}"/>
+												</div>
+												<div style="height:150px;text-align:center;padding:20px" ng-if="unit.unit_type!='video'&&unit.unit_type!='web'">
+													<i class="fa fa-code" style="font-size:8em" ng-if="unit.unit_type=='embed'"></i>
+													<i class="fa fa-pencil-square-o" style="font-size:8em" ng-if="unit.unit_type=='quiz'"></i>
+													<i class="fa fa-thumbs-o-up" style="font-size:8em" ng-if="unit.unit_type=='poll'"></i>
+													<i class="fa fa-question" style="font-size:8em" ng-if="unit.unit_type=='qa'"></i>
+													<i class="fa fa-picture-o" style="font-size:8em" ng-if="unit.unit_type=='draw'"></i>
+												</div>
+												<div style="padding:10px">
+													<div class="text-primary" style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{unit.name}}</div>
+												</div>
+											</div>
+											<div class="thumbnail" ng-if="!unit.preview">
+												<div style="width:100%;height:150px" ng-if="unit.unit_type=='video'">
+													<img style="width:100%;height:150px" ng-src="{{unit.thumbnail_image}}"/>
+												</div>
+												<div style="height:150px;text-align:center;padding:20px 10px" ng-if="unit.unit_type!='video'">
+													<i class="fa fa-list-alt" style="font-size:8em" ng-if="unit.unit_type=='web'"></i>
+													<i class="fa fa-code" style="font-size:8em" ng-if="unit.unit_type=='embed'"></i>
+													<i class="fa fa-pencil-square-o" style="font-size:8em" ng-if="unit.unit_type=='quiz'"></i>
+													<i class="fa fa-thumbs-o-up" style="font-size:8em" ng-if="unit.unit_type=='poll'"></i>
+													<i class="fa fa-question" style="font-size:8em" ng-if="unit.unit_type=='qa'"></i>
+													<i class="fa fa-picture-o" style="font-size:8em" ng-if="unit.unit_type=='draw'"></i>
+												</div>
+												<div style="padding:10px">
+													<div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{unit.name}}</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div style="margin-top:10px" ng-if="modifyKnowledgeCtrl.viewType=='list'">
+							<div class="panel panel-primary" ng-repeat="chapter in modifyKnowledgeCtrl.chapters">
+								<div class="panel-heading">
+									<h3 class="panel-title">{{chapter.name}}</h3>
+								</div>
+								<div class="panel-body">
+									<table class="table table-condensed table-hover" style="margin:0">
+										<tbody>
+											<tr style="cursor:pointer" ng-repeat="unit in chapter.units">
+												<td style="width:20px;border:0;border-bottom:1px solid #ddd">
+													<span>
+														<i class="fa fa-fw" ng-class="{
+															'fa-film': unit.unit_type == 'video',
+															'fa-link': unit.unit_type == 'web',
+															'fa-code': unit.unit_type == 'embed',
+															'fa-pencil-square-o': unit.unit_type == 'quiz',
+															'fa-thumbs-o-up': unit.unit_type == 'poll',
+															'fa-question': unit.unit_type == 'qa',
+															'fa-picture-o': unit.unit_type == 'draw'
+															}"></i>
+													</span>
+												</td>
+												<td style="border:0;border-bottom:1px solid #ddd">
+													<a ng-if="unit.preview" class="btn btn-link" style="padding:0;text-decoration:none" ng-click="modifyKnowledgeCtrl.openPreviewTarget(unit)">
+														<div style="max-width:600px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{unit.name}}</div>
+													</a>
+													<a ng-if="!unit.preview" class="btn btn-link" style="padding:0;text-decoration:none">
+														<div class="text-muted" style="max-width:600px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{unit.name}}</div>
+													</a>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

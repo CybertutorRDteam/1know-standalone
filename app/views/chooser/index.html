@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>1know File Chooser</title>
+    <link rel="stylesheet" href="/library/bootstrap/css/bootstrap.min.css"></link>
+    <link rel="stylesheet" type="text/css" href="/library/font-awesome/css/font-awesome.min.css"></link>
+    <link rel="stylesheet" type="text/css" href="/library/html5-file-uploader/styles.css" />
+    <style type="text/css">
+        body {
+            width: 100%;
+            margin-top: -20px;
+            font-family: Microsoft JhengHei, arial, helvetica, sans-serif;
+        }
+        #dropped-files tr td {
+            vertical-align: middle;
+        }
+        .tab {
+            margin-bottom: 20px;
+            position: relative;
+            background: #fff;
+            overflow: hidden;
+            margin: 0 auto;
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+        .tabs {
+            position: relative;
+            overflow: hidden;
+            margin: 0;
+        }
+        .tabs li {
+            float: left;
+            line-height: 50px;
+            overflow: hidden;
+            padding: 0;
+            position: relative;
+        }
+        .tabs a {
+            border:4px solid white;
+            text-align: center;
+            background-color: #FFF;
+            color: #000;
+            font-weight: 500;
+            display: block;
+            letter-spacing: 0;
+            outline: none;
+            padding: 0 20px;
+            text-decoration: none;
+            -webkit-transition: all 0.2s ease-in-out;
+            -moz-transition: all 0.2s ease-in-out;
+            transition: all 0.2s ease-in-out;
+        }
+        .tabs a:hover {
+            border-bottom: 4px solid #70B1E8;
+            background-color: #FFF;
+        }
+        a.selected {
+            font-weight: bold;
+            border-bottom: 4px solid #428bca;
+            background-color: #FFF;
+        }
+        .tabs_item {
+            display: none;
+            padding: 30px 0;
+        }
+        .tabs_item h4 {
+            font-weight: bold;
+            color: #87AFD3;
+            font-size: 20px;
+        }
+        .tabs_item img {
+            width: 200px;
+            float: left;
+            margin-right: 30px;
+        }
+        .tabs_item:first-child {
+            display: block;
+        }
+        .current a {
+            color: #000;
+        }
+        .uploadimage-dragndrop {
+            border: 2px dashed #DDD;
+            margin: 20px 0;
+            padding: 50px 20px;
+            text-align: center;
+        }
+        .uploadimage-dragndrop.hover {
+            border: 2px dashed #428bca;
+            color: #428bca;
+            font-style: #428bca;
+        }
+        .mysearch {
+            background-color: #e1e1e1;
+            width: 100%;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            margin-bottom: auto;
+            margin-top: 5px;
+            padding: 15px 15px;
+        }
+        .mysearchbar {
+            width: 362px;
+            height: 27px;
+        }
+        .mytable {
+            border: 2px #000;
+            width: 100%;
+            margin: 0 auto;
+            font-size: 13px;
+        }
+        .mytable-title {
+            background: #eee;
+        }
+        .mybottombar {
+            border-top: 1px solid #e5e5e5;
+            height: 67px;
+            background-color: #FFF;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+        .mytable tr td {
+            cursor: pointer;
+        }
+        .mytable tbody>tr>td {
+            vertical-align: middle;
+        }
+        .list-item {
+            border-left: 4px solid #FFF;
+        }
+        .list-item:hover {
+            border-left: 4px solid #428bca;
+        }
+        .list-item-click {
+            background-color: #428bca;
+            color: #FFF;
+        }
+        .mynavbar {
+            box-shadow: 0 0 4px rgba(0, 0, 0, .14), 0 4px 8px rgba(0, 0, 0, .28);
+        }
+        .mylist {
+            overflow-y: auto;
+            height: 360px;
+            width: 100%;
+        }
+    </style>
+    <script type="text/javascript" src="/library/jquery/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="/library/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/library/angularjs/angular.js"></script>
+    <script type="text/javascript" src="/library/html5-file-uploader/html5Upload.js"></script>
+    <script type="text/javascript" src="/library/myersdaily.org/md5.js"></script>
+    <script type="text/javascript" src="/demo/js/plupload/plupload.full.min.js"></script>
+    <script type="text/javascript" src="/demo/js/plupload/i18n/zh_CN.js"></script>
+    <script type="text/javascript" src="/demo/js/ui.js"></script>
+    <script type="text/javascript" src="/demo/js/qiniu.js"></script>
+</head>
+<body>
+    <div layout="vertical" layout-fill ng-app="fileChooser" ng-controller="mainCtrl">
+        <div class="mynavbar" style="margin-bottom:auto;">
+            <div style="margin:20px;height:20px;">
+                <div style="font-size:20px;padding:10px;">上传{{config.type.lang}}到 {{config.unit.name}} 单元</div>
+            </div>
+            <div>
+                <ul class="tabs" style="padding-left: 0px;">
+                    <li ng-show="config.type.local">
+                        <a ng-class="{true:'selected'}[action=='uploader']" ng-click="action='uploader'">添加文件</a>
+                    </li>
+                    <li ng-show="config.type.konzesys.activate">
+                        <a ng-class="{true:'selected'}[action=='konzesys']" ng-click="action='konzesys'">控智</a>
+                    </li>
+                    <li>
+                        <a ng-class="{true:'selected'}[action=='qiniu']" ng-click="action='qiniu'">七牛</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="fileUpload" ng-show="action=='uploader'" ng-controller="uploaderCtrl" style="margin:20px;">
+            <%= form_tag({:action=>:uploadFile}, :multipart => false) do %>
+                <input type="file" style="display:none;" name="upload" id="upload-input" />
+            <% end %>
+            <div id="dragndropimage" class="uploadimage-dragndrop">
+                <!--ProgressBar-->
+                <div ng-repeat="u in uploads">
+                    <div class="progress progress-striped" ng-class="{'uploadimage-uploadcompleted': u.uploadSize == u.fileSize }">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;" ng-style="{ width: u.progress + '%' }"></div>
+                        </div>
+                        <div class="progress">
+                            <strong>{{u.fileName}}</strong>
+                            <span>{{formatFileSize(u.fileSize)}}</span>
+                        </div>
+                    </div>
+                </div>
+                <!--Text-->
+                <div class="uploadimage-text" style="font-size: 20px;">拖拽到此上传</div>
+                <div style="font-size: 20px;color: #838383;">或</div>
+                <button class="btn btn-primary" style="margin:5px;" onclick="$('#upload-input').click();">添加文件</button>
+            </div>
+        </div>
+        <div ng-show="action=='konzesys'" ng-controller="konzesysCtrl" style="margin:20px;">
+            {{errorMsg}}
+            <div ng-show="page == 'login'">
+                <form class="navbar-form navbar-left" role="search">
+                    <input type="text" class="form-control" placeholder="account" ng-model="account">
+                    <input type="password" class="form-control" placeholder="password" ng-model="password">
+                    <button class="btn btn-default" style="width:75px;" ng-click="getVideoList()">登入</button>
+                </form>
+            </div>
+            <!-- <iframe id="frmTempVideo" style="visibility:hidden;" src={{tempVideoSrc}} onload="alert(this.src);"></iframe> -->
+            <div ng-show="page == 'list'">
+                 <div>
+                <form class="navbar-form navbar-left mysearch" role="search">
+                    <div class="form-group">
+                        <input type="text" class="form-control mysearchbar" placeholder="search" ng-model="filter">
+                    </div>
+                    <!-- <button class="btn btn-default glyphicon glyphicon-search" style="width:75px;"></button> -->
+                </form>
+                <table class="table mytable">
+                    <thead>
+                        <tr class="mytable-title">
+                            <th colspan="2" style="padding-left:25px;">档案名</th>
+                            <!-- <th style="width:205px;" id="th-progress">檔案大小</th>
+                            <th style="width:310px;">上傳時間</th> -->
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="mylist">
+                <table class="table mytable">
+                    <tbody>
+                        <tr ng-click="select(item)" ng-class="{'list-item-click':item == selectedItem }" ng-repeat="item in videolist | filter:filter" id="item" class="list-item">
+
+                            <td>{{item.title}}</td>
+                            <!-- <td>
+                                <span>{{formatFileSize(item.file_size)}}</span>
+                            </td>
+                            <td>{{item.updated_at}}</td> -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="mybottombar">
+                <div style="padding:10px;margin:5px;">
+                    <button class="btn btn-primary dropdown-toggle" ng-show="selectedItem.title" ng-click="success()">选取</button>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div id="qiniuUpload" ng-show="action=='qiniu'" ng-controller="qiniuCtrl" style="margin:20px;" ng-init="init()">
+            {{message}}
+            <div ng-show="page == 'setkey'">
+                <form>
+                    <div class="form-group">
+                        <label for="access_key">Access Key</label>
+                        <input type="text" class="form-control" id="access_key" name="access_key" ng-model="access_key" placeholder="Access Key">
+                    </div>
+                    <div class="form-group">
+                        <label for="secret_key">Secret Key</label>
+                        <input type="text" class="form-control" id="secret_key" name="secret_key" ng-model="secret_key" placeholder="Secret Key">
+                    </div>
+                    <div class="form-group">
+                        <label for="domain">七牛域名</label>
+                        <input type="text" class="form-control" id="domain" name="domain" ng-model="domain" placeholder="http://qiniu-plupload.qiniudn.com/">
+                    </div>
+                    <button class="btn btn-primary" ng-click="setQiniuKey()">设定</button>
+                </form>
+            </div>
+            <div ng-show="page == 'upload'">
+                <div id="fsUploadChooser">
+                    <div class="btn-group" role="group">
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                选择空间
+                                <span ng-show="bucketLoadState=='loading'">(读取中...)</span>
+                                <span ng-show="bucketLoadState=='fail'">(读取失败)
+                                    <a href="javascript:;" ng-click="getBuckets()"><i class="fa fa-refresh"></i></a>
+                                </span>
+                                <span ng-show="bucketLoadState=='empty'">(尚未建立空间)</span>
+                                <span ng-show="bucket">({{bucket}})</span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li ng-repeat="bucket in buckets"><a href="javascript:;" ng-click="changeBucket(bucket)">{{bucket}}</a></li>
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-default" ng-click="changePage('setkey')">变更设定</button>
+                    </div>
+                    <div ng-show="bucket">
+                        <div id="dragndropqiniu" class="uploadimage-dragndrop">
+                            <div class="uploadimage-text" style="font-size: 20px;">拖拽到此上传</div>
+                            <div style="font-size: 20px;color: #838383;">或</div>
+                            <button class="btn btn-primary" style="margin:5px;" id="pickfiles">添加文件</button>
+                        </div>
+                        <div id="qiniufiles" ng-hide="true">
+                            <ul>
+                                <li ng-repeat="item in lists">
+                                    {{item.fsize}},
+                                    {{item.key}},
+                                    {{item.mimeType}},
+                                    {{item.putTime}}
+                                </li>
+                            </ul>
+                            <span ng-show="listLoadState=='loading'">读取中...</span>
+                            <span ng-show="listLoadState=='fail'">读取失败
+                                <a href="javascript:;" ng-click="getLists()"><i class="fa fa-refresh"></i></a>
+                            </span>
+                            <span ng-show="listLoadState=='empty'">尚未上传档案</span>
+                            <a href="javascript:;" ng-show="marker" ng-click="getLists(marker)">more</a>
+                        </div>
+                    </div>
+                </div>
+                <div id="fsUploadProgress"></div>
+            </div>
+        </div>
+    </div>`
+    <script type="text/javascript">
+        'use strict';
+        var app = angular.module('fileChooser', [])
+            .config(function($httpProvider){
+                $httpProvider.defaults.headers.post = {
+                    'Content-Type': 'text/plain'
+                };
+            })
+            .factory('$utility', [function(){
+                return {
+                    BASE_URL: location.origin,
+                    SERVICE_URL: [location.origin, '/private'].join('')
+                }
+            }])
+            .controller('mainCtrl', ['$scope','$location',function($scope,$location) {
+                $scope.action = "qiniu";
+                $scope.config = {};
+                $scope.config.unit = {
+                    name : "<%=@unit['name']%>" || '' ,
+                    uqid : "<%=@params['unit_uqid']%>" || '',
+                    type : "<%=@params['type']%>" || 'video',
+                };
+                var types = {
+                    'doc': {
+                        local: {
+                            exts: ['.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.pdf'],
+                        },
+                        lang: "文档",
+                    },
+                    'video': {
+                        local: {
+                            exts: ['.mp4'],
+                        },
+                        lang: "视频",
+                        konzesys: {
+                            activate: "<%=@konzesys['activate']%>",
+                            url : "<%=@konzesys['url']%>",
+                        },
+                    },
+                    'image': {
+                        local: {
+                            exts: ['.jpg', '.png'],
+                        },
+                        lang: "图片",
+                    },
+                };
+                $scope.config.type = types[$scope.config.unit.type];
+                $scope.windowPostMessage = function(data){
+                    if (window.opener && window.opener.postMessage){
+                        window.opener.postMessage(data,[$location.protocol(), '://', $location.host(),':',$location.port()].join(''));
+                    } else if (window.parent && window.parent.postMessage) {
+                        window.parent.postMessage(data,[$location.protocol(), '://', $location.host(),':',$location.port()].join(''));
+                    }
+                    window.close();
+                }
+                $scope.formatFileSize = function(sizeInBytes) {
+                    function trimTrailingZeros(number) {
+                        return number.toFixed(1).replace(/\.0+$/, '');
+                    }
+                    var kiloByte = 1024,megaByte = Math.pow(kiloByte, 2),gigaByte = Math.pow(kiloByte, 3);
+                    if (sizeInBytes < kiloByte) {
+                        return sizeInBytes + ' B';
+                    }
+                    if (sizeInBytes < megaByte) {
+                        return trimTrailingZeros(sizeInBytes / kiloByte) + ' KB';
+                    }
+                    if (sizeInBytes < gigaByte) {
+                        return trimTrailingZeros(sizeInBytes / megaByte) + ' MB';
+                    }
+                    return trimTrailingZeros(sizeInBytes / gigaByte) + ' GB';
+                }
+            }])
+            .controller('uploaderCtrl', ['$scope', function($scope) {
+                $scope.uploads = [];
+                if (html5Upload.fileApiSupported()) {
+                    html5Upload.initialize({
+                        uploadUrl: '/chooser/upload_file',
+                        dropContainer: document.getElementById('dragndropimage'),
+                        inputField: document.getElementById('upload-input'),
+                        key: 'File',
+                        data: {
+                            authenticity_token: $('#fileUpload form input[name="authenticity_token"]').val(),
+                            type : $scope.config.unit.type,
+                            unit_uqid : $scope.config.unit.uqid ,
+                        },
+                        maxSimultaneousUploads: 1,
+                        onFileAdded: function(file) {
+                            var file_ext = '.'+file.file.name.split('.').pop();
+                            if ( !$scope.config.unit.uqid ) {
+                                alert('未选择单元');
+                                return;
+                            }
+                            if ( $scope.config.type.local.exts.indexOf(file_ext) === -1 ) {
+                                alert('上传文档格式不符');
+                                return;
+                            }
+                            $scope.uploads.push(file);
+                            $scope.$digest();
+                            file.on({
+                                onCompleted: function(response) {
+                                    $scope.$digest();
+                                    $scope.windowPostMessage(JSON.stringify({data: JSON.parse(response), type: 'success'}));
+                                },
+                                onProgress: function(progress, fileSize, uploadedBytes) {
+                                    file.progress = progress;
+                                    $scope.$digest();
+                                }
+                            });
+                        }
+                    });
+                }
+            }])
+            .factory('konzesysFactory', ['$http','$q', function($http,$q){
+                return function(){
+                    var config = {url:'test_url'};
+                    var user = { token : '' ,
+                        account : '',
+                        md5password : '',
+                    };
+                    var retriesCount = 0;
+                    function handleResponse(res){
+                        // check success-property of returned data
+                        if (res.data.code != 0 ) {
+                            // if ( res.data.code ) {
+                            //     //is token not alive
+                            //     //need to wait login compulete
+                            //     user.token = '';
+                            //     return doGet(res.data);
+                            // } else {
+                            //     //has error
+                                return $q.reject(res.data);
+                            // }
+                        } else {
+                            //success
+                            return res.data;
+                        }
+                    };
+                    function doGet(data){
+                        retriesCount++ ;
+                        //1.login response
+                        if (data && data.data && data.data.code != 0)
+                            return $q.reject(data.data);
+                        else if ( retriesCount > 3 )
+                            //network error
+                            return $q.reject(data||{info:'发生未知错误'});
+                        else if ( !user.token )
+                            if (config.activate)
+                                return login().then(doGet,doGet); //trigger login
+                            else
+                                return $q.reject(data||{info:'本功能未启动'});
+                        else
+                            return $http.post(config.url+'getVideoList',angular.toJson({token:user.token, "usergroup": 1})
+                                ).then(handleResponse,doGet);
+                    };
+                    function login(){
+                        var deferred = $q.defer();
+                        //if ( !user.account || !user.md5password )
+                        //   deferred.reject({info:'未输入帐号/密码'});
+                        //else {
+                            $http.post(config.url+'login',
+                                angular.toJson({username:user.account,password:user.md5password,isApi:0})
+                            ).then(function(res){
+                                if (res.data.code != 0)/*login failed*/
+                                    deferred.reject(res.data);
+                                //update token
+                                user.token = res.data.token;
+                                deferred.resolve();
+                            },function(){
+                                /*network error*/
+                                deferred.reject({info:'网络错误'});
+                            });
+                        //}
+                        return deferred.promise;
+                    }
+                    return {
+                        getVersionInfo : function(){
+                            return $http.post(config.url+'getVersionInfo');
+                        },
+                        setConfig : function(c){
+                            config = angular.copy(c);
+                        },
+                        setUser : function(account,md5password){
+                            user.account = account ;
+                            user.md5password = md5password ;
+                            user.token = '';
+                        },
+                        login : login,
+                        logout : function(token){
+                            user.token = '';
+                            return $http.post(config.url+'logout',angular.toJson({token:user.token}));
+                        },
+                        //data :{ token : string,
+                        //        keyword : string,
+                        //}
+                        getVideoInfo : function(data){
+                            retriesCount = 0;
+                            return doGet(data);
+                        },
+                        saveToDb : function(){
+                            return $http({
+                                method: 'POST',
+                                url: '/chooser/set_konzesys_account',
+                                data: angular.toJson({account:user.account,password:user.md5password}),
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            });
+                            //return $http.post('/chooser/set_konzesys_account',);
+                        }
+                    };
+                }
+            }])
+            .controller('konzesysCtrl', ['$scope','konzesysFactory', function($scope,konzesysFactory) {
+                /*
+                $scope.user = {
+                    account : "<%=@konzesys_account.account%>",
+                    md5password : "<%=@konzesys_account.password%>",
+                };
+                */
+                $scope.user = {
+                    account : "kevin",
+                    md5password : "e10adc3949ba59abbe56e057f20f883e"
+                }
+                var ks = konzesysFactory();
+                //var first_time = $scope.user.account ? true : false ;  //直接使用系統帳號登入，不再由使用者輸入帳密。
+                var first_time = false;
+                ks.setConfig($scope.config.type.konzesys);
+                ks.setUser($scope.user.account,$scope.user.md5password);
+
+                //default value
+                $scope.page = "list";
+                $scope.videolist = [];
+                $scope.account = $scope.user.account;
+                $scope.passowrd = "";
+
+                var failed = function(data){
+                    //$scope.page = "login";
+                    $scope.list = [];
+                    $scope.password = "";
+                    $scope.errorMsg = data.info ;
+                };
+
+                $scope.getVideoList = function(keyword){
+                    $scope.errorMsg = '' ;
+                    if ( !$scope.config.type.konzesys.activate ) {
+                        failed({info:'未开放'});
+                        return ;
+                    }
+                    if ( !$scope.account ) {
+                        failed({info:'请先登入'});
+                        return ;
+                    }
+                    /*
+                    var md5password = md5($scope.password || '');
+                    if ( !first_time && ($scope.account != $scope.user.account || md5password != $scope.user.md5password) ){
+                        $scope.user.md5password = md5password ;
+                        ks.setUser($scope.account,$scope.password?md5password: '');
+                        $scope.password = '';
+                        //save to 1know db;
+                        ks.saveToDb();
+                    }
+                    */
+                    first_time = false ;
+                    ks.getVideoInfo(keyword)
+                    .then(function(res){
+                        $scope.page = "list";
+                        //bind list
+                        $scope.videolist = [].concat(res.videolist||[]) ;
+                    }).then(null,function(data){
+                        //show error
+                        failed(data);
+                    });
+                }
+                $scope.selectedItem = undefined ;
+                $scope.success = function(){
+                    if ( $scope.selectedItem ) {
+                        $.ajax({
+                            type:"POST",
+                            url: '/chooser/parsevideo',
+                            data: "video=" + btoa($scope.selectedItem.video_url) ,
+                            success: function(video_url) {
+                                // console.log(video_url);
+                                $scope.windowPostMessage(JSON.stringify({data: {url : video_url}, type: 'success'}));
+                            }
+                        });
+                        //$scope.windowPostMessage(JSON.stringify({data: {url:$scope.selectedItem.video_url}, type: 'success'}));
+                    }
+                }
+                $scope.select = function(item) {
+                    $scope.selectedItem = item ;
+                    //alert(item.video_url);
+                    $scope.tempVideoSrc = item.video_url;
+                }
+                //ks.getVersionInfo();
+                if ( !$scope.config.type.konzesys || !$scope.config.type.konzesys.activate )
+                    failed({info:'未开放'});
+                else
+                    $scope.getVideoList();
+            }])
+            .controller('qiniuCtrl', ['$scope', '$http', '$utility', function($scope, $http, $utility) {
+                $scope.access_key = '';
+                $scope.secret_key = '';
+                $scope.bucket = '';
+
+                $scope.getBuckets = function(callback) {
+                    $scope.bucketLoadState = 'loading';
+                    $scope.buckets = [];
+                    $scope.bucket = '';
+                    $http.get([$utility.SERVICE_URL, '/qiniu/buckets'].join(''))
+                    .success(function(response, status) {
+                        if (!response.error) {
+                            $scope.buckets = response;
+                            if (response.length > 0) {
+                                $scope.bucketLoadState = 'success';
+                                if (typeof callback == 'function') callback();
+                            }
+                            else {
+                                $scope.bucketLoadState = 'empty';
+                            }
+                        } else {
+                            $scope.bucketLoadState = 'fail';
+                        }
+                    });
+                }
+
+                $scope.getLists = function(marker) {
+                    marker = marker || '0';
+                    $scope.listLoadState = 'loading';
+                    $http.get([$utility.SERVICE_URL, '/qiniu/management/', $scope.config.unit.type, '/', $scope.bucket, '/', marker].join(''))
+                    .success(function(response, status) {
+                        if (!response.error) {
+                            $scope.marker = response.marker;
+
+                            if (marker == '0') {
+                                $scope.lists = [];
+                                $scope.lists = response.items;
+                            } else {
+                                $scope.lists = $scope.lists.concat(response.items);
+                            }
+                            if (response.items.length > 0) {
+                                $scope.listLoadState = 'success';
+                            } else {
+                                $scope.listLoadState = 'empty';
+                            }
+                        } else {
+                            $scope.listLoadState = 'fail';
+                        }
+                    });
+                }
+
+                $scope.setQiniuKey = function() {
+                    // 重設key
+                    // $http.post([$utility.SERVICE_URL, '/qiniu/setkey'].join(''))
+                    // .success(function(response, status) {
+                    //     if (!response.error) {
+                    //         $scope.buckets = response.body;
+                    //     }
+                    // });
+
+                    $scope.init();
+                }
+
+                var get_uptoken_url = function() {
+                    if ($scope.config.unit.type && $scope.bucket && $scope.filename) {
+                        return [$utility.SERVICE_URL, '/qiniu/uptoken/', $scope.config.unit.type, '/', $scope.bucket, '/', $scope.filename].join('');
+                    }
+                    else {
+                        return false;
+                    }
+                };
+
+                var qiniu_uploader = function() {
+                    var uploader = Qiniu.uploader({
+                        runtimes: 'html5,flash,html4',    //上传模式,依次退化
+                        browse_button: 'pickfiles',       //上传选择的点选按钮，**必需**
+                        uptoken_url: get_uptoken_url,            //Ajax请求upToken的Url
+                        save_key: true,   // 默认 false。若在服务端生成uptoken的上传策略中指定了 `sava_key`，则开启，SDK会忽略对key的处理
+                        domain: $scope.domain, // 'http://qiniu-plupload.qiniudn.com/',   //bucket 域名，下载资源时用到，**必需**
+                        get_new_uptoken: true,  //设置上传文件的时候是否每次都重新获取新的token
+                        container: 'dragndropqiniu',           //上传区域DOM ID，默认是browser_button的父元素，
+                        max_file_size: '100mb',           //最大文件体积限制
+                        flash_swf_url: 'js/plupload/Moxie.swf',  //引入flash,相对路径
+                        max_retries: 0,                   //上传失败最大重试次数
+                        dragdrop: true,                   //开启可拖曳上传
+                        drop_element: 'dragndropqiniu',        //拖曳上传区域元素的ID，拖曳文件或文件夹后可触发上传
+                        chunk_size: '4mb',                //分块上传时，每片的体积
+                        auto_start: false,                 //选择文件后自动上传，若关闭需要自己绑定事件触发上传
+                        multipart: false,
+                        filters: {
+                            mime_types : [
+                                {
+                                    title: $scope.config.unit.type,
+                                    extensions: $scope.config.type.local.exts.map(function(x){ return x.replace(/\./, '') }).join(',')
+                                }
+                            ]
+                        },
+                        init: {
+                            'FilesAdded': function(up, files) {
+                                plupload.each(files, function(file) {
+                                    $scope.filename = file.name;
+                                    var file_ext = '.'+file.name.split('.').pop();
+                                    if ( !$scope.config.unit.uqid ) {
+                                        alert('未选择单元');
+                                        return;
+                                    } else if ( $scope.config.type.local.exts.indexOf(file_ext) === -1 ) {
+                                        alert('上传文档格式不符');
+                                        return;
+                                    } else {
+                                        $('#fsUploadProgress').html('').show();
+                                        $('#fsUploadChooser').hide();
+                                        up.start();
+                                        up.refresh();
+                                    }
+                                });
+                            },
+                            'UploadProgress': function(up, file) {
+                                var progress = new FileProgress(file, 'fsUploadProgress');
+                                var chunk_size = plupload.parseSize(this.getOption('chunk_size'));
+                                progress.setProgress(file.percent + "%", file.speed, chunk_size);
+                            },
+                            'FileUploaded': function(up, file, info) {
+                                var res = $.parseJSON(info);
+                                var url, str;
+                                if (res.url) {
+                                    url = res.url;
+                                    str = "<div><strong>Link:</strong><a href=" + res.url + " target='_blank' > " + res.url + "</a></div>";
+                                } else {
+                                    var domain = up.getOption('domain');
+                                    url = domain + encodeURI(res.key);
+                                    var link = domain + res.key;
+                                    str = "<div><strong>Link:</strong><a href=" + url + " target='_blank' > " + link + "</a></div>";
+                                }
+                                $('#fsUploadProgress').html(str);
+                                // $scope.windowPostMessage(JSON.stringify({data: {url : url}, type: 'success'}));
+                            },
+                            'Error': function(up, err, errTip) {
+                                $('#fsUploadProgress').html(errTip);
+                                $('#fsUploadChooser').show();
+                            }
+                        }
+                    });
+                };
+
+                $scope.changePage = function(page) {
+                    if (page == 'setkey') {
+                        $scope.page = "setkey";
+                    } else {
+                        if ($scope.access_key && $scope.secret_key && $scope.domain) {
+                            $scope.page = "upload";
+                            $scope.getBuckets(qiniu_uploader);
+                        } else {
+                            $scope.page = "setkey";
+                        }
+                    }
+                };
+
+                $scope.changeBucket = function(bucket) {
+                    $scope.bucket = bucket;
+                    $scope.lists = [];
+                    // $scope.getLists();
+                };
+
+                $scope.init = function() {
+                    $scope.access_key = "<%=@qiniu['access_key']%>";
+                    $scope.secret_key = "<%=@qiniu['secret_key']%>";
+                    $scope.domain = "<%=@qiniu['domain']%>";
+                    $scope.changePage();
+                };
+            }]);
+    </script>
+</body>
+</html>

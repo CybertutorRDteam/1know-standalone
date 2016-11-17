@@ -1,0 +1,182 @@
+<div class="container" style="margin:20px auto">
+	<div id="pictureModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div id="content"></div>
+				</div>
+				<div class="modal-footer">
+					<span class="text-danger pull-left" style="font-size:14px"><span translate="N001" remark="圖片最大尺寸"></span> <span>(200x200)</span></span>
+					<a class="btn btn-primary" ng-click="personalCtrl.savePicture()">
+						<i class="fa fa-fw fa-save"></i> <span translate="N002" remark="儲存"></span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="profileModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-xs-2 control-label"><span translate="N003" remark="姓"></span></label>
+							<div class="col-xs-10">
+								<input type="text" class="form-control" ng-model="personalCtrl.profile.edit_last_name"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-2 control-label"><span translate="N004" remark="名"></span></label>
+							<div class="col-xs-10">
+								<input type="text" class="form-control" ng-model="personalCtrl.profile.edit_first_name"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-2 control-label"><span translate="N005" remark="簡介"></span></label>
+							<div class="col-xs-10">
+								<div id="description" style="height:200px"></div>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<a class="btn btn-primary" ng-click="personalCtrl.saveProfile()">
+						<i class="fa fa-fw fa-save"></i> <span translate="N002" remark="儲存"></span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="socialModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<!-- <form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-xs-2 control-label"><span translate="N007" remark="個人網頁"></span></label>
+							<div class="col-xs-10">
+								<div class="input-group">
+									<input type="text" class="form-control" ng-model="personalCtrl.profile.edit_website"/>
+									<span class="input-group-addon"><i class="fa fa-fw fa-link"></i></span>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-2 control-label"><span translate="N008" remark="臉書"></span></label>
+							<div class="col-xs-10">
+								<div class="input-group">
+									<input type="text" class="form-control" ng-model="personalCtrl.profile.edit_facebook"/>
+									<span class="input-group-addon"><i class="fa fa-fw fa-facebook"></i></span>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-2 control-label"><span translate="N009" remark="推特"></span></label>
+							<div class="col-xs-10">
+								<div class="input-group">
+									<input type="text" class="form-control" ng-model="personalCtrl.profile.edit_twitter"/>
+									<span class="input-group-addon"><i class="fa fa-fw fa-twitter"></i></span>
+								</div>
+							</div>
+						</div>
+					</form> -->
+				</div>
+				<div class="modal-footer">
+					<a class="btn btn-primary" ng-click="personalCtrl.saveSocial()">
+						<i class="fa fa-fw fa-save"></i> <span translate="N002" remark="儲存"></span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div>
+		<img ng-src="{{personalCtrl.profile.banner}}" style="width:100%"/>
+		<input type="file" id="input_banner" accept="image/*" style="display:none"/>
+	</div>
+
+	<div class="row" style="margin-top:10px">
+		<div class="col-xs-9">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="btn-group pull-right">
+						<a class="btn btn-link dropdown-toggle" data-toggle="dropdown" style="padding:0">
+							<i class="fa fa-fw fa-edit"></i>
+						</a>
+						<ul class="dropdown-menu">
+							<li>
+								<a href="javascript:;" ng-click="personalCtrl.editProfile()">
+									<span translate="N011" remark="編輯基本資料"></span>
+								</a>
+							</li>
+							<li>
+								<a href="javascript:;" ng-click="personalCtrl.editPicture('banner')">
+									<span translate="N012" remark="編輯上方圖片"></span>
+								</a>
+							</li>
+							<li>
+								<a href="javascript:;" ng-click="personalCtrl.editPicture('photo')">
+									<span translate="N013" remark="編輯個人圖片"></span>
+								</a>
+							</li>
+							<li>
+								<a href="javascript:;" ng-click="personalCtrl.editSocial()">
+									<span translate="N010" remark="編輯社群連結"></span>
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div class="pull-left">
+						<span class="label label-danger" ng-if="personalCtrl.profile.account_type=='free'">Free</span>
+						<span class="label label-success" ng-if="personalCtrl.profile.account_type=='plus'">Plus</span>
+						<span class="label label-primary" ng-if="personalCtrl.profile.account_type=='pro'">Pro</span>
+						<span class="label label-warning" ng-if="personalCtrl.profile.account_type=='vip'">VIP</span>
+						<span class="exp_date"  ng-if="personalCtrl.profile.account_type!='free'" data-toggle="tooltip" data-placement="top" title="您的使用期限" style="padding:0px 4px;margin-left:8px;">
+							{{personalCtrl.profile.expired_date.substr(0,10)}}
+						</span>
+					</div>
+					<h3 class="text-info" style="margin-top:40px">{{personalCtrl.profile.full_name}}</h3>
+					<div ng-bind-html="personalCtrl.profile.description"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-xs-3">
+			<div class="panel panel-default">
+				<div class="panel-body" style="padding:10px">	
+					<div>
+						<img ng-src="{{personalCtrl.profile.photo}}" style="width:100%"/>
+						<input type="file" id="input_photo" accept="image/*" style="display:none"/>
+					</div>
+					<div style="margin-top:10px">
+						<!-- <div>
+							<a class="btn btn-default btn-sm" href="{{personalCtrl.profile.website}}" target="_blank"><i class="fa fa-fw fa-link"></i></a>
+							<a class="btn btn-default btn-sm" href="{{personalCtrl.profile.facebook}}" target="_blank"><i class="fa fa-fw fa-facebook"></i></a>
+							<a class="btn btn-default btn-sm" href="{{personalCtrl.profile.twitter}}" target="_blank"><i class="fa fa-fw fa-twitter"></i></a>
+						</div> -->
+					</div>
+					<div style="margin-top:10px">
+						<ul class="nav">
+							<li ng-repeat="item in personalCtrl.profile.knowledges">
+								<a href="{{item.page}}" target="_blank" style="padding:2px">
+									<div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div style="margin-top:10px">
+						<a class="btn btn-primary btn-block" href="{{personalCtrl.profile.page}}" target="_blank"><span translate="N006" remark="個人頁面"></span></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<style>
+    span.exp_date:hover {
+    	color:red;
+    	cursor:pointer;
+    }
+</style>

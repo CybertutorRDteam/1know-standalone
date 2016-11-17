@@ -1,0 +1,463 @@
+<div>
+	<div id="drawDescriptionModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div ng-bind-html="syncTeachCtrl.drawDescription" style="width:100%;height:100%"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="dispatchModal" class="modal fade" style="z-index:1480">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<h4><span translate="K001" remark="網頁網址"></span></h4>
+					<input type='text' class="form-control" ng-model='syncTeachCtrl.currentUnit.dispatchUrl' placeholder="{{'K001'|translate}}..." remark="網頁網址" />
+					<h4 class="text-danger" ng-show="syncTeachCtrl.errMsg!=undefined" ng-bind-html="syncTeachCtrl.errMsg"></h4>
+				</div>
+				<div class="modal-footer">
+					<a class="btn btn-primary" ng-click="syncTeachCtrl.dispatchUrl()">
+						<span translate="K002" remark="送出"></span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="memberBehaviorModal" class="modal fade" style="z-index:1480">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<img class="pull-left" ng-src="{{syncTeachCtrl.targetMember.photo}}" style="width:48px;height:48px"/>
+					<h4 style="margin-left:64px">{{syncTeachCtrl.targetMember.full_name}}</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-3" ng-repeat="item in syncTeachCtrl.behaviors">
+							<div class="thumbnail">
+								<div class="cover" style="width:117px;height:86px;position:absolute" ng-click="syncTeachCtrl.addMemberBehavior(item)"></div>
+								<div style="text-align:center">
+									<span class="label" ng-class="{'label-success': item.points > 0, 'label-danger': item.points < 0}" style="position:absolute;top:0;right:0">{{item.points > 0 ? '+1' : '-1'}}</span>
+									<div style="padding:15px 0 10px">
+										<i class="fa fa-fw fa-4x" ng-class="{'text-success': item.points > 0, 'text-danger': item.points < 0, '{{syncTeachCtrl.behaviorIcons[item.icon-1]}}': true}"></i>
+									</div>
+									<h5 style="line-height:16px">
+										<div style="padding:0 5px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+									</h5>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div ng-show="syncTeachCtrl.dispatchModel==undefined" style="min-width:880px">
+		<nav class="navbar navbar-static-top navbar-inverse" style="min-width:880px;z-index:1280;padding:0 10px">
+			<div class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="javascript:;" style="padding:9px" ng-click="syncTeachCtrl.preUnit()">
+							<i class="fa fa-fw fa-chevron-left"></i>
+						</a>
+					</li>
+					<li class="dropdown">
+						<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" style="padding:9px;width:300px">
+							<div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
+								<span>
+									<i class="fa fa-fw" ng-class="{
+										'fa-film': syncTeachCtrl.currentUnit.unit_type == 'video',
+										'fa-link': syncTeachCtrl.currentUnit.unit_type == 'web',
+										'fa-code': syncTeachCtrl.currentUnit.unit_type == 'embed',
+										'fa-pencil-square-o': syncTeachCtrl.currentUnit.unit_type == 'quiz',
+										'fa-thumbs-o-up': syncTeachCtrl.currentUnit.unit_type == 'poll',
+										'fa-question': syncTeachCtrl.currentUnit.unit_type == 'qa',
+										'fa-picture-o': syncTeachCtrl.currentUnit.unit_type == 'draw'
+										}"></i>
+								</span>
+								<span>{{syncTeachCtrl.currentUnit.name}}</span>
+							</div>
+						</a>
+						<ul class="dropdown-menu" style="width:300px;max-height:400px;overflow:auto">
+							<li>
+								<div class="text-info" style="font-size:16px;padding:5px 10px 0">{{syncTeachCtrl.target.name}}</div>
+							</li>
+							<li class="divider"/>
+							<li ng-repeat="unit in syncTeachCtrl.units">
+								<div ng-if="unit.unit_type=='chapter'&&syncTeachCtrl.content.type=='knowledge'" style="padding:5px 10px">
+									<span class="label label-danger">{{unit.name}}</span>
+								</div>
+								<a href="javascript:;" ng-if="unit.unit_type!='chapter'" ng-click="syncTeachCtrl.chooseUnit(unit)">
+									<div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
+										<span>
+											<i class="fa fa-fw" ng-class="{
+												'fa-film': unit.unit_type == 'video',
+												'fa-link': unit.unit_type == 'web',
+												'fa-code': unit.unit_type == 'embed',
+												'fa-pencil-square-o': unit.unit_type == 'quiz',
+												'fa-thumbs-o-up': unit.unit_type == 'poll',
+												'fa-question': unit.unit_type == 'qa',
+												'fa-picture-o': unit.unit_type == 'draw'
+												}"></i>
+										</span>
+										<span>{{unit.name}}</span>
+									</div>
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;" style="padding:9px" ng-click="syncTeachCtrl.nextUnit()">
+							<i class="fa fa-fw fa-chevron-right"></i>
+						</a>
+					</li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right" style="margin:0">
+					<li ng-show="syncTeachCtrl.layout=='content'">
+						<a href="javascript:;" style="padding:9px" ng-click="syncTeachCtrl.showDispatchModal()">
+							<i class="fa fa-fw fa-share-square-o"></i>
+							<span translate="K003" remark="派送網頁"></span>
+						</a>
+					</li>
+					<li ng-show="syncTeachCtrl.layout=='content'">
+						<a href="javascript:;" style="padding:9px" ng-click="syncTeachCtrl.toggleWhiteBoard()">
+							<input type="checkbox" style="margin:0 2px 2px" ng-model="syncTeachCtrl.whiteBoard.show"/>
+							<span translate="K004" remark="電子白板"></span>
+						</a>
+					</li>
+					<li>
+						<a href="javascript:;" style="padding:9px" ng-click="syncTeachCtrl.lockScreen()">
+							<input type="checkbox" style="margin:0 2px 2px" ng-model="syncTeachCtrl.lockedScreen"/>
+							<span translate="K005" remark="鎖定螢幕"></span>
+						</a>
+					</li>
+					<li>
+						<a href="javascript:;" style="padding:9px" ng-click="syncTeachCtrl.changeLayout(syncTeachCtrl.layout=='attendance' ? 'content' : 'attendance')">
+							<i class="fa fa-fw fa-group"></i>
+							<span>{{syncTeachCtrl.onlineStudents}}/{{syncTeachCtrl.students.length}}</span>
+						</a>
+					</li>
+					<li>
+						<a href="javascript:;" style="padding:9px" ng-click="syncTeachCtrl.leaveClassroom()">
+							<i class="fa fa-fw fa-sign-out"></i>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+
+		<div style="position:relative">
+			<div class="down-animate" ng-show="syncTeachCtrl.whiteBoard.show" style="position:absolute;z-index:1080">
+				<div id="teach-white-board" ng-style="{width:syncTeachCtrl.contentWidth+'px', height:syncTeachCtrl.contentHeight+'px'}" style="background:rgba(0,0,0,0);bottom:0">
+					<canvas></canvas>
+				</div>
+			</div>
+
+			<div ng-show="syncTeachCtrl.layout=='attendance'" style="padding:20px">
+				<div class="container">
+					<div style="text-align:right;margin-bottom:10px">
+						<a class="btn btn-primary" ng-click="syncTeachCtrl.attendance()">
+							<i class="fa fa-fw fa-refresh"></i> <span translate="K006" remark="更新"></span>
+						</a>
+					</div>
+					<div class="row">
+						<div class="col-xs-2" ng-repeat="item in syncTeachCtrl.students">
+							<div class="thumbnail">
+								<div ng-click="syncTeachCtrl.showAddMemberBehavior(item)">
+									<div class="cover" style="width:130px;height:130px;position:absolute"></div>
+									<img style="width:130px;height:130px;border:8px solid" ng-style="{'border-color':item.status=='online' ? '#468847' : '#b94a48'}" ng-src="{{item.photo}}"/>
+								</div>
+								<div style="padding:10px;position:relative">
+									<div style="color:#555;font-size:16px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.full_name}}</div>
+									<span style="position:absolute;bottom:0;right:0" class="label" ng-class="{'label-success': item.behavior_points>0, 'label-danger': item.behavior_points<0, 'label-info': item.behavior_points==0}">
+										{{item.behavior_points>0 ? '+' + item.behavior_points : item.behavior_points}}
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div ng-style="{width:syncTeachCtrl.contentWidth+'px', height:syncTeachCtrl.contentHeight+'px'}" ng-show="syncTeachCtrl.layout=='content'">
+				<div ng-if="syncTeachCtrl.currentUnit.unit_type=='video'" style="display:table;background:#000" id="videoContainer"></div>
+				<div ng-if="syncTeachCtrl.currentUnit.unit_type=='web'" ng-style="{width:syncTeachCtrl.contentWidth+'px', height:syncTeachCtrl.contentHeight+'px'}" style="overflow:auto;-webkit-overflow-scrolling:touch">
+					<iframe _sandbox="allow-popups allow-forms allow-same-origin allow-scripts"
+						ng-src="{{syncTeachCtrl.currentUnit.content_url}}"
+						ng-style="{width:syncTeachCtrl.contentWidth+'px', height:syncTeachCtrl.contentHeight+'px'}"
+						style="background:#000" frameborder="0"></iframe>
+				</div>
+				<div ng-if="syncTeachCtrl.currentUnit.unit_type=='embed'" ng-style="{width:syncTeachCtrl.contentWidth+'px', height:syncTeachCtrl.contentHeight+'px'}" style="overflow:auto" ng-bind-html="syncTeachCtrl.currentUnit.content"></div>
+				<div ng-if="syncTeachCtrl.currentUnit.unit_type=='quiz'" ng-style="{width:syncTeachCtrl.contentWidth+'px', height:syncTeachCtrl.contentHeight+'px'}" style="overflow:auto;padding:10px">
+					<div>
+						<div class="btn-group">
+							<a class="btn btn-sm btn-default" ng-class="{'btn-primary': syncTeachCtrl.currentUnit.viewType == 'question', active: syncTeachCtrl.currentUnit.viewType == 'question'}" ng-click="syncTeachCtrl.toggleUnitView('question')">
+								<i class="fa fa-fw fa-thumbs-o-up"></i>
+								<span translate="K007" remark="內容"></span>
+							</a>
+							<a class="btn btn-sm btn-default" ng-class="{'btn-primary': syncTeachCtrl.currentUnit.viewType == 'statistics', active: syncTeachCtrl.currentUnit.viewType == 'statistics'}" ng-click="syncTeachCtrl.toggleUnitView('statistics')">
+								<i class="fa fa-fw fa-bar-chart-o"></i>
+								<span translate="K008" remark="統計"></span>
+							</a>
+							<a class="btn btn-sm btn-default" ng-class="{'btn-primary': syncTeachCtrl.currentUnit.viewType == 'record', active: syncTeachCtrl.currentUnit.viewType == 'record'}" ng-click="syncTeachCtrl.toggleUnitView('record')">
+								<i class="fa fa-fw fa-list"></i>
+								<span translate="K009" remark="記錄"></span>
+							</a>
+						</div>
+						<span class="text-info" style="font-size:16px;margin-left:12px">
+							<i class="fa fa-fw fa-group"></i>
+							<span>{{syncTeachCtrl.currentUnit.result_count}}/{{syncTeachCtrl.onlineStudents}}</span>
+						</span>
+						<label class="btn btn-sm btn-primary pull-right">
+							<input type="checkbox" ng-model="syncTeachCtrl.currentUnit.showAnswer" style="margin:0 2px 2px"/>
+							<span translate="K010" remark="顯示答案"></span>
+						</label>
+					</div>
+					<div ng-if="syncTeachCtrl.currentUnit.viewType=='question'" style="margin-top:20px">
+						<div class="panel panel-default" ng-repeat="quiz in syncTeachCtrl.currentUnit.quizzes">
+							<div class="panel-body">
+								<span class="pull-left">
+									<span><span ng-if="$index<9">0</span>{{$index+1}}.</span>
+								</span>
+								<div ng-bind-html="quiz.content"></div>
+								<div style="margin-top:20px">
+									<div ng-repeat="option in quiz.options">
+										<span class="pull-left" style="margin-right:8px">
+											<i class="fa fa-fw fa-square-o"></i>
+										</span>
+										<span ng-if="!option.latex">{{option.item}}</span>
+										<span ng-if="option.latex" mathjax-bind="option.item"></span>
+										<span ng-if="syncTeachCtrl.currentUnit.showAnswer&&option.correct">
+											(<i class="fa fa-fw fa-circle-o text-success"></i>)
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div ng-if="syncTeachCtrl.currentUnit.viewType=='statistics'" id="chart_quiz" style="height:560px;margin:20px auto"></div>
+					<div ng-if="syncTeachCtrl.currentUnit.viewType=='record'" style="margin-top:20px" ng-show="syncTeachCtrl.currentUnit.targetItem!=undefined">
+						<div>
+							<div class="pull-right text-danger" style="font-size:40px" ng-show="syncTeachCtrl.currentUnit.targetItem.units[syncTeachCtrl.currentUnit.uqid].send_result">{{syncTeachCtrl.currentUnit.targetItem.score.success}}/{{syncTeachCtrl.currentUnit.targetItem.score.total}}</div>
+							<div class="btn-group">
+								<a class="btn btn-primary dropdown-toggle" style="text-align:left" data-toggle="dropdown">
+									<span ng-show="syncTeachCtrl.currentUnit.targetItem.units[syncTeachCtrl.currentUnit.uqid].send_result">({{syncTeachCtrl.currentUnit.targetItem.score.success}}/{{syncTeachCtrl.currentUnit.targetItem.score.total}})</span>
+									<span style="margin-left:8px">{{syncTeachCtrl.currentUnit.targetItem.full_name}}</span>
+								</a>
+								<ul class="dropdown-menu" style="width:280px;max-height:400px;overflow:auto">
+									<li ng-repeat="item in syncTeachCtrl.students" ng-show="item.online">
+										<a ng-click="syncTeachCtrl.changeTargetItem(item)">
+											<span ng-if="item.units[syncTeachCtrl.currentUnit.uqid].send_result">({{item.score.success}}/{{item.score.total}})</span>
+											<span ng-if="!item.units[syncTeachCtrl.currentUnit.uqid].send_result"><i class="fa fa-fw fa-question text-danger"></i></span>
+											<span style="margin-left:8px">{{item.full_name}}</span>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div style="margin-top:20px">
+							<div class="panel panel-default" ng-repeat="quiz in syncTeachCtrl.currentUnit.targetItem.quizzes">
+								<div class="panel-body">
+									<span class="pull-left">
+										<span>(<i class="fa fa-fw fa-check" ng-class="{'text-success': quiz.correct, 'text-danger': !quiz.correct}"></i>)</span>
+										<span ng-if="$index<9">0</span>{{$index+1}}.</span>
+									</span>
+									<div ng-bind-html="quiz.content"></div>
+									<div style="margin-top:20px">
+										<div ng-repeat="option in quiz.options">
+											<span class="pull-left" style="margin-right:8px">
+												<i class="fa fa-fw" ng-class="{'fa-check-square-o': option.answer, 'fa-square-o': !option.answer}"></i>
+											</span>
+											<div>
+												<span ng-if="!option.latex">{{option.item}}</span>
+												<span ng-if="option.latex" mathjax-bind="option.item"></span>
+												<span ng-if="option.correct">(<i class="fa fa-fw fa-circle-o text-success"></i>)</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div ng-if="syncTeachCtrl.currentUnit.unit_type=='poll'" ng-style="{width:syncTeachCtrl.contentWidth+'px', height:syncTeachCtrl.contentHeight+'px'}" style="overflow:auto;padding:10px">
+					<div>
+						<div class="btn-group">
+							<a class="btn btn-sm btn-default" ng-class="{'btn-primary': syncTeachCtrl.currentUnit.viewType == 'question', active: syncTeachCtrl.currentUnit.viewType == 'question'}" ng-click="syncTeachCtrl.toggleUnitView('question')">
+								<i class="fa fa-fw fa-thumbs-o-up"></i>
+								<span translate="K007" remark="內容"></span>
+							</a>
+							<a class="btn btn-sm btn-default" ng-class="{'btn-primary': syncTeachCtrl.currentUnit.viewType == 'statistics', active: syncTeachCtrl.currentUnit.viewType == 'statistics'}" ng-click="syncTeachCtrl.toggleUnitView('statistics')">
+								<i class="fa fa-fw fa-bar-chart-o"></i>
+								<span translate="K008" remark="統計"></span>
+							</a>
+							<a class="btn btn-sm btn-default" ng-class="{'btn-primary': syncTeachCtrl.currentUnit.viewType == 'record', active: syncTeachCtrl.currentUnit.viewType == 'record'}" ng-click="syncTeachCtrl.toggleUnitView('record')">
+								<i class="fa fa-fw fa-list"></i>
+								<span translate="K009" remark="記錄"></span>
+							</a>
+						</div>
+						<span class="text-info" style="font-size:16px;margin-left:12px"><i class="fa fa-fw fa-group"></i> {{syncTeachCtrl.currentUnit.result_count}}/{{syncTeachCtrl.onlineStudents}}</span>
+					</div>
+					<div>
+						<h3 ng-if="syncTeachCtrl.currentUnit.viewType=='question'" style="padding:30px;background:#fff;border:1px solid #ddd">
+							<div ng-bind-html="syncTeachCtrl.currentUnit.content.content"></div>
+							<div style="margin-top:20px">
+								<div ng-repeat="option in syncTeachCtrl.currentUnit.content.options">
+									<span class="pull-left" style="margin-right:8px">
+										<i class="fa fa-fw fa-square-o"></i>
+									</span>
+									<span ng-if="!option.latex">{{option.item}}</span>
+									<span ng-if="option.latex" mathjax-bind="option.item"></span>
+								</div>
+							</div>
+						</h3>
+						<div ng-if="syncTeachCtrl.currentUnit.viewType=='statistics'" id="chart_poll" style="height:560px;margin:20px auto"></div>
+						<div ng-if="syncTeachCtrl.currentUnit.viewType=='record'" style="margin-top:20px;postition:relative;">
+							<div style="background:#fff;width:200px;z-index:10;position:absolute">
+								<table class="table table-bordered table-condensed" style="margin:0">
+									<tbody>
+										<tr>
+											<td>&nbsp;</td>
+										</tr>
+										<tr ng-repeat="item in syncTeachCtrl.students">
+											<td style="padding:4px 10px;min-width:100px" ng-show="item.online">
+												<div style="height:20px;margin:1px">
+													<span ng-if="item.units[syncTeachCtrl.currentUnit.uqid].send_result">{{item.full_name}}</span>
+													<span ng-if="!item.units[syncTeachCtrl.currentUnit.uqid].send_result" class="text-danger">{{item.full_name}}</span>
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div style="overflow:auto;padding-left:200px;max-width:908px;display:inline-block;background:#fff;position:absolute;">
+								<table class="table table-bordered table-condensed" style="margin:0">
+									<tbody>
+										<tr>
+											<td ng-repeat="option in syncTeachCtrl.currentUnit.content.options" style="text-align:center;min-width:100px">
+												<span ng-if="!option.latex">{{option.item}}</span>
+												<span ng-if="option.latex" mathjax-bind="option.item"></span>
+											</td>
+										</tr>
+										<tr ng-repeat="item in syncTeachCtrl.students">
+											<td style="text-align:center" ng-repeat="option in syncTeachCtrl.currentUnit.content.options" ng-show="item.online">
+												<span ng-if="item.units[syncTeachCtrl.currentUnit.uqid].send_result">
+													<span ng-repeat="key in item.units[syncTeachCtrl.currentUnit.uqid].result" ng-show="option.value==key">
+														<span class="text-success"><i class="fa fa-fw fa-check"></i></span>
+													</span>
+												</span>
+												<span ng-if="!item.units[syncTeachCtrl.currentUnit.uqid].send_result||item.units[syncTeachCtrl.currentUnit.uqid].result.length==0">&nbsp;</span>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div ng-if="syncTeachCtrl.currentUnit.unit_type=='qa'" ng-style="{width:syncTeachCtrl.contentWidth+'px', height:syncTeachCtrl.contentHeight+'px'}" style="overflow:auto;padding:10px">
+					<div>
+						<div class="btn-group">
+							<a class="btn btn-sm btn-default" ng-class="{'btn-primary': syncTeachCtrl.currentUnit.viewType == 'question', active: syncTeachCtrl.currentUnit.viewType == 'question'}" ng-click="syncTeachCtrl.toggleUnitView('question')">
+								<i class="fa fa-fw fa-thumbs-o-up"></i>
+								<span translate="K007" remark="內容"></span>
+							</a>
+							<a class="btn btn-sm btn-default" ng-class="{'btn-primary': syncTeachCtrl.currentUnit.viewType == 'record', active: syncTeachCtrl.currentUnit.viewType == 'record'}" ng-click="syncTeachCtrl.toggleUnitView('record')">
+								<i class="fa fa-fw fa-list"></i>
+								<span translate="K009" remark="記錄"></span>
+							</a>
+						</div>
+						<span class="text-info" style="font-size:16px;margin-left:12px"><i class="fa fa-fw fa-group"></i> {{syncTeachCtrl.currentUnit.result_count}}/{{syncTeachCtrl.onlineStudents}}</span>
+					</div>
+					<div ng-if="syncTeachCtrl.currentUnit.viewType=='question'" style="margin-top:20px;padding:10px;background:#fff;border:1px solid #ddd">
+						<div ng-bind-html="syncTeachCtrl.currentUnit.content"></div>
+					</div>
+					<div ng-if="syncTeachCtrl.currentUnit.viewType=='record'" style="margin-top:20px" ng-show="syncTeachCtrl.currentUnit.targetItem!=undefined">
+						<div style="margin-bottom:10px">
+							<div class="btn-group">
+								<a class="btn btn-primary dropdown-toggle" style="text-align:left" data-toggle="dropdown">
+									<span>{{syncTeachCtrl.currentUnit.targetItem.full_name}}</span>
+								</a>
+								<ul class="dropdown-menu" style="width:280px;max-height:400px;overflow:auto">
+									<li ng-repeat="item in syncTeachCtrl.students" ng-show="item.online">
+										<a ng-click="syncTeachCtrl.changeTargetItem(item)">
+											<span>
+												<i class="fa fa-fw" ng-class="{'fa-check': item.units[syncTeachCtrl.currentUnit.uqid].send_result, 'text-success': item.units[syncTeachCtrl.currentUnit.uqid].send_result, 'fa-question': !item.units[syncTeachCtrl.currentUnit.uqid].send_result, 'text-danger': !item.units[syncTeachCtrl.currentUnit.uqid].send_result}"></i>
+											</span>
+											<span style="margin-left:8px">{{item.full_name}}</span>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div style="padding:10px;border:1px solid #ddd" ng-show="syncTeachCtrl.currentUnit.targetItem.units[syncTeachCtrl.currentUnit.uqid].send_result">
+							<div ng-bind-html="syncTeachCtrl.currentUnit.targetItem.units[syncTeachCtrl.currentUnit.uqid].result"></div>
+						</div>
+					</div>
+				</div>
+				<div ng-if="syncTeachCtrl.currentUnit.unit_type=='draw'" ng-style="{width:syncStudyCtrl.contentWidth+'px', height:syncStudyCtrl.contentHeight+'px'}">
+					<div ng-if="!syncTeachCtrl.currentUnit.targetItem" style="padding:15px;overflow:auto">
+						<div style="display:inline-block;cursor:pointer;margin:0 10px 10px 0" ng-repeat="item in syncTeachCtrl.students" ng-if="item.online">
+							<div class="thumbnail">
+								<div class="cover" style="width:160px;height:120px;position:absolute" ng-click="syncTeachCtrl.showTargetItemResult(item)"></div>
+								<img ng-src="{{item.units[syncTeachCtrl.currentUnit.uqid].result.result.screenshot}}" style="width:160px;height:120px;cursor:pointer" ng-if="item.units[syncTeachCtrl.currentUnit.uqid].result"/>
+								<div style="width:160px;height:120px;text-align:center" ng-if="!item.units[syncTeachCtrl.currentUnit.uqid].result">
+									<div style="padding-top:20px">
+										<i class="fa fa-fw fa-question fa fa-fw fa-5x text-danger"></i>
+									</div>
+								</div>
+								<div style="border-top:1px solid #ddd;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;padding:4px">{{item.full_name}}</div>
+							</div>
+						</div>
+					</div>
+					<div ng-if="syncTeachCtrl.currentUnit.targetItem">
+						<div id="draw-board" ng-style="{width:syncTeachCtrl.contentWidth+'px', height:syncTeachCtrl.contentHeight+'px', background:syncTeachCtrl.currentUnit.backgroundImage}" style="background:rgba(0,0,0,0);bottom:0">
+							<canvas></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div ng-show="syncTeachCtrl.dispatchModel!=undefined">
+		<div style="min-width:880px">
+			<nav class="navbar navbar-static-top navbar-inverse" style="min-width:880px;z-index:1280;padding:0 10px">
+				<div class="collapse navbar-collapse">
+					<ul class="nav navbar-nav">
+						<li>
+							<a href="javascript:;" style="padding:9px">
+								{{syncTeachCtrl.dispatchModel.title}}
+							</a>
+						</li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right" style="margin:0">
+						<li>
+							<a href="javascript:;" style="padding:9px" ng-click="syncTeachCtrl.toggleWhiteBoard()">
+								<input type="checkbox" style="margin:0 2px 2px" ng-model="syncTeachCtrl.whiteBoard.show"/>
+								<span translate="K004" remark="電子白板"></span>
+							</a>
+						</li>
+						<li>
+							<a href="javascript:;" style="padding:9px" ng-click="syncTeachCtrl.closeDispatch()">
+								<i class="fa fa-fw fa-times"></i> <span translate="K011" remark="關閉派送"></span>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</nav>
+		</div>
+
+		<div>
+			<div class="down-animate" ng-show="syncTeachCtrl.whiteBoard.show" style="position:absolute;z-index:1280">
+				<div id="teach-white-board" ng-style="{width:syncTeachCtrl.contentWidth+'px', height:syncTeachCtrl.contentHeight+'px'}" style="background:rgba(0,0,0,0);bottom:0">
+					<canvas></canvas>
+				</div>
+			</div>
+			<div ng-style="{height:syncTeachCtrl.contentHeight+'px'}" style="overflow:auto;-webkit-overflow-scrolling:touch" ng-bind-html="syncTeachCtrl.dispatchModel.content"></div>
+		</div>
+	</div>
+</div>

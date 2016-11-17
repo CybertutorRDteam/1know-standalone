@@ -1,0 +1,190 @@
+<style>
+  .video_bg {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#fefcea+0,f1da36+100;Gold+3D */
+background: #fefcea; /* Old browsers */
+background: -moz-linear-gradient(-45deg,  #fefcea 0%, #f1da36 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#fefcea), color-stop(100%,#f1da36)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(-45deg,  #fefcea 0%,#f1da36 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(-45deg,  #fefcea 0%,#f1da36 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(-45deg,  #fefcea 0%,#f1da36 100%); /* IE10+ */
+background: linear-gradient(135deg,  #fefcea 0%,#f1da36 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fefcea', endColorstr='#f1da36',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+  }
+</style>
+<div>
+	<div id="teacherModal" class="modal fade" style="z-index:1480">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body" style="text-align:center">
+					<span class="text-info" translate="L001" remark="教師離線" style="font-size:8em;line-height:1em"></span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="behaviorModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div style="padding:30px">
+						<div class="pull-left" style="margin-top:20px">
+							<i class="fa fa-fw fa-5x {{syncStudyCtrl.behaviorIcons[syncStudyCtrl.behavior.icon-1]}}" ng-class="{'text-success': syncStudyCtrl.behavior.points > 0, 'text-danger': syncStudyCtrl.behavior.points < 0}"></i>
+						</div>
+						<div style="margin-left:120px">
+							<h1>{{syncStudyCtrl.behavior.symbol}}</h1>
+							<h2>{{syncStudyCtrl.behavior.name}}</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="unitDescModal" class="modal fade" style="z-index:1480">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div ng-bind-html="syncStudyCtrl.currentUnit.description"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div ng-show="!syncStudyCtrl.lockedScreen&&!syncStudyCtrl.dispatchModel" style="min-width:880px">
+		<nav class="navbar navbar-static-top navbar-inverse" style="min-width:880px;z-index:1280;padding:0 10px">
+			<ul class="nav navbar-nav">
+				<li>
+					<a style="padding:9px"><span>{{syncStudyCtrl.currentUnit.name}}</span></a>
+				</li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right" style="margin:0">
+				<li ng-if="syncStudyCtrl.currentUnit!=undefined&&syncStudyCtrl.currentUnit.description!=''">
+					<a href="javascript:;" style="padding:9px" ng-click="syncStudyCtrl.showUnitDescModal()">
+						<span translate="L002" remark="顯示補充教材"></span>
+					</a>
+				</li>
+				<li>
+					<a style="padding:9px">
+						<span class="label" ng-class="{'label-success': syncStudyCtrl.profile.behavior.total>0, 'label-danger': syncStudyCtrl.profile.behavior.total<0, 'label-info': syncStudyCtrl.profile.behavior.total==0}"><i class="fa fa-fw fa-trophy"></i> {{syncStudyCtrl.profile.behavior.total}}</span>
+					</a>
+				</li>
+				<li>
+					<a href="javascript:;" style="padding:9px" ng-click="syncStudyCtrl.reponseSelf()">
+						<span>{{syncStudyCtrl.profile.full_name}}</span>
+					</a>
+				</li>
+				<li>
+					<a href="javascript:;" style="padding:9px" ng-click="syncStudyCtrl.leaveClassroom()">
+						<i class="fa fa-fw fa-sign-out"></i>
+					</a>
+				</li>
+			</ul>
+		</nav>
+
+		<div ng-style="{width:syncStudyCtrl.contentWidth+'px', height:syncStudyCtrl.contentHeight+'px'}" ng-hide="syncStudyCtrl.dispatchUrl">
+			<div ng-if="syncStudyCtrl.currentUnit.unit_type=='video'" style="display:table;background:#000" id="videoContainer"></div>
+			<div ng-if="syncStudyCtrl.currentUnit.unit_type=='web'" ng-style="{width:syncStudyCtrl.contentWidth+'px', height:syncStudyCtrl.contentHeight+'px'}" style="overflow:auto;-webkit-overflow-scrolling:touch">
+				<iframe _sandbox="allow-popups allow-forms allow-same-origin allow-scripts"
+					ng-src="{{syncStudyCtrl.currentUnit.content_url}}"
+					ng-style="{width:syncStudyCtrl.contentWidth+'px', height:syncStudyCtrl.contentHeight+'px'}"
+					style="background:#000" frameborder="0"></iframe>
+			</div>
+			<div ng-if="syncStudyCtrl.currentUnit.unit_type=='embed'" ng-style="{width:syncStudyCtrl.contentWidth+'px', height:syncStudyCtrl.contentHeight+'px'}" style="overflow:auto" ng-bind-html="syncStudyCtrl.currentUnit.content"></div>
+			<div ng-if="syncStudyCtrl.currentUnit.unit_type=='quiz'" ng-style="{width:syncStudyCtrl.contentWidth+'px', height:syncStudyCtrl.contentHeight+'px'}" style="overflow:auto;padding:10px">
+				<div class="panel panel-default" ng-repeat="quiz in syncStudyCtrl.currentUnit.quizzes">
+					<div class="panel-body">
+						<span class="pull-left">
+							<span><span ng-if="$index<9">0</span>{{$index+1}}.</span>
+						</span>
+						<div ng-bind-html="quiz.content"></div>
+						<div style="margin-top:20px">
+							<div ng-repeat="option in quiz.options">
+								<label class="checkbox" style="cursor:pointer" ng-if="quiz.quiz_type=='multi'">
+									<input type="checkbox" name="{{quiz.uqid}}" ng-model="option.answer"/>
+									<span ng-if="!option.latex">{{option.item}}</span>
+									<span ng-if="option.latex" mathjax-bind="option.item"></span>
+								</label>
+								<label class="radio" style="cursor:pointer" ng-if="quiz.quiz_type=='single'">
+									<input type="radio" name="{{quiz.uqid}}" value="{{option.value}}" ng-model="quiz.single"/>
+									<span ng-if="!option.latex">{{option.item}}</span>
+									<span ng-if="option.latex" mathjax-bind="option.item"></span>
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div style="margin:10px 0">
+					<a class="btn btn-primary" ng-click="syncStudyCtrl.sendQuizResult()">
+						<span translate="L003" remark="送出" quiz-submit></span>
+					</a>
+				</div>
+			</div>
+			<div ng-if="syncStudyCtrl.currentUnit.unit_type=='poll'" ng-style="{width:syncStudyCtrl.contentWidth+'px', height:syncStudyCtrl.contentHeight+'px'}" style="overflow:auto;padding:10px">
+				<h3 style="padding:30px;background:#fff;border:1px solid #ddd">
+					<div ng-bind-html="syncStudyCtrl.currentUnit.content.content"></div>
+					<div style="margin-top:20px">
+						<label class="checkbox" style="cursor:pointer" ng-repeat="option in syncStudyCtrl.currentUnit.content.options">
+							<input type="checkbox" name="{{syncStudyCtrl.currentUnit.uqid}}" ng-model="option.answer"/>
+							<span ng-if="!option.latex">{{option.item}}</span>
+							<span ng-if="option.latex" mathjax-bind="option.item"></span>
+						</label>
+					</div>
+				</h3>
+				<div style="margin:10px 0">
+					<a class="btn btn-primary" ng-click="syncStudyCtrl.sendPollResult()">
+						<span translate="L003" remark="送出" poll-submit></span>
+					</a>
+				</div>
+			</div>
+			<div ng-if="syncStudyCtrl.currentUnit.unit_type=='qa'" ng-style="{width:syncStudyCtrl.contentWidth+'px', height:syncStudyCtrl.contentHeight+'px'}" style="overflow:auto;padding:10px">
+				<h3><div ng-bind-html="syncStudyCtrl.currentUnit.content"></div></h3>
+				<div style="margin-top:20px">
+					<div id="qa-result" style="height:200px"></div>
+				</div>
+				<div style="margin:10px 0">
+					<a class="btn btn-primary" ng-click="syncStudyCtrl.sendQAResult()">
+						<span translate="L003" remark="送出" qa-submit></span>
+					</a>
+				</div>
+			</div>
+			<div ng-if="syncStudyCtrl.currentUnit.unit_type=='draw'" ng-style="{width:syncStudyCtrl.contentWidth+'px', height:syncStudyCtrl.contentHeight+'px'}">
+				<div id="draw-board" ng-style="{width:syncStudyCtrl.contentWidth+'px', height:syncStudyCtrl.contentHeight+'px', background:syncStudyCtrl.currentUnit.backgroundImage}" style="background:rgba(0,0,0,0);bottom:0">
+					<canvas></canvas>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div ng-show="syncStudyCtrl.lockedScreen">
+		<div style="text-align:center">
+			<span class="text-danger" style="font-size:8em;line-height:4em">Screen Locked</span>
+		</div>
+	</div>
+
+	<div ng-show="syncStudyCtrl.dispatchModel" style="min-width:880px">
+		<nav class="navbar navbar-static-top navbar-inverse" style="min-width:880px;z-index:1280;padding:0 10px">
+			<ul class="nav navbar-nav">
+				<li>
+					<a style="padding:9px"><span>{{syncStudyCtrl.dispatchModel.title}}</span></a>
+				</li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right" style="margin:0">
+				<li>
+					<a style="padding:9px">
+						<span class="label" ng-class="{'label-success': syncStudyCtrl.profile.behavior.total>0, 'label-danger': syncStudyCtrl.profile.behavior.total<0, 'label-info': syncStudyCtrl.profile.behavior.total==0}"><i class="fa fa-fw fa-trophy"></i> {{syncStudyCtrl.profile.behavior.total}}</span>
+					</a>
+				</li>
+				<li>
+					<a style="padding:9px">{{syncStudyCtrl.profile.full_name}}</a>
+				</li>
+				<li>
+					<a href="javascript:;" style="padding:9px" ng-click="syncStudyCtrl.leaveClassroom()">
+						<i class="fa fa-fw fa-sign-out"></i>
+					</a>
+				</li>
+			</ul>
+		</nav>
+
+		<div ng-style="{height:syncStudyCtrl.contentHeight+'px'}" style="overflow:auto;-webkit-overflow-scrolling:touch" ng-bind-html="syncStudyCtrl.dispatchModel.content"></div>
+	</div>
+</div>

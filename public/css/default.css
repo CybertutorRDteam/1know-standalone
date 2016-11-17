@@ -1,0 +1,235 @@
+@font-face {
+	font-family: 'Open Sans';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Open Sans'), local('OpenSans'), url(OpenSans.woff) format('woff');
+}
+body {
+	font-family: Helvetica, Tahoma, Arial, STXihei, "华文细黑", "Microsoft YaHei", "微软雅黑", SimSun, "宋体", Heiti, "黑体", sans-serif;
+	background: url(/img/bg.jpg);
+	padding: 0;
+}
+
+.redactor_box{border: 1px solid #ddd;}
+.dropdown-submenu{position:relative;}
+.dropdown-submenu>.dropdown-menu{top:0;left:100%;margin-top:-6px;margin-left:-1px;}
+.dropdown-submenu:hover>.dropdown-menu{display:block;}
+.logo { opacity: .9; }
+.logo:hover { opacity: 1 }
+.logo span { color: #fff; }
+.logo .logo-header { font-size: 95%; }
+.logo .logo-footer { font-size: 55%; }
+.navbar {
+	min-height: 38px;
+	min-width: 970px;
+	margin: 0;
+	border: 0;
+	background-color: rgba(34,34,34,0.88);
+}
+.navbar-brand {
+	height: auto;
+}
+.container {
+	max-width: none !important;
+	width: 970px;
+}
+.tooltip-inner {
+    max-width: 100%;
+    text-align: left;
+}
+.thumbnail {
+	position: relative;
+	padding: 0;
+}
+.thumbnail .cover {
+	background: transparent;;
+}
+.thumbnail .cover:hover {
+	background: rgba(0,0,0,0.3);
+	cursor: pointer;
+}
+.thumbnail .link:hover {
+	color: #999;
+	text-decoration-color: #999;
+}
+.thumbnail .card-hover {
+	background: transparent;
+	width: 100%;
+	height: 100%;
+}
+.thumbnail .card-hover:hover {
+	background: rgba(0,0,0,0.1);
+	cursor: pointer;
+}
+.note-card {
+	border: 1px solid #ddd;
+	margin-bottom: 5px;
+	padding: 6px;
+}
+.note-card:hover {
+	box-shadow: 0px 0px 15px rgba(0,0,0,0.8);
+}
+.activity-chart-header {
+	transform: rotate(-22.5deg);
+	-ms-transform: rotate(-22.5deg);
+	-webkit-transform: rotate(-22.5deg);
+	-o-transform: rotate(-22.5deg);
+	-moz-transform: rotate(-22.5deg);
+	transform-origin: 90%;
+	-ms-transform-origin: 90%;
+	-webkit-transform-origin: 90%;
+	-o-transform-origin: 90%;
+	-moz-transform-origin: 90%;
+	width: 120px;
+	text-align: left;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	position: absolute;
+}
+.activity-chart-header:hover {
+	cursor: pointer;
+	color: #31708f;
+	font-weight: bold;
+}
+.activity-chart-member {
+	width: 112px;
+	height: 22px;
+	text-align: left;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+.activity-chart-member:hover {
+	cursor: pointer;
+	color: #31708f;
+	font-weight: bold;
+}
+
+.reveal-animate.ng-enter {
+	-webkit-transition: 1s linear all;
+	-moz-transition: 1s linear all;
+	-ms-transition: 1s linear all;
+	-o-transition: 1s linear all;
+	transition: 1s linear all;
+	opacity: 0;
+}
+.reveal-animate.ng-enter.ng-enter-active {
+	opacity: 1;
+}
+
+.side-animate.ng-enter {
+	-webkit-transition: 1s linear all;
+	-moz-transition: 1s linear all;
+	-ms-transition: 1s linear all;
+	-o-transition: 1s linear all;
+	transition: 1s linear all;
+	position: relative;
+	opacity: 0;
+	left: 40px;
+}
+.side-animate.ng-enter.ng-enter-active {
+	opacity: 1;
+	left: 0;
+}
+
+.down-animate {
+	-webkit-transition: 1s linear all;
+	-moz-transition: 1s linear all;
+	-ms-transition: 1s linear all;
+	-o-transition: 1s linear all;
+	transition: 1s linear all;
+	opacity: 1;
+	bottom: 0;
+}
+
+.down-animate.ng-hide-add,
+.down-animate.ng-hide-remove {
+	display: block!important;
+}
+
+.down-animate.ng-hide {
+	opacity: 0;
+	bottom: 300px;
+}
+
+.board-animate {
+	-webkit-transition: .5s linear all;
+	-moz-transition: .5s linear all;
+	-ms-transition: .5s linear all;
+	-o-transition: .5s linear all;
+	transition: .5s linear all;
+	opacity: 1;
+	left: 0;
+}
+
+.board-animate.ng-hide-add,
+.board-animate.ng-hide-remove {
+	display: block!important;
+}
+
+.board-animate.ng-hide {
+	opacity: 0;
+	left: 100px;
+}
+
+@-webkit-keyframes saving {
+	0%   {opacity: 0}
+	100% {opacity: 1}
+}
+@-moz-keyframes saving {
+	0%   {opacity: 0}
+	100% {opacity: 1}
+}
+@-ms-keyframes saving {
+	0%   {opacity: 0}
+	100% {opacity: 1}
+}
+@-o-keyframes saving {
+	0%   {opacity: 0}
+	100% {opacity: 1}
+}
+@keyframes saving {
+	0%   {opacity: 0}
+	100% {opacity: 1}
+}
+.saving {
+	-webkit-animation: saving 1s linear 0s infinite alternate;
+	-moz-animation: saving 1s linear 0s infinite alternate;
+	-ms-animation: saving 1s linear 0s infinite alternate;
+	-o-animation: saving 1s linear 0s infinite alternate;
+	animation: saving 1s linear 0s infinite alternate;
+}
+
+@-webkit-keyframes alert {
+	0%   {opacity: 0}
+	50%  {opacity: 1}
+	100% {opacity: 0}
+}
+@-moz-keyframes alert {
+	0%   {opacity: 0}
+	50%  {opacity: 1}
+	100% {opacity: 0}
+}
+@-ms-keyframes alert {
+	0%   {opacity: 0}
+	50%  {opacity: 1}
+	100% {opacity: 0}
+}
+@-o-keyframes alert {
+	0%   {opacity: 0}
+	50%  {opacity: 1}
+	100% {opacity: 0}
+}
+@keyframes alert {
+	0%   {opacity: 0}
+	50%  {opacity: 1}
+	100% {opacity: 0}
+}
+.alert-animation {
+	-webkit-animation: alert 2s linear 0s;
+	-moz-animation: alert 2s linear 0s;
+	-ms-animation: alert 2s linear 0s;
+	-o-animation: alert 2s linear 0s;
+	animation: alert 2s linear 0s;
+}

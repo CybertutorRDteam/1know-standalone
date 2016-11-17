@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="1know">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# object: http://ogp.me/ns/object#">
+    <title><%= @content[:name] %></title>
+
+    <meta charset="UTF-8">
+
+    <meta name="keywords" content="1know, oneknow, ischool, flip, classroom, e-learning" />
+    <meta name="description" content="<%= @content[:description].gsub(/<\/?[^>]*>/, "")[0, 120] if @content[:description] != nil %>..." />
+    <meta name="author" content="ischool" />
+
+    <meta property="fb:app_id" content="143261322503748" />
+    <meta property="og:url" content="<%= @content[:page] %>" />
+    <meta property="og:title" content="<%= @content[:name] %>" />
+    <meta property="og:description" content="<%= @content[:description].gsub(/<\/?[^>]*>/, "")[0, 120] if @content[:description] != nil %>..." />
+    <meta property="og:image" content="<%= @content[:logo] %>" />
+
+    <link rel="icon" href="<%= @content[:logo]%>" />
+
+    <link rel="stylesheet" href="/library/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/library/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="/css/default.css">
+
+    <script src="/library/jquery/jquery-1.11.0.min.js"></script>
+    <script src="/library/angularjs/angular.min.js"></script>
+    <script src="/library/angularjs/angular-translate.min.js"></script>
+    <script src="/library/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/js/language.js"></script>
+
+    <script>
+        var web_name = "<%=@APP_CONFIG['web_name']%>";
+        var logo = "<%=@APP_CONFIG['logo']%>";
+        var copyright = "<%=@APP_CONFIG['copyright']%>";
+        var service_email = "<%=@APP_CONFIG['service_email']%>";
+    </script>
+</head>
+
+<body ng-controller="MainCtrl as mainCtrl">
+    <div id="globalAlertModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h4 class="text-danger">{{global.message}}</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="shareModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="btn-group">
+                        <a class="btn" ng-class="{'btn-default': mainCtrl.shareTarget.type != 'social', 'btn-primary': mainCtrl.shareTarget.type == 'social'}"
+                            ng-click="mainCtrl.shareTarget.type='social'">
+                            <span translate="Q001" remark="分享這個頻道"></span>
+                        </a>
+                        <a class="btn" ng-class="{'btn-default': mainCtrl.shareTarget.type != 'embed', 'btn-primary': mainCtrl.shareTarget.type == 'embed'}"
+                            ng-click="mainCtrl.shareTarget.type='embed'">
+                            <span translate="Q002" remark="嵌入"></span>
+                        </a>
+                        <a class="btn" ng-class="{'btn-default': mainCtrl.shareTarget.type != 'email', 'btn-primary': mainCtrl.shareTarget.type == 'email'}"
+                            ng-click="mainCtrl.shareTarget.type='email'">
+                            <span translate="Q003" remark="電子郵件"></span>
+                        </a>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div ng-if="mainCtrl.shareTarget.type=='social'">
+                        <div>
+                            <input type="text" class="form-control" ng-model="mainCtrl.shareTarget.page"/>
+                        </div>
+                        <div style="margin-top:10px">
+                            <a class="btn btn-sm btn-primary" ng-href="https://www.facebook.com/sharer/sharer.php?u={{mainCtrl.shareTarget.encodePage}}" target="_blank">
+                                <i class="fa fa-fw fa-facebook"></i>
+                            </a>
+                            <a class="btn btn-sm btn-info" ng-href="https://twitter.com/share?text={{mainCtrl.shareTarget.name}}&via=1know&url={{mainCtrl.shareTarget.encodePage}}" target="_blank">
+                                <i class="fa fa-fw fa-twitter"></i>
+                            </a>
+                            <a class="btn btn-sm btn-danger" ng-href="https://plus.google.com/share?url={{mainCtrl.shareTarget.encodePage}}" target="_blank">
+                                <i class="fa fa-fw fa-google-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div ng-if="mainCtrl.shareTarget.type=='embed'">
+                        <textarea class="form-control" rows="3" style="resize:vertical" ng-model="mainCtrl.shareTarget.embed.code"></textarea>
+                        <div style="margin-top:10px">
+                            <label translate="Q004" remark="顯示大小"></label><label>：</label>
+                            <input type="text" style="width:50px;padding:0 5px;text-align:center" ng-model="mainCtrl.shareTarget.embed.width" ng-change="mainCtrl.changeShareEmbed()"/>
+                            <label> x </label>
+                            <input type="text" style="width:50px;padding:0 5px;text-align:center" ng-model="mainCtrl.shareTarget.embed.height" ng-change="mainCtrl.changeShareEmbed()"/>
+                        </div>
+                    </div>
+                    <div ng-if="mainCtrl.shareTarget.type=='email'">
+                        <div>
+                            <label translate="Q005" remark="收件者"></label>
+                            <textarea class="form-control" rows="1" style="resize:none" ng-model="mainCtrl.shareTarget.email.user"></textarea>
+                        </div>
+                        <div style="margin-top:10px">
+                            <label translate="Q006" remark="備註"></label>
+                            <textarea class="form-control" rows="3" style="resize:vertical" ng-model="mainCtrl.shareTarget.email.memo"></textarea>
+                        </div>
+                        <div style="margin-top:10px">
+                            <a class="btn btn-primary" ng-click="mainCtrl.sendShareEmail()">
+                                <span translate="Q007" remark="傳送電子郵件"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div style="margin-top:60px" progress-container>
+            <div class="progress progress-striped active" style="margin:0 auto;height:32px;width:400px">
+                <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                    <h5><span remark="讀取中">Loading</span>...</h5>
+                </div>
+            </div>
+        </div>
+        <div style="display:none" main-container>
+            <nav class="navbar navbar-static-top navbar-inverse">
+                <div class="container">
+                    <div class="navbar-header">
+                        <a href="javascript:;" class="navbar-brand logo" style="padding:7px 15px" ng-click="mainCtrl.open1know()">
+                            <img ng-show="mainCtrl.logo" ng-src="{{ mainCtrl.logo }}">
+                            <span ng-show="!mainCtrl.logo && mainCtrl.web_name" class="logo-header">{{ mainCtrl.web_name }}</span>
+                            <span ng-show="!mainCtrl.logo && !mainCtrl.web_name" class="logo-header"><span style="color:#f00">1</span>Know</span>
+                        </a>
+                    </div>
+                    <div class="collapse navbar-collapse" ng-if="mainCtrl.channel&&mainCtrl.channel.account">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <a href="javascript:;" style="padding:7px">
+                                    <img ng-src="{{mainCtrl.channel.account.photo}}" style="width:24px;height:24px"/>
+                                    <span style="margin:0 4px">{{mainCtrl.channel.account.full_name}}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container" style="margin:20px auto">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div style="width:200px;float:left">
+                            <img src="<%= @content[:logo] %>" style="width:100%"/>
+                            <div style="margin-top:10px" ng-if="mainCtrl.channel" ng-switch="mainCtrl.channel.account!=null">
+                                <div ng-switch-when="true" ng-switch="mainCtrl.channel.subscribed">
+                                    <a class="btn btn-danger btn-block" ng-switch-when="true" ng-click="mainCtrl.open()">
+                                        <span translate="Q009" remark="已訂閱">已訂閱</span>
+                                    </a>
+                                    <a class="btn btn-danger btn-block" ng-switch-when="false" ng-click="mainCtrl.subscribe()">
+                                        <span translate="Q010" remark="訂閱">訂閱</span>
+                                    </a>
+                                </div>
+                                <div ng-switch-when="false">
+                                    <a class="btn btn-block btn-danger" ng-click="mainCtrl.signinWithIschool()">
+                                        <span translate="Q010" remark="訂閱">訂閱</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-left:220px">
+                            <div class="pull-right" style="margin-left:20px">
+                                <a class="btn btn-sm btn-danger" ng-click="mainCtrl.showShareModal()">
+                                    <span translate="Q011" remark="分享"></span>
+                                </a>
+                            </div>
+                            <h3 style="margin:10px 0 20px">{{mainCtrl.channel.name}}</h3>
+                            <div>
+                                <div ng-bind-html="mainCtrl.channel.description"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-9">
+                        <span>
+                            <a href="javascript:;" ng-click="mainCtrl.loadCategory(null, true)" ng-if="!mainCtrl.channel.view">
+                                <span>{{mainCtrl.channel.name}}</span>
+                            </a>
+                            <span class="text-muted" ng-if="mainCtrl.channel.view">{{mainCtrl.channel.name}}</span>
+                        </span>
+                        <span ng-repeat="item in mainCtrl.channel.categoryPath">
+                            <span class="divider"><i class="fa fa-fw fa-angle-double-right"></i></span>
+                            <a href="javascript:;" ng-click="mainCtrl.loadCategory(item, false)" ng-if="!item.view">
+                                <span>{{item.name}}</span>
+                            </a>
+                            <span class="text-muted" ng-if="item.view">{{item.name}}</span>
+                        </span>
+                    </div>
+                    <div class="col-xs-3">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-fw fa-search"></i></span>
+                            <input type="text" class="form-control" ng-model="mainCtrl.searchWord" ng-keyup="mainCtrl.searchKnow($event)">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top:20px">
+                    <div ng-if="!mainCtrl.knowledges">
+                        <div ng-if="mainCtrl.channel.targetCategory.categories.length>0">
+                            <div class="row">
+                                <div class="col-xs-4" ng-repeat="item in mainCtrl.channel.targetCategory.categories">
+                                    <div class="thumbnail" style="border-radius:0" ng-click="mainCtrl.loadCategory(item, false)">
+                                        <div class="card-hover" style="position:absolute"></div>
+                                        <div class="pull-left" style="padding-top:10px" ng-if="!item.logo">
+                                            <i class="fa fa-fw fa-folder-o text-info" style="font-size:6em"></i>
+                                        </div>
+                                        <img class="pull-left" style="width:96px;height:96px" ng-src="{{item.logo}}" ng-if="item.logo"/>
+                                        <div style="margin-left:108px;height:94px;padding:15px 10px 10px 15px">
+                                            <div style="margin-top:4px">
+                                                <div style="font-size:16px">{{item.name}}</div>
+                                                <div class="text-muted" style="margin-top:4px">
+                                                    <span style="margin-right:8px" ng-if="item.category_size>0"><i class="fa fa-fw fa-folder-o"></i> {{item.category_size}}</span>
+                                                    <span ng-if="item.knowledge_size>0"><i class="fa fa-fw fa-book"></i> {{item.knowledge_size}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-if="mainCtrl.channel.targetCategory.knowledges.length>0">
+                            <div class="row">
+                                <div class="col-xs-4" ng-repeat="item in mainCtrl.channel.targetCategory.knowledges">
+                                    <div class="thumbnail" style="border-radius:0" ng-click="mainCtrl.openKnowledge(item)">
+                                        <div class="card-hover" style="position:absolute"></div>
+                                        <img class="pull-left" style="width:96px;height:96px" ng-src="{{item.logo}}"/>
+                                        <div style="margin-left:96px;height:96px;padding:15px 10px 10px 15px">
+                                            <div style="font-size:15px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+                                            <div class="text-muted" style="font-size:13px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.editor.full_name}}</div>
+                                            <div class="text-muted" style="margin-top:10px">
+                                                <span>
+                                                    <i class="fa fa-star" ng-style="{'color': item.average_rate >= 1 ? '#eeb929' : '#cacaca'}"></i>
+                                                    <i class="fa fa-star" ng-style="{'color': item.average_rate >= 2 ? '#eeb929' : '#cacaca'}"></i>
+                                                    <i class="fa fa-star" ng-style="{'color': item.average_rate >= 3 ? '#eeb929' : '#cacaca'}"></i>
+                                                    <i class="fa fa-star" ng-style="{'color': item.average_rate >= 4 ? '#eeb929' : '#cacaca'}"></i>
+                                                    <i class="fa fa-star" ng-style="{'color': item.average_rate == 5 ? '#eeb929' : '#cacaca'}"></i>
+                                                </span>
+                                                <span class="pull-right">
+                                                    <i class="fa fa-fw fa-user"></i> {{item.readers}}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="mainCtrl.knowledges">
+                        <div class="row">
+                            <div class="col-xs-4" ng-repeat="item in mainCtrl.knowledges">
+                                <div class="thumbnail" style="border-radius:0" ng-click="mainCtrl.openKnowledge(item)">
+                                    <div class="card-hover" style="position:absolute"></div>
+                                    <img class="pull-left" style="width:96px;height:96px" ng-src="{{item.logo}}"/>
+                                    <div style="margin-left:96px;height:96px;padding:15px 10px 10px 15px">
+                                        <div style="font-size:15px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+                                        <div class="text-muted" style="font-size:13px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.editor.full_name}}</div>
+                                        <div class="text-muted" style="margin-top:10px">
+                                            <span>
+                                                <i class="fa fa-star" ng-style="{'color': item.average_rate >= 1 ? '#eeb929' : '#cacaca'}"></i>
+                                                <i class="fa fa-star" ng-style="{'color': item.average_rate >= 2 ? '#eeb929' : '#cacaca'}"></i>
+                                                <i class="fa fa-star" ng-style="{'color': item.average_rate >= 3 ? '#eeb929' : '#cacaca'}"></i>
+                                                <i class="fa fa-star" ng-style="{'color': item.average_rate >= 4 ? '#eeb929' : '#cacaca'}"></i>
+                                                <i class="fa fa-star" ng-style="{'color': item.average_rate == 5 ? '#eeb929' : '#cacaca'}"></i>
+                                            </span>
+                                            <span class="pull-right">
+                                                <i class="fa fa-fw fa-user"></i> {{item.readers}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container" style="text-align:center;margin-top:20px">
+                <span style="margin:0 8px">{{mainCtrl.copyright}}</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        angular.module('1know', ['pascalprecht.translate'])
+        .config(function($sceProvider, $locationProvider, $translateProvider) {
+            $sceProvider.enabled(false);
+            $locationProvider.html5Mode(true);
+            $translateProvider.translations('zh-tw', translations['zh-tw']);
+            $translateProvider.translations('zh-cn', translations['zh-cn']);
+            $translateProvider.translations('en-us', translations['en-us']);
+            $translateProvider.translations('es-es', translations['es-es']);
+            $translateProvider.translations('de-de', translations['de-de']);
+        })
+        .controller('MainCtrl', function($scope, $http, $location, $timeout, $translate, $window) {
+            var self = this;
+
+            self.web_name = $window.web_name;
+            self.logo = $window.logo;
+            self.copyright = $window.copyright;
+            self.service_email = $window.service_email
+
+            self.service_url = [location.origin, '/private'].join('');
+            self.global = { message: '' };
+
+            self.showShareModal = function() {
+                self.shareTarget = {
+                    uqid: self.channel.uqid,
+                    name: self.channel.name,
+                    page: self.channel.page,
+                    encodePage: encodeURIComponent(self.channel.page),
+                    embed: {
+                        width: 800,
+                        height: 600,
+                        code: ['<iframe width="800" height="600" src="', self.channel.page, '" frameborder="0" allowfullscreen></iframe>'].join('')
+                    },
+                    email: {
+                        user: '',
+                        memo: ''
+                    },
+                    type: 'social'
+                };
+
+                $('#shareModal').modal('show');
+            }
+
+            self.changeShareEmbed = function() {
+                self.shareTarget.embed.code = ['<iframe width="', self.shareTarget.embed.width, '" height="', self.shareTarget.embed.height, '" src="', self.shareTarget.page, '" frameborder="0" allowfullscreen></iframe>'].join('');
+            }
+
+            self.sendShareEmail = function() {
+                if (self.shareTarget.email.user !== undefined && self.shareTarget.email.user !== '') {
+                    var data = {
+                        url: self.shareTarget.page,
+                        uqid: self.shareTarget.uqid,
+                        email: self.shareTarget.email.user,
+                        memo: self.shareTarget.email.memo,
+                        type: 'channel'
+                    };
+
+                    $http.post([self.service_url, '/utility/sendMail'].join(''), data)
+                    .success(function(response, status) {
+                        $('#shareModal').modal('hide');
+                    });
+                }
+            }
+
+            self.open1know = function() {
+                window.location.href = [$location.protocol(), '://', $location.host(),($location.port() == 80?'':':'+$location.port())].join('');
+            }
+
+            self.signinWithIschool = function() {
+                var width = 800;
+                var height = 700;
+                var top = (screen.height/2)-(height/2);
+                var left = (screen.width/2)-(width/2);
+                var state = encodeURIComponent(['subscribe_channel:', self.channel.uqid].join(''));
+                var target = ['https://auth.ischool.com.tw/oauth/authorize.php?client_id=a266592ce660b43f980d49b4079d53ed&response_type=code&state=', state, '&redirect_uri=', window.location.origin, '/oauth/ischool&lang=', self.lang, '&scope=User.Mail,User.BasicInfo'].join('');
+
+                window.open(target, '1409620722041', ['width=',width,',height=',height,',menubar=0,titlebar=0,status=0,top=',top,',left=',left].join(''));
+            }
+
+            self.subscribe = function() {
+                $http.post([self.service_url, '/discovery/channels/', self.channel.uqid, '/subscribe'].join(''))
+                .success(function(response, status) {
+                    if (!response.error)
+                        window.location.href = [location.origin, "/discover/channel/", self.channel.uqid].join('');
+                    else {
+                        self.global.message = response.error;
+                        $('#globalAlertModal').modal('show');
+                        $('#globalAlertModal').on('hidden.bs.modal', function() {
+                            self.global.message = '';
+                        });
+                    }
+                });
+            }
+
+            self.loadCategory = function(category, lastItem) {
+                delete self.searchWord;
+                delete self.knowledges;
+
+                if (category === null) {
+                    self.channel.liClass = 'active';
+                    self.channel.categoryPath = [];
+                    self.channel.targetCategory = self.channel;
+                    return;
+                }
+
+                self.channel.targetCategory = category;
+
+                if (lastItem) {
+                    category.view = true;
+                    self.channel.view = false;
+                    self.channel.categoryPath = [];
+                    self.channel.categoryPath.push(category);
+                }
+                else {
+                    var path = [];
+                    for (var i=0;i<self.channel.categoryPath.length;i++) {
+                        if (category.uqid !== self.channel.categoryPath[i].uqid) {
+                            self.channel.categoryPath[i].view = false;
+                            path.push(self.channel.categoryPath[i]);
+                        }
+                        else
+                            i = self.channel.categoryPath.length;
+                    }
+                    category.view = true;
+                    path.push(category);
+                    self.channel.view = false;
+                    self.channel.categoryPath = path;
+                }
+
+                if (self.channel.targetCategory.isLoad === undefined) {
+                    $http.get([self.service_url, '/discovery/channels/', self.channel.uqid, '/categories/', self.channel.targetCategory.uqid].join(''))
+                    .success(function(response, status) {
+                        self.channel.targetCategory.categories = response.categories;
+                        self.channel.targetCategory.knowledges = response.knowledges;
+                        self.channel.targetCategory.isLoad = true;
+
+                        angular.forEach(response.knowledges, function(item) {
+                            item.format_time = new Date(949334400000 + item.total_time * 1000);
+                        });
+                    });
+                }
+            }
+
+            self.searchKnow = function(event) {
+                if (event.keyCode !== 13) return;
+
+                if (self.searchWord !== undefined && self.searchWord !== '') {
+                    $http.get([self.service_url, '/discovery/channels/', self.channel.uqid, '/knowledges?keyword=', self.searchWord].join(''))
+                    .success(function(response, status) {
+                        self.knowledges = response;
+
+                        angular.forEach(response, function(item) {
+                            item.format_time = new Date(949334400000 + item.total_time * 1000);
+                        });
+                    });
+                }
+                else
+                    self.clearKnowledge();
+            }
+
+            self.clearKnowledge = function() {
+                delete self.searchWord;
+                delete self.knowledges;
+
+                self.loadChannel(self.channel.uqid);
+            }
+
+            self.openKnowledge = function(know) {
+                if (!know.subscribed)
+                    window.open(know.page, '_blank');
+                else
+                    window.open([location.origin, '/learn/knowledge/', know.uqid].join(''), '_blank');
+            }
+
+            $http.get([$location.protocol(), '://', $location.host(),($location.port() == 80?'':':'+$location.port()), '/channel/<%= @content[:uqid] %>.json'].join(''))
+            .success(function(response, status) {
+                self.channel = response;
+                self.channel.encodePage = encodeURIComponent(response.page);
+                self.loadCategory(null, true);
+
+                $('[progress-container]').hide();
+                $('[main-container]').show();
+
+                if (response.account) {
+                    $translate.uses(response.account.language.type);
+                }
+                else {
+                    var lang = 'en-us';
+
+                    if (window.navigator.language !== undefined)
+                        lang = window.navigator.language.toLowerCase();
+                    else if (window.navigator.systemLanguage !== undefined)
+                        lang = window.navigator.systemLanguage.toLowerCase();
+
+                    $translate.uses(lang);
+                }
+            });
+        })
+    </script>
+</body>
+</html>

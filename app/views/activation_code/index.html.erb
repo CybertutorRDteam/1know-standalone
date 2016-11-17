@@ -1,0 +1,12 @@
+<!--
+<form action="/activation_code/set_a_code" method="post">
+	<input type="text" placeholder="請輸入啟動碼 ..." name="code" />
+	<button type="submit">送出</button>
+</form>
+-->
+
+<%= form_tag "/activation_code/set_a_code" do %>
+    <%= text_field_tag :code %>
+    <%= text_field_tag :user_id %>
+    <%= submit_tag %>
+<% end %>

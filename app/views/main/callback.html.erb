@@ -1,0 +1,19 @@
+<html>
+	<body>
+		<script>
+			try {
+				if (window.opener && window.opener.location.origin === window.location.origin) {
+					window.opener.location.href = "<%= @target ? @target : '/' %>";
+					window.close();
+				} else if ("<%= @target %>") {
+					window.location.href = "<%= @target ? @target : '/' %>";
+				}
+				else
+					window.location.href = '/';
+			}
+			catch(error) {
+				window.location.href = '/';
+			}
+		</script>
+	</body>
+</html>

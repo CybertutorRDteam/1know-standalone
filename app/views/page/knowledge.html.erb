@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="1know">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# object: http://ogp.me/ns/object#">
+    <title><%= @content[:name] %></title>
+
+    <meta charset="UTF-8">
+
+    <meta name="keywords" content="1know, oneknow, ischool, flip, classroom, e-learning" />
+    <meta name="description" content="<%= @content[:description].gsub(/<\/?[^>]*>/, "")[0, 120] if @content[:description] != nil %>..." />
+    <meta name="author" content="ischool" />
+
+    <meta property="fb:app_id" content="143261322503748" />
+    <meta property="og:url" content="<%= @content[:page] %>" />
+    <meta property="og:title" content="<%= @content[:name] %>" />
+    <meta property="og:description" content="<%= @content[:description].gsub(/<\/?[^>]*>/, "")[0, 120] if @content[:description] != nil %>..." />
+    <meta property="og:image" content="<%= @content[:logo] %>" />
+
+    <link rel="icon" href="<%= @content[:logo]%>" />
+
+    <link rel="stylesheet" href="/library/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/library/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="/library/video-js/video-js.css" />
+    <link rel="stylesheet" href="/library/literallycanvas/literallycanvas.css" />
+    <link rel="stylesheet" href="/css/default.css">
+
+    <script src="/library/jquery/jquery-1.11.0.min.js"></script>
+    <script src="/library/angularjs/angular.min.js"></script>
+    <script src="/library/angularjs/angular-translate.min.js"></script>
+    <script src="/library/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/library/underscore/underscore.min.js"></script>
+    <script src="/library/literallycanvas/literallycanvas.js"></script>
+    <script src="/library/video-js/video.js"></script>
+    <script src="/library/video-js/plugins/vjs.youtube.js"></script>
+    <script src="/library/video-js/plugins/vjs.vimeo.js"></script>
+    <script src="/library/video-js/plugins/vjs.speed.js"></script>
+    <script src="/js/language.js"></script>
+
+    <script>
+        var web_name = "<%=@APP_CONFIG['web_name']%>";
+        var logo = "<%=@APP_CONFIG['logo']%>";
+        var copyright = "<%=@APP_CONFIG['copyright']%>";
+        var service_email = "<%=@APP_CONFIG['service_email']%>";
+    </script>
+</head>
+
+<body ng-controller="MainCtrl as mainCtrl">
+    <div id="globalAlertModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h4 class="text-danger">{{global.message}}</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="shareModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="btn-group">
+                        <a class="btn" ng-class="{'btn-default': mainCtrl.shareTarget.type != 'social', 'btn-primary': mainCtrl.shareTarget.type == 'social'}"
+                            ng-click="mainCtrl.shareTarget.type='social'">
+                            <span translate="O001" remark="分享這個知識"></span>
+                        </a>
+                        <a class="btn" ng-class="{'btn-default': mainCtrl.shareTarget.type != 'embed', 'btn-primary': mainCtrl.shareTarget.type == 'embed'}"
+                            ng-click="mainCtrl.shareTarget.type='embed'">
+                            <span translate="O002" remark="嵌入"></span>
+                        </a>
+                        <a class="btn" ng-class="{'btn-default': mainCtrl.shareTarget.type != 'email', 'btn-primary': mainCtrl.shareTarget.type == 'email'}"
+                            ng-click="mainCtrl.shareTarget.type='email'">
+                            <span translate="O003" remark="電子郵件"></span>
+                        </a>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div ng-if="mainCtrl.shareTarget.type=='social'">
+                        <div class="input-group">
+                            <input type="text" class="form-control" ng-model="mainCtrl.shareTarget.page"/>
+                            <span class="input-group-btn">
+                                <a class="btn btn-default" ng-href="{{mainCtrl.shareTarget.page}}" target="_blank">
+                                    <i class="fa fa-fw fa-share"></i>
+                                </a>
+                            </span>
+                        </div>
+                        <div style="margin-top:10px">
+                            <!-- <a class="btn btn-sm btn-primary" ng-href="https://www.facebook.com/sharer/sharer.php?u={{mainCtrl.shareTarget.encodePage}}" target="_blank">
+                                <i class="fa fa-fw fa-facebook"></i>
+                            </a>
+                            <a class="btn btn-sm btn-info" ng-href="https://twitter.com/share?text={{mainCtrl.shareTarget.name}}&via=1know&url={{mainCtrl.shareTarget.encodePage}}" target="_blank">
+                                <i class="fa fa-fw fa-twitter"></i>
+                            </a>
+                            <a class="btn btn-sm btn-danger" ng-href="https://plus.google.com/share?url={{mainCtrl.shareTarget.encodePage}}" target="_blank">
+                                <i class="fa fa-fw fa-google-plus"></i>
+                            </a> -->
+                        </div>
+                    </div>
+                    <div ng-if="mainCtrl.shareTarget.type=='embed'">
+                        <textarea class="form-control" rows="3" style="resize:vertical" ng-model="mainCtrl.shareTarget.embed.code"></textarea>
+                        <div style="margin-top:10px">
+                            <label translate="O004" remark="顯示大小"></label><label>：</label>
+                            <input type="text" style="width:50px;padding:0 5px;text-align:center" ng-model="mainCtrl.shareTarget.embed.width" ng-change="mainCtrl.changeShareEmbed()"/>
+                            <label> x </label>
+                            <input type="text" style="width:50px;padding:0 5px;text-align:center" ng-model="mainCtrl.shareTarget.embed.height" ng-change="mainCtrl.changeShareEmbed()"/>
+                        </div>
+                    </div>
+                    <div ng-if="mainCtrl.shareTarget.type=='email'">
+                        <div>
+                            <label translate="O005" remark="收件者"></label>
+                            <textarea class="form-control" rows="1" style="resize:none" ng-model="mainCtrl.shareTarget.email.user"></textarea>
+                        </div>
+                        <div style="margin-top:10px">
+                            <label translate="O006" remark="備註"></label>
+                            <textarea class="form-control" rows="3" style="resize:vertical" ng-model="mainCtrl.shareTarget.email.memo"></textarea>
+                        </div>
+                        <div style="margin-top:10px">
+                            <a class="btn btn-primary" ng-click="mainCtrl.sendShareEmail()">
+                                <span translate="O007" remark="傳送電子郵件"></span>
+                            </a>
+                        </div>
+                    </div>
+                    <div style="margin-top:20px;padding-top:10px;border-top:1px solid #ddd">
+                        <label class="pull-right" style="cursor:pointer" ng-if="mainCtrl.knowledge.account">
+                            <input type="checkbox" ng-model="mainCtrl.shareTarget.shareNote" ng-change="mainCtrl.changeShareParams()"/>
+                            <span translate="O008" remark="包含我的筆記"></span>
+                        </label>
+                        <div class="btn-group">
+                            <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="max-width:320px">
+                                <div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
+                                    <span>{{mainCtrl.shareTarget.shareUnit.name}}</span>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu" style="max-width:320px;max-height:420px;overflow:auto">
+                                <li ng-repeat="unit in mainCtrl.shareTarget.units">
+                                    <a href="javascript:;" ng-if="unit.unit_type!='chapter'" ng-click="mainCtrl.changeShareParams(unit)">
+                                        <div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
+                                            <span>
+                                                <i class="fa fa-fw" ng-class="{
+                                                    'fa-film': unit.unit_type == 'video',
+                                                    'fa-link': unit.unit_type == 'web',
+                                                    'fa-code': unit.unit_type == 'embed',
+                                                    'fa-pencil-square-o': unit.unit_type == 'quiz',
+                                                    'fa-thumbs-o-up': unit.unit_type == 'poll',
+                                                    'fa-question': unit.unit_type == 'qa',
+                                                    'fa-picture-o': unit.unit_type == 'draw'
+                                                    }"></i>
+                                            </span>
+                                            <span>{{unit.name}}</span>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="drawDescriptionModal" class="modal fade" style="z-index:1480">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div ng-bind-html="mainCtrl.currentUnit.content.description" style="width:100%;height:100%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="previewModal" class="modal fade bs-modal-lg">
+        <div class="modal-dialog modal-lg" style="height:90%">
+            <div class="modal-content" style="height:100%">
+                <div ng-if="mainCtrl.currentUnit.unit_type=='video'" style="height:100%">
+                    <div ng-if="mainCtrl.currentUnit.sub_type=='audio'" style="word-break:break-all;height:calc(100% - 90px)" ng-bind-html="mainCtrl.currentUnit.description"></div>
+                    <div id="videoContainer" style="height:100%"></div>
+                </div>
+                <div ng-if="mainCtrl.currentUnit.unit_type=='web'" style="height:100%;overflow:auto;-webkit-overflow-scrolling:touch">
+                    <iframe _sandbox="allow-popups allow-forms allow-same-origin allow-scripts"
+                        ng-src="{{mainCtrl.currentUnit.content_url}}"
+                        width="100%" height="99%" frameborder="0"></iframe>
+                </div>
+                <div ng-if="mainCtrl.currentUnit.unit_type=='embed'" style="height:100%;overflow:auto;-webkit-overflow-scrolling:touch" ng-bind-html="mainCtrl.currentUnit.content"></div>
+                <div ng-if="mainCtrl.currentUnit.unit_type=='quiz'" style="height:100%;overflow:auto">
+                    <div style="padding:10px">
+                        <div class="panel panel-default" ng-repeat="quiz in mainCtrl.currentUnit.quizzes">
+                            <div class="panel-body">
+                                <span class="pull-left">
+                                    <span><span ng-if="$index<9">0</span>{{$index+1}}.</span>
+                                </span>
+                                <div ng-bind-html="quiz.content"></div>
+                                <div style="margin-top:20px">
+                                    <div ng-repeat="option in quiz.options">
+                                        <label class="checkbox" ng-if="quiz.quiz_type=='multi'" style="cursor:pointer">
+                                            <input type="checkbox" name="{{quiz.uqid}}" ng-model="option.answer"/>
+                                            <span ng-if="!option.latex">{{option.item}}</span>
+                                            <img ng-if="option.latex" ng-src="{{option.latex_url}}" border="0"/>
+                                        </label>
+                                        <label class="radio" ng-if="quiz.quiz_type=='single'" style="cursor:pointer">
+                                            <input type="radio" name="{{quiz.uqid}}" value="{{option.value}}" ng-model="quiz.single"/>
+                                            <span ng-if="!option.latex">{{option.item}}</span>
+                                            <img ng-if="option.latex" ng-src="{{option.latex_url}}" border="0"/>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="mainCtrl.currentUnit.unit_type=='poll'" style="height:100%;overflow:auto">
+                    <div style="padding:10px">
+                        <h3 style="padding:30px">
+                            <div ng-bind-html="mainCtrl.currentUnit.content.content"></div>
+                            <div style="margin-top:20px">
+                                <label class="checkbox" style="cursor:pointer" ng-repeat="option in watchCtrl.currentUnit.content.options">
+                                    <input type="checkbox" name="{{mainCtrl.currentUnit.uqid}}" ng-model="option.answer"/>
+                                    <span ng-if="!option.latex">{{option.item}}</span>
+                                    <img ng-if="option.latex" ng-src="{{option.latex_url}}" border="0"/>
+                                </label>
+                            </div>
+                        </h3>
+                    </div>
+                </div>
+                <div ng-if="mainCtrl.currentUnit.unit_type=='qa'" style="height:100%;overflow:auto">
+                    <div style="padding:10px">
+                        <h3><div ng-bind-html="mainCtrl.currentUnit.content"></div></h3>
+                        <div style="margin-top:20px">
+                            <div id="qa-result" style="height:200px"></div>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="mainCtrl.currentUnit.unit_type=='draw'" style="width:100%;height:100%">
+                    <div id="draw-board" ng-style="{background:mainCtrl.currentUnit.backgroundImage}" style="width:100%;height:100%;background:rgba(0,0,0,0);bottom:0">
+                        <canvas></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div style="margin-top:60px" progress-container>
+            <div class="progress progress-striped active" style="margin:0 auto;height:32px;width:400px">
+                <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                    <h5><span remark="讀取中">Loading</span>...</h5>
+                </div>
+            </div>
+        </div>
+        <div style="display:none" main-container>
+            <nav class="navbar navbar-static-top navbar-inverse">
+                <div class="container">
+                    <div class="navbar-header">
+                        <a href="javascript:;" class="navbar-brand logo" style="padding:7px 15px" ng-click="mainCtrl.open1know()">
+                            <img ng-show="mainCtrl.logo" ng-src="{{ mainCtrl.logo }}">
+                            <span ng-show="!mainCtrl.logo && mainCtrl.web_name" class="logo-header">{{ mainCtrl.web_name }}</span>
+                            <span ng-show="!mainCtrl.logo && !mainCtrl.web_name" class="logo-header"><span style="color:#f00">1</span>Know</span>
+                        </a>
+                    </div>
+                    <div class="collapse navbar-collapse" ng-if="mainCtrl.knowledge&&mainCtrl.knowledge.account">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <a href="javascript:;" style="padding:7px">
+                                    <img ng-src="{{mainCtrl.knowledge.account.photo}}" style="width:24px;height:24px"/>
+                                    <span style="margin:0 4px">{{mainCtrl.knowledge.account.full_name}}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container" style="margin:20px auto">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <div class="panel panel-default">
+                            <div class="panel-body" style="padding:10px">
+                                <div>
+                                    <img src="<%= @content[:logo] %>" style="width:191px;height:191px"/>
+                                </div>
+                                <div style="margin-top:10px" ng-if="mainCtrl.knowledge" ng-switch="mainCtrl.knowledge.account!=null">
+                                    <div ng-switch-when="true" ng-switch="mainCtrl.knowledge.subscribed">
+                                        <a class="btn btn-danger btn-block" ng-switch-when="true" ng-click="mainCtrl.learn()">
+                                            <span translate="O010" remark="已訂閱">已訂閱</span>
+                                        </a>
+                                        <a class="btn btn-danger btn-block" ng-switch-when="false" ng-click="mainCtrl.subscribe()">
+                                            <span translate="O011" remark="訂閱">訂閱</span>
+                                        </a>
+                                    </div>
+                                    <div ng-switch-when="false">
+                                        <a class="btn btn-block btn-danger" ng-click="mainCtrl.signinWithIschool()">
+                                            <span translate="O011" remark="訂閱">訂閱</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div style="margin-top:10px;padding:10px">
+                                    <!-- <img ng-src="http://chart.apis.google.com/chart?cht=qr&chl={{mainCtrl.knowledge.share_page}}&chs=170x170"/> -->
+                                    <div style="font-size:14px;margin-left:10px">
+                                        <h4><i class="fa fa-fw fa-user"></i> {{mainCtrl.knowledge.reader}}</h4>
+                                        <div>
+                                            <i class="fa fa-star" style="color:#eeb929"></i>
+                                            <i class="fa fa-star" style="color:#eeb929"></i>
+                                            <i class="fa fa-star" style="color:#eeb929"></i>
+                                            <i class="fa fa-star" style="color:#eeb929"></i>
+                                            <i class="fa fa-star" style="color:#eeb929"></i>
+                                            <span style="margin-left:16px">{{mainCtrl.knowledge.rating[0]}}</span>
+                                        </div>
+                                        <div>
+                                            <i class="fa fa-star" style="color:#eeb929"></i>
+                                            <i class="fa fa-star" style="color:#eeb929"></i>
+                                            <i class="fa fa-star" style="color:#eeb929"></i>
+                                            <i class="fa fa-star" style="color:#eeb929"></i>
+                                            <i class="fa fa-star" style="color:#cacaca"></i>
+                                            <span style="margin-left:16px">{{mainCtrl.knowledge.rating[1]}}</span>
+                                        </div>
+                                        <div>
+                                            <i class="fa fa-star" style="color:#eeb929"></i>
+                                            <i class="fa fa-star" style="color:#eeb929"></i>
+                                            <i class="fa fa-star" style="color:#eeb929"></i>
+                                            <i class="fa fa-star" style="color:#cacaca"></i>
+                                            <i class="fa fa-star" style="color:#cacaca"></i>
+                                            <span style="margin-left:16px">{{mainCtrl.knowledge.rating[2]}}</span>
+                                        </div>
+                                        <div>
+                                            <i class="fa fa-star" style="color:#eeb929"></i>
+                                            <i class="fa fa-star" style="color:#eeb929"></i>
+                                            <i class="fa fa-star" style="color:#cacaca"></i>
+                                            <i class="fa fa-star" style="color:#cacaca"></i>
+                                            <i class="fa fa-star" style="color:#cacaca"></i>
+                                            <span style="margin-left:16px">{{mainCtrl.knowledge.rating[3]}}</span>
+                                        </div>
+                                        <div>
+                                            <i class="fa fa-star" style="color:#eeb929"></i>
+                                            <i class="fa fa-star" style="color:#cacaca"></i>
+                                            <i class="fa fa-star" style="color:#cacaca"></i>
+                                            <i class="fa fa-star" style="color:#cacaca"></i>
+                                            <i class="fa fa-star" style="color:#cacaca"></i>
+                                            <span style="margin-left:16px">{{mainCtrl.knowledge.rating[4]}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="margin-top:20px">
+                                    <span class="text-muted">
+                                        <span translate="O012" remark="編輯者">編輯者</span>
+                                    </span>
+                                    <div>
+                                        <ul class="nav">
+                                            <li ng-repeat="item in mainCtrl.knowledge.editors">
+                                                <a href="{{item.page}}" target="_blank" style="padding:6px">
+                                                    <img ng-src="{{item.photo}}" style="float:left;width:24px;height:24px;margin-top:-2px;border:1px solid #ddd"/>
+                                                    <span style="padding:6px">{{item.full_name}}</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div style="margin-top:20px" ng-if="mainCtrl.knowledge.groups.length>0">
+                                    <span class="text-muted">
+                                        <span translate="O013" remark="加到我的群組">加到我的群組</span>
+                                    </span>
+                                    <div>
+                                        <ul class="nav">
+                                            <li ng-repeat="item in mainCtrl.knowledge.groups" ng-switch="item.joined!=null">
+                                                <a href="javascript:;" style="padding:0px" ng-switch-when="true">
+                                                    <div class="text-muted" style=";text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+                                                </a>
+                                                <a href="javascript:;" style="padding:0px" ng-switch-when="false" ng-click="mainCtrl.joinGroup(item)">
+                                                    <div style=";text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-9">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="pull-right" style="margin-left:20px">
+                                    <a class="btn btn-sm btn-danger" ng-click="mainCtrl.showShareModal()">
+                                        <span translate="O014" remark="分享">分享</span>
+                                    </a>
+                                </div>
+                                <h3 style="margin:10px 0 20px">{{mainCtrl.knowledge.name}}</h3>
+                                <div>
+                                    <div ng-bind-html="mainCtrl.knowledge.description"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="text-align:right">
+                                <span class="alert alert-danger pull-left" style="padding:4px 8px" ng-if="mainCtrl.knowledge&&!mainCtrl.knowledge.privacy">这是不公开的知识，请在分享或共用之前三思。</span>
+                                <span class="btn-group">
+                                    <!-- <a class="btn btn-sm btn-default" ng-class="{'btn-primary': mainCtrl.viewType=='thumbnail'}" ng-click="mainCtrl.toggleView('thumbnail')"><i class="fa fa-fw fa-th-large"></i></a> -->
+                                    <a class="btn btn-sm btn-default" ng-class="{'btn-primary': mainCtrl.viewType=='list'}" ng-click="mainCtrl.toggleView('list')"><i class="fa fa-fw fa-th-list"></i></a>
+                                </span>
+                            </div>
+                            <div id="thumbnail" style="margin-top:10px;display:none">
+                                <div class="panel panel-primary" ng-repeat="chapter in mainCtrl.knowledge.chapters">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">{{chapter.name}}</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-xs-4" ng-repeat="unit in chapter.units">
+                                                <div class="thumbnail" ng-if="unit.preview">
+                                                    <div class="cover" style="width:200px;height:150px;position:absolute" ng-click="mainCtrl.preview(unit)"></div>
+                                                    <div ng-if="unit.unit_type=='video'">
+                                                        <img style="width:100%;height:150px" ng-src="{{unit.thumbnail_image}}" ng-if="unit.thumbnail_image!=undefined"/>
+                                                        <img style="width:100%;height:150px" ng-src="{{unit.content_url2}}" ng-if="unit.thumbnail_image==undefined"/>
+                                                    </div>
+                                                    <div style="height:150px;text-align:center" ng-if="unit.unit_type=='web'">
+                                                        <img style="width:100%;height:150px" ng-src="{{unit.content_url2}}"/>
+                                                    </div>
+                                                    <div style="height:150px;text-align:center;padding:20px" ng-if="unit.unit_type!='video'&&unit.unit_type!='web'">
+                                                        <i class="fa fa-code" style="font-size:8em" ng-if="unit.unit_type=='embed'"></i>
+                                                        <i class="fa fa-pencil-square-o" style="font-size:8em" ng-if="unit.unit_type=='quiz'"></i>
+                                                        <i class="fa fa-thumbs-o-up" style="font-size:8em" ng-if="unit.unit_type=='poll'"></i>
+                                                        <i class="fa fa-question" style="font-size:8em" ng-if="unit.unit_type=='qa'"></i>
+                                                        <i class="fa fa-picture-o" style="font-size:8em" ng-if="unit.unit_type=='draw'"></i>
+                                                    </div>
+                                                    <div style="padding:10px">
+                                                        <div class="text-primary" style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{unit.name}}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="thumbnail" ng-if="!unit.preview">
+                                                    <div style="width:100%;height:150px" ng-if="unit.unit_type=='video'">
+                                                        <img style="width:100%;height:150px" ng-src="{{unit.thumbnail_image}}"/>
+                                                    </div>
+                                                    <div style="height:150px;text-align:center;padding:20px 10px" ng-if="unit.unit_type!='video'">
+                                                        <i class="fa fa-list-alt" style="font-size:8em" ng-if="unit.unit_type=='web'"></i>
+                                                        <i class="fa fa-code" style="font-size:8em" ng-if="unit.unit_type=='embed'"></i>
+                                                        <i class="fa fa-pencil-square-o" style="font-size:8em" ng-if="unit.unit_type=='quiz'"></i>
+                                                        <i class="fa fa-thumbs-o-up" style="font-size:8em" ng-if="unit.unit_type=='poll'"></i>
+                                                        <i class="fa fa-question" style="font-size:8em" ng-if="unit.unit_type=='qa'"></i>
+                                                        <i class="fa fa-picture-o" style="font-size:8em" ng-if="unit.unit_type=='draw'"></i>
+                                                    </div>
+                                                    <div style="padding:10px">
+                                                        <div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{unit.name}}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="list" style="margin-top:10px">
+                                <div class="panel panel-primary" ng-repeat="chapter in mainCtrl.knowledge.chapters">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">{{chapter.name}}</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <table class="table table-condensed table-hover" style="margin:0">
+                                            <tbody>
+                                                <tr ng-repeat="unit in chapter.units">
+                                                    <td style="width:20px;border:0;border-bottom:1px solid #ddd">
+                                                        <span ng-switch="unit.unit_type">
+                                                            <i class="fa fa-fw fa-film" ng-switch-when="video"></i>
+                                                            <i class="fa fa-fw fa-link" ng-switch-when="web"></i>
+                                                            <i class="fa fa-fw fa-code" ng-switch-when="embed"></i>
+                                                            <i class="fa fa-fw fa-pencil-square-o" ng-switch-when="quiz"></i>
+                                                            <i class="fa fa-fw fa-thumbs-o-up" ng-switch-when="poll"></i>
+                                                            <i class="fa fa-fw fa-question" ng-switch-when="qa"></i>
+                                                            <i class="fa fa-fw fa-picture-o" ng-switch-when="draw"></i>
+                                                        </span>
+                                                    </td>
+                                                    <td style="border:0;border-bottom:1px solid #ddd" ng-switch="unit.preview">
+                                                        <a class="btn btn-link" style="padding:0;text-decoration:none" ng-switch-when="true" ng-click="mainCtrl.preview(unit)">
+                                                            <div style="max-width:560px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{unit.name}}</div>
+                                                        </a>
+                                                        <a class="btn btn-link" style="padding:0;text-decoration:none" ng-switch-when="false">
+                                                            <div class="text-muted" style="max-width:560px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{unit.name}}</div>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container" style="text-align:center;margin-top:20px">
+                <span style="margin:0 8px">{{MainCtrl.copyright}}</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="/library/youku/youku.js"></script>
+    <!-- <script src="http://www.websnapr.com/js/websnapr.js"></script> -->
+    <script>
+        var websnapr_hash = websnapr_hash || '';
+
+        angular.module('1know', ['pascalprecht.translate'])
+        .config(function($sceProvider, $locationProvider, $translateProvider) {
+            $sceProvider.enabled(false);
+            $locationProvider.html5Mode(true);
+            $translateProvider.translations('zh-tw', translations['zh-tw']);
+            $translateProvider.translations('zh-cn', translations['zh-cn']);
+            $translateProvider.translations('en-us', translations['en-us']);
+            $translateProvider.translations('es-es', translations['es-es']);
+            $translateProvider.translations('de-de', translations['de-de']);
+        })
+        .controller('MainCtrl', function($scope, $http, $location, $timeout, $compile, $translate, $window) {
+            var self = this;
+
+            self.web_name = $window.web_name;
+            self.logo = $window.logo;
+            self.copyright = $window.copyright;
+            self.service_email = $window.service_email;
+
+            self.service_url = [location.origin, '/private'].join('');
+            self.global = { message: '' };
+
+            self.showShareModal = function() {
+                $http.get([self.service_url, '/discovery/knowledges/', self.knowledge.uqid, '/units'].join(''))
+                .success(function(response, status) {
+                    self.shareTarget = {
+                        uqid: self.knowledge.uqid,
+                        name: self.knowledge.name,
+                        base_page: self.knowledge.share_page,
+                        page: self.knowledge.share_page,
+                        encodePage: encodeURIComponent(self.knowledge.share_page),
+                        embed: {
+                            width: 800,
+                            height: 600,
+                            code: ['<iframe width="800" height="600" src="', self.knowledge.share_page, '" frameborder="0" allowfullscreen></iframe>'].join('')
+                        },
+                        email: {
+                            user: '',
+                            memo: ''
+                        },
+                        shareNote: false,
+                        units: response,
+                        shareUnit: response[0],
+                        type: 'social'
+                    };
+
+                    self.changeShareParams(response[0]);
+                    $('#shareModal').modal('show');
+                });
+            }
+
+            self.changeShareEmbed = function() {
+                self.shareTarget.embed.code = ['<iframe width="', self.shareTarget.embed.width, '" height="', self.shareTarget.embed.height, '" src="', self.shareTarget.page, '" frameborder="0" allowfullscreen></iframe>'].join('');
+            }
+
+            self.changeShareParams = function(unit) {
+                if (unit)
+                    self.shareTarget.shareUnit = unit;
+
+                if (self.shareTarget.shareNote)
+                    self.shareTarget.page = [self.shareTarget.base_page, '&u=', self.shareTarget.shareUnit.uqid, '&n=', self.knowledge.account.uqid].join('');
+                else
+                    self.shareTarget.page = [self.shareTarget.base_page, '&u=', self.shareTarget.shareUnit.uqid].join('');
+
+                self.shareTarget.encodePage = encodeURIComponent(self.shareTarget.page);
+                self.shareTarget.embed.code = ['<iframe width="', self.shareTarget.embed.width, '" height="', self.shareTarget.embed.height, '" src="', self.shareTarget.page, '" frameborder="0" allowfullscreen></iframe>'].join('');
+            }
+
+            self.sendShareEmail = function() {
+                if (self.shareTarget.email.user !== undefined && self.shareTarget.email.user !== '') {
+                    var data = {
+                        url: self.shareTarget.page,
+                        uqid: self.shareTarget.uqid,
+                        email: self.shareTarget.email.user,
+                        memo: self.shareTarget.email.memo,
+                        type: 'knowledge'
+                    };
+
+                    $http.post([self.service_url, '/utility/sendMail'].join(''), data)
+                    .success(function(response, status) {
+                        $('#shareModal').modal('hide');
+                    });
+                }
+            }
+
+            self.open1know = function() {
+                window.location.href = [$location.protocol(), '://', $location.host(),($location.port() == 80?'':':'+$location.port())].join('');
+            }
+
+            self.signinWithIschool = function() {
+                var width = 800;
+                var height = 700;
+                var top = (screen.height/2)-(height/2);
+                var left = (screen.width/2)-(width/2);
+                var state = encodeURIComponent(['subscribe_knowledge:', self.knowledge.uqid].join(''));
+                var target = ['https://auth.ischool.com.tw/oauth/authorize.php?client_id=a266592ce660b43f980d49b4079d53ed&response_type=code&state=', state, '&redirect_uri=', window.location.origin, '/oauth/ischool&lang=', self.lang, '&scope=User.Mail,User.BasicInfo'].join('');
+
+                window.open(target, '1409620722041', ['width=',width,',height=',height,',menubar=0,titlebar=0,status=0,top=',top,',left=',left].join(''));
+            }
+
+            self.learn = function() {
+                window.location.href = ["/#!/learn/knowledge/", self.knowledge.uqid].join('');
+            }
+
+            self.subscribe = function() {
+                $http.post([self.service_url, '/learning/', self.knowledge.uqid, '/subscribe'].join(''))
+                .success(function(response, status) {
+                    if (!response.error)
+                        window.location.href = [location.origin, "/#!/learn/knowledge/", self.knowledge.uqid].join('');
+                    else {
+                        self.global.message = response.error;
+                        $('#globalAlertModal').modal('show');
+                        $('#globalAlertModal').on('hidden.bs.modal', function() {
+                            self.global.message = '';
+                        });
+                    }
+                });
+            }
+
+            self.joinGroup = function(item) {
+                $http.post([self.service_url, '/join/', item.uqid, '/knowledges'].join(''), { knowUqid: self.knowledge.uqid })
+                .success(function(response, status) {
+                    if (!response.error)
+                        window.location.href = [location.origin, "/#!/join/group/", item.uqid].join('');
+                    else {
+                        self.global.message = response.error;
+                        $('#globalAlertModal').modal('show');
+                        $('#globalAlertModal').on('hidden.bs.modal', function() {
+                            self.global.message = '';
+                        });
+                    }
+                });
+            }
+            self.changeSize = function() {
+                self.contentWidth = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth);
+                self.contentHeight = (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight) - 38;
+
+                self.contentWidth = self.contentWidth > 898 ? 898 : self.contentWidth;
+                self.contentHeight = self.contentHeight > 696 ? 696 : self.contentHeight;
+            }
+            self.changeSize();
+            window.onresize = function() {
+                $scope.$apply(function() {
+                    self.changeSize();
+                });
+            }
+            self.preview = function(item) {
+                $location.search({v: self.viewType, u: item.uqid});
+
+                delete self.currentUnit;
+                self.currentUnit = item;
+
+                $('#videoContainer').html('');
+
+                $timeout(function() {
+                    if (self.currentUnit.unit_type === 'video') {
+                        var videoPath = self.currentUnit.content_url.match(/^(?:([A-Za-z]+):)?\/\/(?:.*?)\.?(youtube|vimeo|youku)\.(?:.*?)\/([0-9]+|v_show\/id_([0-9a-zA-Z]+)|[^#]*v=([0-9a-zA-Z\-\_]+))?/);
+
+                        if (videoPath !== null && videoPath.length === 6) {
+                            if (videoPath[2] === 'youku') {
+                                $('#videoContainer').html('<div id="videoPlayer" ng-style="{width:mainCtrl.contentWidth+\'px\', height:mainCtrl.contentHeight+\'px\'}"></div>');
+
+                                var player = new YKU.Player('videoPlayer',{
+                                    client_id: 'c865b5756563acee',
+                                    vid: videoPath[4],
+                                    width: '100%',
+                                    height: '100%'
+                                });
+
+                                self.videoPlayer = {target: player, type: 'youku'};
+
+                                $compile(document.getElementById('videoPlayer'))($scope);
+                            }
+                            else {
+                                var videoId = Date.now();
+                                var option = {
+                                    controls: true,
+                                    preload: 'auto',
+                                    forceSSL: true,
+                                    forceHTML5: true,
+                                    techOrder: videoPath[2] === 'youtube' ? ['youtube'] : (videoPath[2] === 'vimeo' ? ['vimeo'] : []),
+                                    src: self.currentUnit.content_url,
+                                    ytcontrols: true
+                                }
+
+                                $('#videoContainer').html(
+                                    ['<video id="video-', videoId,'"',
+                                        ' src="', self.currentUnit.content_url, (self.currentUnit.content_url.indexOf("?") != -1 ? '&' : '?'), videoId, '"',
+                                        ' width="100%" height="100%"',
+                                        ' class="video-js vjs-default-skin vjs-big-play-centered">',
+                                    '</video>'].join('')
+                                );
+
+                                videojs(['video-', videoId].join(''), option, function() {
+                                    self.videoPlayer = {target: this, type: 'videojs'};
+                                });
+
+                                $(['#video-', videoId].join('')).attr('ng-style', '{width:mainCtrl.contentWidth+\'px\', height:mainCtrl.contentHeight+\'px\'}');
+                                $compile(document.getElementById(['video-', videoId].join('')))($scope);
+                            }
+                        }
+                        else {
+                            var videoId = Date.now();
+
+                            $('#videoContainer').html(
+                                ['<video id="video-', videoId,'"',
+                                    ' src="', self.currentUnit.content_url, (self.currentUnit.content_url.indexOf("?") != -1 ? '&' : '?'), videoId, '"',
+                                    ' width="100%" height="100%"',
+                                    ' class="video-js vjs-default-skin vjs-big-play-centered">',
+                                '</video>'].join('')
+                            );
+
+                            videojs(['video-', videoId].join(''), {controls: true, preload: 'auto'}, function() {
+                                self.videoPlayer = {target: this, type: 'videojs'};
+                            });
+
+                            $(['#video-', videoId].join('')).attr('ng-style', '{width:mainCtrl.contentWidth+\'px\', height:mainCtrl.contentHeight+\'px\'}');
+                            $compile(document.getElementById(['video-', videoId].join('')))($scope);
+                        }
+                    }
+                    else if (self.currentUnit.unit_type === 'draw') {
+                        $timeout(function() {
+                            $('#draw-board').html('<canvas></canvas>');
+                            $('#draw-board').literallycanvas({
+                                imageURLPrefix: '/library/literallycanvas/img',
+                                backgroundColor: 'rgba(0, 0, 0, 0)',
+                                primaryColor: '#f00'
+                            });
+
+                            if (self.currentUnit.content.description !== '') {
+                                $('#draw-board .custom-button').before('<div id="draw-description" class="btn btn-xs btn-primary" style="margin:-4px 4px 0"><span translate="O018" remark="塗鴉說明"></span></div>');
+                                $('#draw-description').click(function() {
+                                    $('#drawDescriptionModal').modal('show');
+                                });
+                            }
+
+                            if (self.currentUnit.content.background !== '') {
+                                $('#draw-board .custom-button').before('<div id="draw-background" class="btn btn-xs btn-primary" style="margin:-4px 0 0"><span translate="O019" remark="背㬌圖片"></span></div>');
+                                $('#draw-background').click(function() {
+                                    $timeout(function() {
+                                        if (self.currentUnit.backgroundImage === undefined)
+                                            self.currentUnit.backgroundImage = ['url(', self.currentUnit.content.background, ') no-repeat'].join('');
+                                        else
+                                            delete self.currentUnit.backgroundImage;
+                                    },100);
+                                });
+                            }
+
+                            $('#draw-board canvas').attr({ 'width': $('#draw-board').css('width'), 'height': $('#draw-board').css('height')});
+                            $('#draw-board canvas').css({ 'width': $('#draw-board').css('width'), 'height': $('#draw-board').css('height')});
+
+                            $compile(document.getElementById('literally-toolbar'))($scope);
+                        },100);
+                    }
+                    else if (self.currentUnit.unit_type === 'embed') {
+                        if ($(self.currentUnit.content).find('embed').length > 0)
+                            self.currentUnit.content = $(self.currentUnit.content).find('embed').css('width', '100%').css('height', '100%')[0].outerHTML;
+                        else if ($(self.currentUnit.content).find('iframe').length > 0)
+                            self.currentUnit.content = $(self.currentUnit.content).find('iframe').css('width', '100%').css('height', '100%')[0].outerHTML;
+                        else if ($(self.currentUnit.content)[0].nodeName === 'EMBED')
+                            self.currentUnit.content = $(self.currentUnit.content).css('width', '100%').css('height', '100%')[0].outerHTML;
+                        else if ($(self.currentUnit.content)[0].nodeName === 'IFRAME')
+                            self.currentUnit.content = $(self.currentUnit.content).css('width', '100%').css('height', '100%')[0].outerHTML;
+                    }
+
+                    $('#previewModal').on('hidden.bs.modal', function (e) {
+                        $scope.$apply(function() {
+                            delete self.currentUnit;
+                            $location.search({v: self.viewType});
+                            $('#videoContainer').html('');
+                        });
+                    });
+                    $('#previewModal').modal('show');
+                },100);
+            }
+
+            self.toggleView = function(type) {
+                self.viewType = type;
+                $location.search({v: type});
+
+                if (type === 'thumbnail') {
+                    $('#thumbnail').show();
+                    $('#list').hide();
+                }
+                else {
+                    $('#thumbnail').hide();
+                    $('#list').show();
+                }
+            }
+
+            $http.get([$location.protocol(), '://', $location.host(),($location.port() == 80?'':':'+$location.port()), '/knowledge/<%= @content[:uqid] %>.json'].join(''))
+            .success(function(response, status) {
+                self.knowledge = response;
+                self.knowledge.encodePage = encodeURIComponent(response.page);
+
+                angular.forEach(self.knowledge.chapters, function(chapter) {
+                    angular.forEach(chapter.units, function(item) {
+                        if (item.unit_type === 'video') {
+                            var videoPath = item.content_url.match(/\/\/(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|embed\/)?([a-z0-9_\-]+)/i);
+
+                            if (videoPath && videoPath[1]) {
+                                item.thumbnail_image = ['http://i1.ytimg.com/vi/', videoPath[1], '/0.jpg'].join('');
+                            }
+                            else {
+                                videoPath = item.content_url.match(/\/\/(?:www\.)?vimeo.com\/([0-9a-z\-_]+)/i);
+
+                                if (videoPath && videoPath[1]) {
+                                    $.get(['http://vimeo.com/api/oembed.json?url=http:', videoPath[0]].join(''), function(response) {
+                                        $scope.$apply(function() {
+                                            item.thumbnail_image = response.thumbnail_url;
+                                        });
+                                    });
+                                }
+                                else
+                                    item.content_url2 = ['http://images.websnapr.com/?url=', item.content_url, '&key=727h5b1Hm40w&hash=' + encodeURIComponent(websnapr_hash)].join('');
+                            }
+                        }
+                        else if (item.unit_type === 'web')
+                            item.content_url2 = ['http://images.websnapr.com/?url=', item.content_url, '&key=727h5b1Hm40w&hash=' + encodeURIComponent(websnapr_hash)].join('');
+                    });
+                });
+
+                self.viewType = $location.$$search.v || 'list';
+                if ($location.$$search.u !== undefined) {
+                    angular.forEach(self.knowledge.chapters, function(chapter) {
+                        angular.forEach(chapter.units, function(item) {
+                            if (item.uqid === $location.$$search.u) self.preview(item);
+                        });
+                    });
+
+                    $location.search({v: self.viewType, u: $location.$$search.u});
+                }
+                else
+                    $location.search({v: self.viewType});
+
+                self.toggleView(self.viewType);
+
+                $('[progress-container]').hide();
+                $('[main-container]').show();
+
+                if (response.account) {
+                    $translate.uses(response.account.language.type);
+                }
+                else {
+                    var lang = 'en-us';
+
+                    if (window.navigator.language !== undefined)
+                        lang = window.navigator.language.toLowerCase();
+                    else if (window.navigator.systemLanguage !== undefined)
+                        lang = window.navigator.systemLanguage.toLowerCase();
+
+                    $translate.uses(lang);
+                }
+            });
+        })
+    </script>
+</body>
+</html>

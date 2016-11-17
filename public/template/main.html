@@ -1,0 +1,294 @@
+<div id="changePasswordModal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-xs-7">
+						<form class="form-horizontal" role="form">
+							<div class="form-group">
+								<label class="col-xs-4 control-label">
+									<span translate="A001" remark="帳號"></span>
+								</label>
+								<div class="col-xs-8">
+									<div class="text-info" style="word-break:break-word">{{mainCtrl.account.email}}</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-4 control-label">
+									<span translate="A002" remark="舊密碼"></span>
+								</label>
+								<div class="col-xs-8">
+									<input type="password" class="form-control" ng-model="mainCtrl.password.old"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-4 control-label">
+									<span translate="A003" remark="新密碼"></span>
+								</label>
+								<div class="col-xs-8">
+									<input type="password" class="form-control" ng-model="mainCtrl.password.new"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-4 control-label">
+									<span translate="A004" remark="新密碼再一次"></span>
+								</label>
+								<div class="col-xs-8">
+									<input type="password" class="form-control" ng-model="mainCtrl.password.confirm"/>
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="col-xs-5">
+						<div class="alert alert-warning" style="font-size:14px">
+							<span translate="A005" remark="如果您使用 Google / Facebook / Live 或是其它第三方整合帳號登入者，第一次設定密碼時，舊密碼請留空白，只需輸入新密碼。"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="margin:0">
+				<div class='alert alert-danger pull-left' style="margin:0;padding:5px" ng-if="mainCtrl.password.message" ng-bind-html="mainCtrl.password.message"></div>
+				<a class="btn btn-primary" ng-click="mainCtrl.changePassword()" ng-if="!mainCtrl.password.change"><span translate="A006" remark="確定"></span></a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="shareModal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<a class="btn btn-sm btn-primary pull-right" href="{{mainCtrl.shareTarget.langing_page}}" target="_blank" ng-if="mainCtrl.shareTarget.shareType=='group'">
+					<span translate="A007" remark="群組頁面"></span>
+				</a>
+				<a class="btn btn-sm btn-primary pull-right" href="{{mainCtrl.shareTarget.langing_page}}" target="_blank" ng-if="mainCtrl.shareTarget.shareType=='channel'">
+					<span translate="A008" remark="頻道頁面"></span>
+				</a>
+				<a class="btn btn-sm btn-primary pull-right" href="{{mainCtrl.shareTarget.langing_page}}" target="_blank" ng-if="mainCtrl.shareTarget.shareType=='knowledge'">
+					<span translate="A009" remark="知識頁面"></span>
+				</a>
+				<div class="btn-group">
+					<a class="btn btn-sm" ng-class="{'btn-default': mainCtrl.shareTarget.type != 'social', 'btn-primary': mainCtrl.shareTarget.type == 'social'}"
+						ng-click="mainCtrl.shareTarget.type='social'">
+						<span translate="A010" remark="分享這個群組" ng-if="mainCtrl.shareTarget.shareType=='group'"></span>
+						<span translate="A011" remark="分享這個頻道" ng-if="mainCtrl.shareTarget.shareType=='channel'"></span>
+						<span translate="A012" remark="分享這個知識" ng-if="mainCtrl.shareTarget.shareType=='knowledge'"></span>
+					</a>
+					<a class="btn btn-sm" ng-class="{'btn-default': mainCtrl.shareTarget.type != 'embed', 'btn-primary': mainCtrl.shareTarget.type == 'embed'}"
+						ng-click="mainCtrl.shareTarget.type='embed'">
+						<span translate="A013" remark="嵌入"></span>
+					</a>
+					<a class="btn btn-sm" ng-class="{'btn-default': mainCtrl.shareTarget.type != 'email', 'btn-primary': mainCtrl.shareTarget.type == 'email'}"
+						ng-click="mainCtrl.shareTarget.type='email'">
+						<span translate="A014" remark="電子郵件"></span>
+					</a>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div ng-if="mainCtrl.shareTarget.type=='social'">
+					<div class="input-group" ng-if="mainCtrl.shareTarget.shareType=='knowledge'">
+						<input type="text" class="form-control" ng-model="mainCtrl.shareTarget.page"/>
+						<span class="input-group-btn">
+							<a class="btn btn-default" ng-href="{{mainCtrl.shareTarget.page}}" target="_blank">
+								<i class="fa fa-fw fa-share"></i>
+							</a>
+						</span>
+					</div>
+					<div ng-if="mainCtrl.shareTarget.shareType!='knowledge'">
+						<input type="text" class="form-control" ng-model="mainCtrl.shareTarget.page"/>
+					</div>
+					<div style="margin-top:10px">
+						<!-- <a class="btn btn-sm btn-primary" ng-href="https://www.facebook.com/sharer/sharer.php?u={{mainCtrl.shareTarget.encodePage}}" target="_blank">
+							<i class="fa fa-fw fa-facebook"></i>
+						</a>
+						<a class="btn btn-sm btn-info" ng-href="https://twitter.com/share?text={{mainCtrl.shareTarget.name}}&via=1know&url={{mainCtrl.shareTarget.encodePage}}" target="_blank">
+							<i class="fa fa-fw fa-twitter"></i>
+						</a>
+						<a class="btn btn-sm btn-danger" ng-href="https://plus.google.com/share?url={{mainCtrl.shareTarget.encodePage}}" target="_blank">
+							<i class="fa fa-fw fa-google-plus"></i>
+						</a> -->
+					</div>
+				</div>
+				<div ng-if="mainCtrl.shareTarget.type=='embed'">
+					<textarea class="form-control" rows="3" style="resize:vertical" ng-model="mainCtrl.shareTarget.embed.code"></textarea>
+					<div style="margin-top:10px">
+						<label translate="A015" remark="顯示大小"></label><label>：</label>
+						<input type="text" style="width:50px;padding:0 5px;text-align:center" ng-model="mainCtrl.shareTarget.embed.width" ng-change="mainCtrl.changeShareEmbed()"/>
+						<label> x </label>
+						<input type="text" style="width:50px;padding:0 5px;text-align:center" ng-model="mainCtrl.shareTarget.embed.height" ng-change="mainCtrl.changeShareEmbed()"/>
+					</div>
+				</div>
+				<div ng-if="mainCtrl.shareTarget.type=='email'">
+					<div>
+						<label translate="A016" remark="收件者"></label>
+						<textarea class="form-control" rows="1" style="resize:none" ng-model="mainCtrl.shareTarget.email.user"></textarea>
+					</div>
+					<div style="margin-top:10px">
+						<label translate="A017" remark="備註"></label>
+						<textarea class="form-control" rows="3" style="resize:vertical" ng-model="mainCtrl.shareTarget.email.memo"></textarea>
+					</div>
+					<div style="margin-top:10px">
+						<a class="btn btn-primary" ng-click="mainCtrl.sendShareEmail()">
+							<span translate="A018" remark="傳送電子郵件"></span>
+						</a>
+					</div>
+				</div>
+				<div style="margin-top:20px;padding-top:10px;border-top:1px solid #ddd" ng-if="mainCtrl.shareTarget.shareType=='knowledge'">
+					<label class="pull-right" style="cursor:pointer">
+						<input type="checkbox" ng-model="mainCtrl.shareTarget.shareNote" ng-change="mainCtrl.changeShareParams()"/>
+						<span translate="A019" remark="包含我的筆記"></span>
+					</label>
+					<div class="btn-group">
+						<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="max-width:320px">
+							<div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
+								<span>{{mainCtrl.shareTarget.shareUnit.name}}</span>
+							</div>
+						</a>
+						<ul class="dropdown-menu" style="max-width:320px;max-height:420px;overflow:auto">
+							<li ng-repeat="unit in mainCtrl.shareTarget.units">
+								<a href="javascript:;" ng-if="unit.unit_type!='chapter'" ng-click="mainCtrl.changeShareParams(unit)">
+									<div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
+										<span>
+											<i class="fa fa-fw" ng-class="{
+												'fa-film': unit.unit_type == 'video',
+												'fa-link': unit.unit_type == 'web',
+												'fa-code': unit.unit_type == 'embed',
+												'fa-pencil-square-o': unit.unit_type == 'quiz',
+												'fa-thumbs-o-up': unit.unit_type == 'poll',
+												'fa-question': unit.unit_type == 'qa',
+												'fa-picture-o': unit.unit_type == 'draw'
+												}"></i>
+										</span>
+										<span>{{unit.name}}</span>
+									</div>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<nav class="navbar navbar-static-top navbar-inverse" role="navigation" style="background-color:rgba(34,34,34,0.88)" ng-if="mainCtrl.visible">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<span>
+				<a class="navbar-brand logo" style="padding:7px 15px" href="/">
+					<img ng-show="mainCtrl.logo" ng-src="{{ mainCtrl.logo }}">
+					<span ng-show="!mainCtrl.logo && mainCtrl.web_name" class="logo-header">{{ mainCtrl.web_name }}</span>
+					<span ng-show="!mainCtrl.logo && !mainCtrl.web_name" class="logo-header"><span style="color:#f00">1</span>Know</span>
+					<small style="margin-left:8px;display:inline-block;">
+						<small class="label label-danger" ng-if="mainCtrl.account.account_type=='free'">FREE</small>
+						<small class="label label-success" ng-if="mainCtrl.account.account_type=='plus'">PLUS</small>
+						<small class="label label-primary" ng-if="mainCtrl.account.account_type=='pro'">PRO</small>
+						<small class="label label-warning" ng-if="mainCtrl.account.account_type=='vip'">VIP</small>
+					</small>
+				</a>
+			</span>
+		</div>
+
+		<div class="collapse navbar-collapse" ng-if="mainCtrl.account!=undefined">
+			<ul class="nav navbar-nav" bs-navbar>
+				<li data-match-route="/(:?discover.*)">
+					<a href="#!/discover" style="padding:9px 15px">
+						<span translate="A020" remark="發現"></span>
+					</a>
+				</li>
+				<li data-match-route="/(:?learn.*)">
+					<a href="#!/learn" style="padding:9px 15px">
+						<span translate="A021" remark="學習"></span>
+					</a>
+				</li>
+				<li data-match-route="/(:?join.*)">
+					<a href="#!/join" style="padding:9px 15px">
+						<span translate="A022" remark="群組"></span>
+					</a>
+				</li>
+				<li data-match-route="/(:?create.*)">
+					<a href="#!/create" style="padding:9px 15px">
+						<span translate="A023" remark="創作"></span>
+					</a>
+				</li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li style="padding:8px 0 0 0">
+					<!-- <iframe src="//www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2F1know.net&amp;width&amp;layout=button_count&amp;action=like&amp;show_faces=true&amp;share=true&amp;height=21&amp;appId=143261322503748" scrolling="no" frameborder="0" style="border:none;overflow:hidden;height:21px;width:140px" allowTransparency="true"></iframe> -->
+				</li>
+				<li class="dropdown">
+					<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" style="padding:7px">
+						<img ng-src="{{mainCtrl.account.photo}}" style="width:24px;height:24px"/>
+						<span style="margin:0 4px">{{mainCtrl.account.full_name}}</span><span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li>
+							<a href="#!/personal"><i class="fa fa-fw fa-list"></i> <span translate="A024" remark="個人資訊"></span></a>
+						</li>
+						<li ng-if="(mainCtrl.account.role=='ischool'||mainCtrl.account.role=='1know')&&mainCtrl.account.domain!='1know.net'">
+							<a href="javascript:;" ng-click="mainCtrl.showChangePassowrd()"><i class="fa fa-fw fa-key"></i> <span translate="A025" remark="修改密碼"></span></a>
+						</li>
+						<!-- <li class="divider"></li> -->
+						<!-- <li ng-if="mainCtrl.account.role=='ischool'||mainCtrl.account.role=='1know'">
+							<a href="http://1know.weebly.com" target="_blank">
+								<i class="fa fa-fw fa-home"></i> <span translate="A026" remark="官方網站"></span>
+							</a>
+						</li> -->
+						<!-- <li>
+							<a href="https://www.facebook.com/groups/1know/" target="_blank">
+								<i class="fa fa-fw fa-comments-o"></i> <span translate="A027" remark="臉書"></span>
+							</a>
+						</li> -->
+						<!-- <li class="dropdown-submenu">
+							<a href="javascript:;"><i class="fa fa-fw fa-puzzle-piece"></i> <span>Extension</span></a>
+   							<ul class="dropdown-menu" style="left:inherit;right:100%">
+								<li>
+									<a href="https://chrome.google.com/webstore/detail/oneknow/nnegbcminlcngpbmooapnpacabaoggfo" target="_blank">
+										<img src="/img/webstore.png" style="width:18px;height:18px"/> <span>Chrome</span>
+									</a>
+								</li>
+							</ul>
+						</li> -->
+						<!-- <li class="divider"></li>
+						<li class="dropdown-submenu">
+							<a href="javascript:;"><i class="fa fa-fw fa-globe"></i> {{mainCtrl.language.title}}</a>
+   							<ul class="dropdown-menu" style="left:inherit;right:100%">
+   								<li><a href="javascript:;" ng-click="mainCtrl.changeLanguage('en-us')">English</a></li>
+								<li><a href="javascript:;" ng-click="mainCtrl.changeLanguage('zh-tw')">繁體中文</a></li>
+								<li><a href="javascript:;" ng-click="mainCtrl.changeLanguage('zh-cn')">简体中文</a></li>
+								<li><a href="javascript:;" ng-click="mainCtrl.changeLanguage('es-ar')">Español (Argentina)</a></li>
+								<li><a href="javascript:;" ng-click="mainCtrl.changeLanguage('es-pe')">Español (Perú)</a></li>
+								<li><a href="javascript:;" ng-click="mainCtrl.changeLanguage('de-de')">Deutsch</a></li>
+								<li class="divider"></li>
+								<li><a href="javascript:;" ng-click="mainCtrl.changeLanguage('code')">Language Code</a></li>
+								<li><a href="https://docs.google.com/spreadsheets/d/1IgIQhV_4cd9dpibRTj2y56B2fbXdC-7GBFt-s9S8EaQ/edit?usp=sharing" target="_blank">Translate Document</a></li>
+							</ul>
+						</li> -->
+						<li class="divider"></li>
+						<li>
+							<a href="/docs/index.html" target="_blank">
+								<i class="fa fa-fw fa-book"></i><span> 说明文件</span>
+							</a>
+						</li>
+						<li class="divider"></li>
+						<li ng-if="mainCtrl.account.role=='ischool'">
+							<a href="#!/background">
+								<i class="fa fa-fw fa-cog"></i> <span translate="A028" remark="後台管理"></span>
+							</a>
+						</li>
+						<li>
+							<a href="javascript:;" ng-click="mainCtrl.signout()">
+								<i class="fa fa-fw fa-sign-out"></i> <span translate="A029" remark="登出"></span>
+							</a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
+</nav>
