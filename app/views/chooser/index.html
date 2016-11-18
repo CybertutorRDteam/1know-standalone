@@ -151,10 +151,6 @@
     <script type="text/javascript" src="/library/angularjs/angular.js"></script>
     <script type="text/javascript" src="/library/html5-file-uploader/html5Upload.js"></script>
     <script type="text/javascript" src="/library/myersdaily.org/md5.js"></script>
-    <script type="text/javascript" src="/demo/js/plupload/plupload.full.min.js"></script>
-    <script type="text/javascript" src="/demo/js/plupload/i18n/zh_CN.js"></script>
-    <script type="text/javascript" src="/demo/js/ui.js"></script>
-    <script type="text/javascript" src="/demo/js/qiniu.js"></script>
 </head>
 <body>
     <div layout="vertical" layout-fill ng-app="fileChooser" ng-controller="mainCtrl">
@@ -170,7 +166,7 @@
                     <li ng-show="config.type.konzesys.activate">
                         <a ng-class="{true:'selected'}[action=='konzesys']" ng-click="action='konzesys'">控智</a>
                     </li>
-                    <li>
+                    <li ng-show="config.type.qiniu.activate">
                         <a ng-class="{true:'selected'}[action=='qiniu']" ng-click="action='qiniu'">七牛</a>
                     </li>
                 </ul>
@@ -254,15 +250,15 @@
                 <form>
                     <div class="form-group">
                         <label for="access_key">Access Key</label>
-                        <input type="text" class="form-control" id="access_key" name="access_key" ng-model="access_key" placeholder="Access Key">
+                        <input type="text" class="form-control" id="access_key" name="access_key" ng-model="config.type.qiniu.access_key" placeholder="Access Key">
                     </div>
                     <div class="form-group">
                         <label for="secret_key">Secret Key</label>
-                        <input type="text" class="form-control" id="secret_key" name="secret_key" ng-model="secret_key" placeholder="Secret Key">
+                        <input type="text" class="form-control" id="secret_key" name="secret_key" ng-model="config.type.qiniu.secret_key" placeholder="Secret Key">
                     </div>
                     <div class="form-group">
                         <label for="domain">七牛域名</label>
-                        <input type="text" class="form-control" id="domain" name="domain" ng-model="domain" placeholder="http://qiniu-plupload.qiniudn.com/">
+                        <input type="text" class="form-control" id="domain" name="domain" ng-model="config.type.qiniu.domain" placeholder="http://qiniu-plupload.qiniudn.com/">
                     </div>
                     <button class="btn btn-primary" ng-click="setQiniuKey()">设定</button>
                 </form>
@@ -330,7 +326,7 @@
                 }
             }])
             .controller('mainCtrl', ['$scope','$location',function($scope,$location) {
-                $scope.action = "qiniu";
+                $scope.action = "uploader";
                 $scope.config = {};
                 $scope.config.unit = {
                     name : "<%=@unit['name']%>" || '' ,
@@ -429,7 +425,8 @@
             }])
             .factory('konzesysFactory', ['$http','$q', function($http,$q){
                 return function(){
-                    var config = {url:'test_url'};
+                    var config = {};
+                    config.url = 'test_url';
                     var user = { token : '' ,
                         account : '',
                         md5password : '',
@@ -461,7 +458,7 @@
                             //network error
                             return $q.reject(data||{info:'发生未知错误'});
                         else if ( !user.token )
-                            if (config.activate)
+                            if (config.activate == 'true')
                                 return login().then(doGet,doGet); //trigger login
                             else
                                 return $q.reject(data||{info:'本功能未启动'});
@@ -615,9 +612,17 @@
                     $scope.getVideoList();
             }])
             .controller('qiniuCtrl', ['$scope', '$http', '$utility', function($scope, $http, $utility) {
-                $scope.access_key = '';
-                $scope.secret_key = '';
-                $scope.bucket = '';
+                $scope.config.type.qiniu = {};
+                $scope.config.type.qiniu.activate = "<%=@qiniu['activate']%>"
+                $scope.config.type.qiniu.access_key = '';
+                $scope.config.type.qiniu.secret_key = '';
+                $scope.config.type.qiniu.bucket = '';
+                if($scope.config.type.qiniu.activate == 'true'){
+                    $.getScript("/library/qiniu/plupload/plupload.full.min.js");
+                    $.getScript("/library/qiniu/plupload/i18n/zh_CN.js");
+                    $.getScript("/library/qiniu/js/ui.js");
+                    $.getScript("/library/qiniu/js/qiniu.js");
+                }
 
                 $scope.getBuckets = function(callback) {
                     $scope.bucketLoadState = 'loading';
@@ -778,9 +783,9 @@
                 };
 
                 $scope.init = function() {
-                    $scope.access_key = "<%=@qiniu['access_key']%>";
-                    $scope.secret_key = "<%=@qiniu['secret_key']%>";
-                    $scope.domain = "<%=@qiniu['domain']%>";
+                    $scope.config.type.qiniu.access_key = "<%=@qiniu['access_key']%>";
+                    $scope.config.type.qiniu.secret_key = "<%=@qiniu['secret_key']%>";
+                    $scope.config.type.qiniu.domain = "<%=@qiniu['domain']%>";
                     $scope.changePage();
                 };
             }]);

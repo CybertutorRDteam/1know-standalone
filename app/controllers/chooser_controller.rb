@@ -48,10 +48,14 @@ class ChooserController < ApplicationController
 		@APP_CONFIG = APP_CONFIG
 		@konzesys = @@konzesys
 		# @qiniu = qiniu.where(:ref_user_id => session[:userinfo][:id]).first
+		#access_key = 'bEA9JzrIBDkfXR5HPz6t1GnaEdNWw9erAip83Jwl'
+		#secret_key = '5X39U2Kp12UQ9QB89UjVPEZBwTALwMxC4NV5uFf3'
+		#domain = 'http://7xm74c.com1.z0.glb.clouddn.com/'
 		@qiniu = {
-			'access_key' => 'bEA9JzrIBDkfXR5HPz6t1GnaEdNWw9erAip83Jwl',
-			'secret_key' => '5X39U2Kp12UQ9QB89UjVPEZBwTALwMxC4NV5uFf3',
-			'domain' => 'http://7xm74c.com1.z0.glb.clouddn.com/'
+			'activate' => APP_CONFIG['qiniu']['activate'],
+			'access_key' => APP_CONFIG['qiniu']['access_key'],
+			'secret_key' => APP_CONFIG['qiniu']['secret_key'],
+			'domain' => APP_CONFIG['qiniu']['domain']
 		}
 	end
 

@@ -184,7 +184,7 @@
 					<img ng-show="mainCtrl.logo" ng-src="{{ mainCtrl.logo }}">
 					<span ng-show="!mainCtrl.logo && mainCtrl.web_name" class="logo-header">{{ mainCtrl.web_name }}</span>
 					<span ng-show="!mainCtrl.logo && !mainCtrl.web_name" class="logo-header"><span style="color:#f00">1</span>Know</span>
-					<small style="margin-left:8px;display:inline-block;">
+					<small style="margin-left:8px;display:inline-block;" ng-if="!mainCtrl.hide_account_type">
 						<small class="label label-danger" ng-if="mainCtrl.account.account_type=='free'">FREE</small>
 						<small class="label label-success" ng-if="mainCtrl.account.account_type=='plus'">PLUS</small>
 						<small class="label label-primary" ng-if="mainCtrl.account.account_type=='pro'">PRO</small>

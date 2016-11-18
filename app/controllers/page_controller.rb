@@ -731,6 +731,7 @@ class PageController < ApplicationController
             <script src='#{content[:root_url]}/library/literallycanvas/literallycanvas.js'></script>
             <script>
                 var web_name = '#{@APP_CONFIG['web_name']}';
+                var hide_account_type = '#{@APP_CONFIG['hide_account_type']}';
                 var logo = '#{@APP_CONFIG['logo']}';
                 var copyright = '#{@APP_CONFIG['copyright']}';
                 var service_email = '#{@APP_CONFIG['service_email']}';

@@ -239,6 +239,7 @@ var _1know = angular.module('1know', ['ngRoute', 'ngAnimate', 'pascalprecht.tran
 	var self = this;
 
 	self.web_name = $window.web_name;
+	self.hide_account_type = $window.hide_account_type;
 	self.logo = $window.logo;
 	self.copyright = $window.copyright;
 	self.service_email = $window.service_email;

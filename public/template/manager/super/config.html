@@ -16,7 +16,15 @@
                         <span class="help-block" translate="系統配置_啟動碼驗證說明">啟動碼驗證說明</span>
                     </label>
                 </div>
-
+            </div>
+            <div class="form-group">
+                <span class="col-sm-3 control-label" translate="系統配置_隱藏帳號等級圖示">隱藏帳號等級圖示</span>
+                <div class="col-sm-9">
+                    <label class="checkbox-inline" for="hide_account_type">
+                        <input id="hide_account_type" name="hide_account_type" type="checkbox" ng-model="configCtrl.currentConfig.hide_account_type">
+                        <span class="help-block" translate="系統配置_隱藏帳號等級說明">隱藏帳號等級說明</span>
+                    </label>
+                </div>
             </div>
         </div>
         <h4 translate="系統配置_OAuth">OAuth</h4>
@@ -97,6 +105,48 @@
                 <label for="konzesys_url" class="col-sm-3 control-label" translate="系統配置_控智服務網址">控智服務網址</label>
                 <div class="col-sm-9">
                     <input id="konzesys_url" name="konzesys_url" type="text" class="form-control" ng-model="configCtrl.currentConfig.konzesys_url" placeholder="http://218.56.8.86:8080/api.php?action=">
+                </div>
+            </div>
+        </div>
+        <div class="text-center" style="margin: 5px;">
+            <input class="btn btn-primary" name="commit" type="submit" value="{{'系統配置_儲存'|translate}}">
+        </div>
+         <h4 translate="系統配置_七牛">七牛</h4>
+        <div class="my-config-container">
+            <div class="form-group">
+                <label for="qiniu_activate" class="col-sm-3 control-label" translate="系統配置_啟用七牛">啟用七牛</label>
+                <div class="col-sm-9">
+                    <input id="qiniu_activate" name="qiniu_activate" type="checkbox" ng-model="configCtrl.currentConfig.qiniu_activate">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="qiniu_access_key" class="col-sm-3 control-label" translate="系統配置_七牛_Access_key">Qiniu Access Key</label>
+                <div class="col-sm-9">
+                    <input id="qiniu_access_key" name="qiniu_access_key" type="text" class="form-control" ng-model="configCtrl.currentConfig.qiniu_access_key" placeholder="bEA9JzrIBDkfXR5HPz6t1GnaEdNWw9erAip83Jwl">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="qiniu_secret_key" class="col-sm-3 control-label" translate="系統配置_七牛_Secret_key">Qiniu Secret Key</label>
+                <div class="col-sm-9">
+                    <input id="qiniu_secret_key" name="qiniu_secret_key" type="text" class="form-control" ng-model="configCtrl.currentConfig.qiniu_secret_key" placeholder="5X39U2Kp12UQ9QB89UjVPEZBwTALwMxC4NV5uFf3">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="qiniu_domain" class="col-sm-3 control-label" translate="系統配置_七牛服務網址">七牛服務網址</label>
+                <div class="col-sm-9">
+                    <input id="qiniu_domain" name="qiniu_domain" type="text" class="form-control" ng-model="configCtrl.currentConfig.qiniu_domain" placeholder="http://7xm74c.com1.z0.glb.clouddn.com/">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="qiniu_bucket_access_key" class="col-sm-3 control-label" translate="系統配置_七牛雲端_Access_key">Qiniu Bucket Access Key</label>
+                <div class="col-sm-9">
+                    <input id="qiniu_bucket_access_key" name="qiniu_bucket_access_key" type="text" class="form-control" ng-model="configCtrl.currentConfig.qiniu_bucket_access_key" placeholder="hTEY-7K8l6dvao5OvzElzqwLywVK_GXgwsm04XuU">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="qiniu_bucket_secret_key" class="col-sm-3 control-label" translate="系統配置_七牛雲端_Secret_key">Qiniu Bucket Secret Key</label>
+                <div class="col-sm-9">
+                    <input id="qiniu_bucket_secret_key" name="qiniu_bucket_secret_key" type="text" class="form-control" ng-model="configCtrl.currentConfig.qiniu_bucket_secret_key" placeholder="ZI_qtS_dnZKiZHYFzSEkkQvYGvBRpO4ou-MHqjX_">
                 </div>
             </div>
         </div>

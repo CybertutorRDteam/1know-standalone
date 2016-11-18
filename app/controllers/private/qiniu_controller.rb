@@ -7,8 +7,8 @@ class Private::QiniuController  < ApplicationController
     before_filter :establish_key
 
     def establish_key
-        Qiniu.establish_connection! :access_key => 'bEA9JzrIBDkfXR5HPz6t1GnaEdNWw9erAip83Jwl',
-                                    :secret_key => '5X39U2Kp12UQ9QB89UjVPEZBwTALwMxC4NV5uFf3'
+        Qiniu.establish_connection! :access_key => APP_CONFIG['qiniu']['access_key'],
+                                    :secret_key => APP_CONFIG['qiniu']['secret_key']
     end
 
     def get_uptoken_test
@@ -42,7 +42,7 @@ class Private::QiniuController  < ApplicationController
         # entry = Qiniu::Utils.urlsafe_base64_encode('iknow:example.m3u8')
         # ops_data = ["avthumb/mp4", ";avthumb/m3u8/segtime/15/vb/440k|saveas/#{entry}", ";vframe/jpg/offset/7/w/480/h/360"]
         # put_policy.persistent_ops = ops_data * "" # ary to string
-        put_policy.persistent_notify_url = "http://140.126.57.223:8080/private/qiniu/notify"
+        put_policy.persistent_notify_url = APP_CONFIG['host_name'] + "/private/qiniu/notify"
 
         # ###### 縮圖200x200，檔名sample.jpg ######
         # entry = Qiniu::Utils.urlsafe_base64_encode('iknow:sample.jpg')
@@ -206,7 +206,7 @@ class Private::QiniuController  < ApplicationController
             'Authorization' => 'Bearer w6PQLatuvjv16mdiRGhTyy3QRBFAcHLR-It0s61H1t1IUZ_8WXOJeZcLW3fAShpFfMqNiD6wEH4qNVzaHEHiGKUQC6Kr1UdnkBk5_h1gJNTb1ef1_Qqm4oWonQSKjKnedUXHUcpLDI-Mch1SHALLWjTVX1XxVzQPhTOBlzu_FA6wRGWluBnUGSscbsmtOv4mJeCQScSXb6a_Bc0Tw-cmFA=='
         })
         req.set_form_data(
-            'email' => 'test1@flip.dr-cloud.net', #xxx@flip.dr-cloud.net
+            'email' => 'test1@cybertutor.com.tw', #xxx@flip.dr-cloud.net
             'password' => 'cyber12345'
         )
         res = https.request(req)
@@ -365,9 +365,11 @@ class Private::QiniuController  < ApplicationController
     end
 
     # 存储空间
+    #access_key = 'hTEY-7K8l6dvao5OvzElzqwLywVK_GXgwsm04XuU'
+    #secret_key = 'ZI_qtS_dnZKiZHYFzSEkkQvYGvBRpO4ou-MHqjX_'
     def buckets
-        Qiniu.establish_connection! :access_key => 'hTEY-7K8l6dvao5OvzElzqwLywVK_GXgwsm04XuU',
-                                    :secret_key => 'ZI_qtS_dnZKiZHYFzSEkkQvYGvBRpO4ou-MHqjX_'
+        Qiniu.establish_connection! :access_key => APP_CONFIG['qiniu']['bucket_access_key'],
+                                    :secret_key => APP_CONFIG['qiniu']['bucket_secret_key']
 
         url = Qiniu::Config.settings[:rs_host] + '/buckets'
         resp_code, resp_body, resp_headers = Qiniu::HTTP.management_post(url)
@@ -380,8 +382,8 @@ class Private::QiniuController  < ApplicationController
 
     # 创建存储空间
     def mkbucket
-        Qiniu.establish_connection! :access_key => 'hTEY-7K8l6dvao5OvzElzqwLywVK_GXgwsm04XuU',
-                                    :secret_key => 'ZI_qtS_dnZKiZHYFzSEkkQvYGvBRpO4ou-MHqjX_'
+        Qiniu.establish_connection! :access_key => APP_CONFIG['qiniu']['bucket_access_key'],
+                                    :secret_key => APP_CONFIG['qiniu']['bucket_secret_key']
 
         url = Qiniu::Config.settings[:rs_host] + '/mkbucket/iknow/public/1'
         resp_code, resp_body, resp_headers = Qiniu::HTTP.management_post(url)
