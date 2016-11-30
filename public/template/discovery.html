@@ -1,51 +1,136 @@
 <div class="container" style="margin:20px auto">
-	<div ng-if="discoveryCtrl.target=='knowledge'">
-		<div>
-			<div class="pull-left" style="margin:20px 0 0 40px;padding:8px;background:rgba(0,0,0,0.2);"> 
-				<input type="text" ng-model="discoveryCtrl.keyWord" ng-keyup="discoveryCtrl.searchKnowledge($event)" placeholder="{{'C012'|translate}}....." remark="尋找一門好知識" style="font-size:18px;width:280px;padding:8px;margin:0;border:0"/>
+	<div ng-show="discoveryCtrl.target=='knowledge'">
+		<div ng-show=discoveryCtrl.frontCfg.target=='default'>
+			<div ng-show="discoveryCtrl.frontCfg.twobannerActivate" class="twoBanner row">
+				<style type="text/css">
+					.twoBanner > div{ height: 125px;border: 1px solid #DDD;border-radius: 15px }
+				</style>
+				<div style="float:left;position: relative;width: 47%;margin-left: 1.6%;margin-right: 1.3%;height: 180px;cursor: pointer;" ng-repeat="obj in discoveryCtrl.frontdata.front_twobanner_obj" ng-style="discoveryCtrl.banner_set_bg(obj)" ng-click="discoveryCtrl.getObjDetail(obj)"></div>
 			</div>
-			<div style="height:220px;background:url(/img/index_banner.png) no-repeat"></div>
-		</div>
-		<div style="margin:30px 0 15px">
-			<div class="btn-group">
-				<a class="btn btn-default" ng-class="{active: discoveryCtrl.orderType=='date', 'btn-primary': discoveryCtrl.orderType=='date'}" ng-click="discoveryCtrl.toggleOrder('date')"><span translate="C004" remark="最新發佈"></span></a>
-				<a class="btn btn-default" ng-class="{active: discoveryCtrl.orderType=='subscribed', 'btn-primary': discoveryCtrl.orderType=='subscribed'}" ng-click="discoveryCtrl.toggleOrder('subscribed')"><span translate="C005" remark="熱門訂閱"></span></a>
-				<a class="btn btn-default" ng-class="{active: discoveryCtrl.orderType=='rating', 'btn-primary': discoveryCtrl.orderType=='rating'}" ng-click="discoveryCtrl.toggleOrder('rating')"><span translate="C006" remark="評分"></span></a>
+			<div ng-show="!discoveryCtrl.frontCfg.hideSearchBanner">
+				<div class="pull-left" style="margin:20px 0 0 40px;padding:8px;background:rgba(0,0,0,0.2);"> 
+					<input type="text" ng-model="discoveryCtrl.keyWord" ng-keyup="discoveryCtrl.searchKnowledge($event)" placeholder="{{'C012'|translate}}....." remark="尋找一門好知識" style="font-size:18px;width:280px;padding:8px;margin:0;border:0"/>
+				</div>
+				<div style="height:220px;background:url(/img/index_banner.png) no-repeat"></div>
 			</div>
-			<div class="btn-group pull-right" style="margin-left:8px">
-				<a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-					<span translate="C002" remark="訂閱的頻道"></span>
-				</a>
-				<ul class="dropdown-menu">
-					<li>
-						<a href="#!/discover/knowledge">
-							<span translate="C001" remark="探索知識"></span>
-						</a>
-					</li>
-					<li>
-						<a href="#!/discover/channel/chle0ef90209f34">
-							<span translate="C007" remark="編輯精選"></span>
-						</a>
-					</li>
-					<li class="divider" ng-if="discoveryCtrl.channels.length>0"></li>
-					<li ng-repeat="item in discoveryCtrl.channels">
-						<a href="#!/discover/channel/{{item.uqid}}">
-							<span>{{item.name}}</span>
-							<span style="margin-left:8px" ng-show="item.uqid==discoveryCtrl.currentChannel.uqid"><i class="fa fa-fw fa-hand-left"></i></span>
-						</a>
-					</li>
-					<li class="divider" ng-if="discoveryCtrl.channels.length>0&&discoveryCtrl.currentChannel.role=='member'"></li>
-					<li ng-if="discoveryCtrl.channels.length>0&&discoveryCtrl.target!='knowledge'&&discoveryCtrl.target!='chle0ef90209f34'&&discoveryCtrl.currentChannel.role=='member'">
-						<a ng-click="discoveryCtrl.currentChannel.unsubscribeAlert=true">
-							<span translate="C003" remark="取消訂閱"></span>
+			<div ng-show="discoveryCtrl.frontCfg.sliderActivate" style="margin-top: 20px;height: 300px">
+				<ul class="pgwSlider">
+					<li ng-repeat="obj in discoveryCtrl.frontdata.front_slider_obj" on-finish-render="ngSliderRepeatFinished">
+						<a href="javascript:;" target="_blank">
+							<img ng-src="/images/frontobject/{{obj.bImg}}" alt="{{obj.name}}" data-description="{{obj.description}}">
 						</a>
 					</li>
 				</ul>
 			</div>
+			<div ng-show="discoveryCtrl.frontCfg.tagfunctionActivate && discoveryCtrl.frontdata.front_tags.length > 0">
+				<div ng-repeat="tag in discoveryCtrl.frontdata.front_tags">
+					<div ng-show="tag.knowledges != 'null'">
+						<h3>{{tag.name}}</h3>
+						<div class="row" ng-init="discoveryCtrl.get_frontObject_knowledges(tag.id, tag.knowledges); tag.limit = 6">
+							<div class="col-xs-4" ng-repeat="item in discoveryCtrl.frontdata.knowledges[tag.id] | limitTo: tag.limit">
+								<div class="thumbnail" ng-click="discoveryCtrl.openKnowledge(item)">
+									<div class="card-hover" style="position:absolute"></div>
+									<img class="pull-left" style="width:96px;height:96px" ng-src="{{item.logo}}"/>
+									<div style="margin-left:96px;height:96px;padding:15px 10px 10px 15px">
+										<div style="font-size:15px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+										<div class="text-muted" style="font-size:13px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.editor.full_name}}</div>
+										<div class="text-muted" style="margin-top:10px">
+											<span>
+												<i class="fa fa-star" ng-style="{'color': item.average_rate >= 1 ? '#eeb929' : '#cacaca'}"></i>
+												<i class="fa fa-star" ng-style="{'color': item.average_rate >= 2 ? '#eeb929' : '#cacaca'}"></i>
+												<i class="fa fa-star" ng-style="{'color': item.average_rate >= 3 ? '#eeb929' : '#cacaca'}"></i>
+												<i class="fa fa-star" ng-style="{'color': item.average_rate >= 4 ? '#eeb929' : '#cacaca'}"></i>
+												<i class="fa fa-star" ng-style="{'color': item.average_rate == 5 ? '#eeb929' : '#cacaca'}"></i>
+											</span>
+											<span class="pull-right">
+												<i class="fa fa-fw fa-user"></i> {{item.readers}}
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<button ng-show="JSON.parse(tag.knowledges).length > 10" ng-click="tag.limit = tag.limit + 10">more...</button>
+						<hr>
+					</div>
+				</div>
+			</div>
+			<div ng-show="!discoveryCtrl.frontCfg.hideDefaultDiscovery">
+				<div style="margin:30px 0 15px">
+					<div class="btn-group">
+						<a class="btn btn-default" ng-class="{active: discoveryCtrl.orderType=='date', 'btn-primary': discoveryCtrl.orderType=='date'}" ng-click="discoveryCtrl.toggleOrder('date')"><span translate="C004" remark="最新發佈"></span></a>
+						<a class="btn btn-default" ng-class="{active: discoveryCtrl.orderType=='subscribed', 'btn-primary': discoveryCtrl.orderType=='subscribed'}" ng-click="discoveryCtrl.toggleOrder('subscribed')"><span translate="C005" remark="熱門訂閱"></span></a>
+						<a class="btn btn-default" ng-class="{active: discoveryCtrl.orderType=='rating', 'btn-primary': discoveryCtrl.orderType=='rating'}" ng-click="discoveryCtrl.toggleOrder('rating')"><span translate="C006" remark="評分"></span></a>
+					</div>
+					<div class="btn-group pull-right" style="margin-left:8px">
+						<a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+							<span translate="C002" remark="訂閱的頻道"></span>
+						</a>
+						<ul class="dropdown-menu">
+							<li>
+								<a href="#!/discover/knowledge">
+									<span translate="C001" remark="探索知識"></span>
+								</a>
+							</li>
+							<li>
+								<a href="#!/discover/channel/chle0ef90209f34">
+									<span translate="C007" remark="編輯精選"></span>
+								</a>
+							</li>
+							<li class="divider" ng-if="discoveryCtrl.channels.length>0"></li>
+							<li ng-repeat="item in discoveryCtrl.channels">
+								<a href="#!/discover/channel/{{item.uqid}}">
+									<span>{{item.name}}</span>
+									<span style="margin-left:8px" ng-show="item.uqid==discoveryCtrl.currentChannel.uqid"><i class="fa fa-fw fa-hand-left"></i></span>
+								</a>
+							</li>
+							<li class="divider" ng-if="discoveryCtrl.channels.length>0&&discoveryCtrl.currentChannel.role=='member'"></li>
+							<li ng-if="discoveryCtrl.channels.length>0&&discoveryCtrl.target!='knowledge'&&discoveryCtrl.target!='chle0ef90209f34'&&discoveryCtrl.currentChannel.role=='member'">
+								<a ng-click="discoveryCtrl.currentChannel.unsubscribeAlert=true">
+									<span translate="C003" remark="取消訂閱"></span>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div>
+					<div class="row">
+						<div class="col-xs-4" ng-repeat="item in discoveryCtrl.knowledges">
+							<div class="thumbnail" ng-click="discoveryCtrl.openKnowledge(item)">
+								<div class="card-hover" style="position:absolute"></div>
+								<img class="pull-left" style="width:96px;height:96px" ng-src="{{item.logo}}"/>
+								<div style="margin-left:96px;height:96px;padding:15px 10px 10px 15px">
+									<div style="font-size:15px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+									<div class="text-muted" style="font-size:13px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.editor.full_name}}</div>
+									<div class="text-muted" style="margin-top:10px">
+										<span>
+											<i class="fa fa-star" ng-style="{'color': item.average_rate >= 1 ? '#eeb929' : '#cacaca'}"></i>
+											<i class="fa fa-star" ng-style="{'color': item.average_rate >= 2 ? '#eeb929' : '#cacaca'}"></i>
+											<i class="fa fa-star" ng-style="{'color': item.average_rate >= 3 ? '#eeb929' : '#cacaca'}"></i>
+											<i class="fa fa-star" ng-style="{'color': item.average_rate >= 4 ? '#eeb929' : '#cacaca'}"></i>
+											<i class="fa fa-star" ng-style="{'color': item.average_rate == 5 ? '#eeb929' : '#cacaca'}"></i>
+										</span>
+										<span class="pull-right">
+											<i class="fa fa-fw fa-user"></i> {{item.readers}}
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div ng-if="discoveryCtrl.start_index!=-1&&discoveryCtrl.keyWord==undefined" style="text-align:right">
+						<a class="btn btn-primary" ng-click="discoveryCtrl.loadKnowledge(discoveryCtrl.start_index + 1)"><span translate="C008" remark="顯示更多"></span>...</a>
+					</div>
+				</div>
+			</div>
 		</div>
-		<div>
-			<div class="row">
-				<div class="col-xs-4" ng-repeat="item in discoveryCtrl.knowledges">
+		<div ng-if="discoveryCtrl.frontCfg.target=='objDetail'">
+			<div>
+				<img ng-src="/images/frontobject/{{select_obj.bImg}}" style="width:100%;height:220px;background-repeat:no-repeat">
+			</div>
+			<h3>{{select_obj.name}}</h3>
+			<div class="row" style="margin-top: 20px;">
+				<div class="col-xs-4" ng-repeat="item in discoveryCtrl.frontdata.knowledges[select_obj.id]">
 					<div class="thumbnail" ng-click="discoveryCtrl.openKnowledge(item)">
 						<div class="card-hover" style="position:absolute"></div>
 						<img class="pull-left" style="width:96px;height:96px" ng-src="{{item.logo}}"/>
@@ -67,9 +152,6 @@
 						</div>
 					</div>
 				</div>
-			</div>
-			<div ng-if="discoveryCtrl.start_index!=-1&&discoveryCtrl.keyWord==undefined" style="text-align:right">
-				<a class="btn btn-primary" ng-click="discoveryCtrl.loadKnowledge(discoveryCtrl.start_index + 1)"><span translate="C008" remark="顯示更多"></span>...</a>
 			</div>
 		</div>
 	</div>

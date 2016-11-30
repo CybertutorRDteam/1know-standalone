@@ -1,6 +1,8 @@
-_1know.controller('DiscoveryCtrl', function($scope, $http, $location, $routeParams, $utility) {
+_1know.controller('DiscoveryCtrl', function($scope, $http, $location, $routeParams, $utility, $window) {
 	var self = this;
 	self.language = $utility.LANGUAGE;
+	self.frontCfg = $window.frontCfg;
+	self.frontCfg.target = 'default';
 
 	self.loadChannelList = function() {
 		$http.get([$utility.SERVICE_URL, '/discovery/channels'].join(''))
@@ -15,7 +17,6 @@ _1know.controller('DiscoveryCtrl', function($scope, $http, $location, $routePara
 			if (!response.error) {
 				if (uqid === 'chle0ef90209f34')
 					response.name = translations[$utility.LANGUAGE.type]['C007'];//編輯精選
-
 				self.currentChannel = response;
 				self.currentChannel.view = true;
 				self.currentChannel.categoryPath = [];
@@ -152,6 +153,58 @@ _1know.controller('DiscoveryCtrl', function($scope, $http, $location, $routePara
 		delete self.keyWord;
 	}
 
+	//frontpage
+	self.loadFrontObjects = function(){
+		var check = false;
+		$.each(frontCfg,function(i,o){ check = check || o; });
+		if(!check) return;
+		$http.get([$utility.SERVICE_URL, '/discovery/frontobjects'].join(''))
+		.success(function(response, status){
+			if(!response.error){
+				self.frontdata = response;
+				self.frontdata.knowledges = {};
+			}
+		});
+	}
+	$scope.$on('ngSliderRepeatFinished', function(ngSliderRepeatFinishedEvent) {
+		$('<link rel="stylesheet" type="text/css" href="/library/pgwSlider/pgwslider.min.css">').appendTo($('body'));
+		$.getScript('/library/pgwSlider/pgwslider.min.js',function(){
+			$('ul.pgwSlider').pgwSlider({
+				transitionEffect: 'sliding',
+				adaptiveHeight: true,
+				verticalCentering: true,
+				maxHeight: 300
+			});
+		});
+	});
+	
+	self.banner_set_bg = function(o){
+		return {'background': "url('/images/frontobject/"+o.sImg+"')", 'background-size': '100% 100%', 'background-repeat': 'no-repeat'};
+	}
+	self.get_frontObject_knowledges = function(tid, o, offset){
+		var tmp = JSON.parse(o), payload = {};
+		if (tmp == null) return;
+		payload.set = $.map(tmp,function(obj,idx){
+			return obj.uqid;
+		});
+		payload.start_index = offset? offset:0;
+		$http.post([$utility.SERVICE_URL, '/discovery/frontknowledges'].join(''), payload)
+		.success(function(response, status){
+			if(!response.error){
+				self.frontdata.knowledges[tid] = [];
+				angular.forEach(response, function(item) {
+					item.format_time = new Date(949334400000 + item.total_time * 1000);
+					self.frontdata.knowledges[tid].push(item); 
+				});
+			}
+		});
+	}
+	self.getObjDetail = function(o){
+		self.get_frontObject_knowledges(o.id, o.knowledges);
+		self.frontCfg.target = 'objDetail';
+		$scope.select_obj = o;
+	}
+	//==========================//
 	self.init = function() {
 		if ($routeParams.t !== undefined) {
 			self.target = $routeParams.t;
@@ -170,9 +223,21 @@ _1know.controller('DiscoveryCtrl', function($scope, $http, $location, $routePara
 			else
 				$location.path('/discover/knowledge/');
 		}
+		//frontpage option
+		self.loadFrontObjects();
 	}
-
 	$scope.$watch('mainCtrl.account', function(newVal, oldVal) {
 		if (newVal !== undefined && newVal !== 'NotLogin') self.init();
 	});
+}).directive('onFinishRender', function ($timeout) {
+	return {
+		restrict: 'A',
+		link: function (scope, element, attr) {
+			if (scope.$last === true) {
+				$timeout(function () {
+					scope.$emit(attr.onFinishRender);
+				});
+			}
+		}
+	}
 })

@@ -39,6 +39,9 @@ if (!$.browser.msie && !$.browser.webkit && !$.browser.mozilla) {
 			var self = this;
 
 			self.web_name = $window.web_name;
+			self.hideSysIntroduce = $window.hide_sys_introduce;
+			self.disableTrialAccount = $window.disable_trial_account;
+			self.disableTempUseCode = $window.disable_tempuse_code;
 			self.logo = $window.logo;
 			self.copyright = $window.copyright;
 			self.service_email = $window.service_email;

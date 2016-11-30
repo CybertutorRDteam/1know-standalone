@@ -27,6 +27,7 @@ _1know.controller('ConfigCtrl', function($scope, $http, $location, $timeout, $ro
 			host_name: "",
 			need_activation: "",
 			hide_account_type: "",
+			hide_sys_introduce: "",
 			oauth_client_id: "",
 			oauth_client_secret: "",
 			oauth_redirect_uri: "",
@@ -51,11 +52,11 @@ _1know.controller('ConfigCtrl', function($scope, $http, $location, $timeout, $ro
 				response.forEach(function(item){
 					switch (item.name) {
 						case 'need_activation':
-							item.content = (item.content == 'true');
-							break;
+						case 'hide_account_type':
+						case 'hide_sys_introduce':
+						case 'disable_trial_account':
+						case 'disable_tempuse_code':
 						case 'konzesys_activate':
-							item.content = (item.content == 'true');
-							break;
 						case 'qiniu_activate':
 							item.content = (item.content == 'true');
 							break;

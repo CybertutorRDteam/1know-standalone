@@ -1,0 +1,85 @@
+<div>
+	<form class="form-horizontal" id="frontpageForm" ng-submit="frontpageCtrl.saveConfig()">
+		<h4><span translate="首頁配置_預設設置">預設設置</span></h4>
+		<div class="my-config-container">
+			<div class="form-group">
+				<span class="col-sm-3 control-label" translate="首頁配置_關閉預設">關閉預設配置</span>
+				<div class="col-sm-9">
+					<label for="front_hide_default_discovery" class="checkbox-inline">
+						<input id="front_hide_default_discovery" name="front_hide_default_discovery" type="checkbox" ng-model="frontpageCtrl.currentConfig.front_hide_default_discovery">
+						<span class="help-block" translate="首頁配置_關閉預設說明">關閉預設配置版面，隱藏原有分類</span>
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<span class="col-sm-3 control-label" translate="首頁配置_關閉搜尋橫幅">關閉搜尋橫幅</span>
+				<div class="col-sm-9">
+					<label for="front_hide_search_banner" class="checkbox-inline">
+						<input id="front_hide_search_banner" name="front_hide_search_banner" type="checkbox" ng-model="frontpageCtrl.currentConfig.front_hide_search_banner">
+						<span class="help-block" translate="首頁配置_關閉搜尋橫幅說明">隱藏預設搜尋橫幅</span>
+					</label>
+				</div>
+			</div>
+		</div>
+		<h4><span translate="首頁配置_橫幅設置">橫幅設置</span></h4>
+		<div class="my-config-container">
+			<div class="form-group">
+				<span class="col-sm-3 control-label" translate="首頁配置_啟用橫幅">啟用橫幅</span>
+				<div class="col-sm-9">
+					<label for="front_slider_activate" class="checkbox-inline">
+						<input id="front_slider_activate" name="front_slider_activate" type="checkbox" ng-model="frontpageCtrl.currentConfig.front_slider_activate">
+						<span class="help-block" translate="首頁配置_啟用橫幅說明">啟用橫幅說明</span>
+					</label>
+				</div>
+			</div>
+			<div class="form-group" ng-repeat="x in [0,1,2]">
+				<label for="front_slider_param{{x}}" class="col-sm-3 control-label" translate="首頁配置_param{{x}}">第一橫福</label>
+				<div class="col-sm-9">
+					<input id="front_slider_param{{x}}" name="front_slider_param{{x}}" type="text" class="form-control" ng-model="frontpageCtrl.slider[x]">
+				</div>
+			</div>
+		</div>
+		<h4><span translate="首頁配置_雙幅設置">雙幅設置</span></h4>
+		<div class="my-config-container">
+			<div class="form-group">
+				<span class="col-sm-3 control-label" translate="首頁配置_啟用雙幅">啟用雙幅</span>
+				<div class="col-sm-9">
+					<label for="front_twobanner_activate" class="checkbox-inline">
+						<input id="front_twobanner_activate" name="front_twobanner_activate" type="checkbox" ng-model="frontpageCtrl.currentConfig.front_twobanner_activate">
+						<span class="help-block" translate="首頁配置_啟用雙幅說明">啟用雙幅說明</span>
+					</label>
+				</div>
+			</div>
+			<div class="form-group" ng-repeat="x in [0,1]">
+				<label for="front_twobanner_param{{x}}" class="col-sm-3 control-label" translate="首頁配置_param{{x}}">第一橫福</label>
+				<div class="col-sm-9">
+					<input id="front_twobanner_param{{x}}" name="front_twobanner_param{{x}}" type="text" class="form-control" ng-model="frontpageCtrl.banner[x]">
+				</div>
+			</div>
+		</div>
+		<h4><span translate="首頁配置_標籤設置">標籤設置</span></h4>
+		<div class="my-config-container">
+			<div class="form-group">
+				<span class="col-sm-3 control-label" translate="首頁配置_啟用標籤">啟用標籤</span>
+				<div class="col-sm-9">
+					<label for="front_tagfunction_activate" class="checkbox-inline">
+						<input id="front_tagfunction_activate" name="front_tagfunction_activate" type="checkbox" ng-model="frontpageCtrl.currentConfig.front_tagfunction_activate">
+						<span class="help-block" translate="首頁配置_啟用標籤功能">啟用標籤分類功能</span>
+					</label>
+				</div>
+			</div>
+		</div>
+		<div class="text-center" style="margin: 5px;">
+			<input class="btn btn-primary" name="commit" type="submit" value="{{'首頁配置_儲存'|translate}}">
+		</div>
+	</form>
+</div>
+<div id="errorMessageModal" class="modal fade" style="z-index:1480">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body">
+				<h4 class="text-danger" translate="{{frontpageCtrl.errMessage}}"></h4>
+			</div>
+		</div>
+	</div>
+</div>

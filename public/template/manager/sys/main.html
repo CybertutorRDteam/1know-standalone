@@ -1,13 +1,28 @@
 <div class="container">
-    <div class="row">
-        <div class="col-md-3">
-            <div class="list-group">
-                <a href="#!/permission" data-match-route="/(:?permission.*)" class="list-group-item"><span translate="功能列_使用許可"></span></a>
-                <a href="#!/config" data-match-route="/(:?config.*)" class="list-group-item"><span translate="功能列_系統配置"></span></a>
-            </div>
-        </div>
-        <div class="col-md-9">
-            <div ng-view class="reveal-animate"></div>
-        </div>
-    </div>
+	<div class="row">
+		<div class="col-md-3">
+			<div class="list-group">
+				<a href="#!/permission" data-match-route="/(:?permission.*)" class="list-group-item"><span translate="功能列_使用許可"></span></a>
+				<a href="#!/config" data-match-route="/(:?config.*)" class="list-group-item"><span translate="功能列_系統配置"></span></a>
+				<a href="javascript:;" class="list-group-item" data-toggle="collapse" data-target="#frontpage">
+					<span translate="功能列_首頁配置"></span>
+					<i class="glyphicon glyphicon-chevron-right"></i>
+				</a>
+				<div class="list-group collapse" id="frontpage">
+					<a href="#!/frontpage_objCfg" data-match-route="/(:?frontpage_objCfg.*)" class="col-md-offset-1 list-group-item"><span translate="功能列_首頁配置_類別設定"></span></a>
+					<a href="#!/frontpage_mainCfg" data-match-route="/(:?frontpage_mainCfg.*)" class="col-md-offset-1 list-group-item"><span translate="功能列_首頁配置_佈局設定"></span></a>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-9">
+			<div ng-view class="reveal-animate"></div>
+		</div>
+	</div>
 </div>
+<script type="text/javascript">
+	$('.container').on('click', '[data-toggle=collapse]', function(){
+		$(this).children('i')
+			.toggleClass('glyphicon-chevron-right')
+			.toggleClass('glyphicon-chevron-down');
+	});
+</script>

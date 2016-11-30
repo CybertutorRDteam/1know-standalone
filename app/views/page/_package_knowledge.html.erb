@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang='en' ng-app='1know'>
+<head>
+	<title><%=content[:name]%></title>
+	<meta charset='UTF-8'>
+	<link rel='icon' href='<%=content[:root_url]+content[:logo]%>' />
+	<link rel='stylesheet' href='https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css'>
+	<link rel='stylesheet' href='https://vjs.zencdn.net/4.2/video-js.css'>
+	<link rel='stylesheet' href='https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css'>
+	<link rel='stylesheet' href='<%=content[:root_url]%>/library/literallycanvas/literallycanvas.css'>
+	<link rel='stylesheet' href='<%=content[:root_url]%>/css/default.css'>
+	<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+	<script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.11/angular.min.js'></script>
+	<script src='https://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js'></script>
+	<script src='https://vjs.zencdn.net/4.2/video.js'></script>
+	<script src='<%=content[:root_url]%>/library/literallycanvas/literallycanvas.js'></script>
+	<script>
+		var web_name = '<%=@APP_CONFIG['web_name']%>';
+		var hide_account_type = '<%=@APP_CONFIG['hide_account_type']%>';
+		var logo = '<%=@APP_CONFIG['logo']%>';
+		var copyright = '<%=@APP_CONFIG['copyright']%>';
+		var service_email = '<%=@APP_CONFIG['service_email']%>';
+	</script>
+</head>
+<body ng-controller='MainCtrl'>
+	<nav id='header' class='navbar navbar-static-top navbar-inverse' role='navigation'>
+		<div class='container'>
+			<div class='navbar-header'>
+				<a class='navbar-brand logo' style='padding:9px 15px' href='/'>
+					<img ng-show='logo' ng-src='{{ logo }}'>
+					<span ng-show='!logo && web_name' class='logo-header'>{{ web_name }}</span>
+					<span ng-show='!logo && !web_name' class='logo-header'>
+				</a>
+			</div>
+		</div>
+	</nav>
+	<div ng-switch='model.layout'>
+		<div class='container' style='margin:20px auto' ng-switch-when='content'>
+			<div class='row'>
+				<div class='col-xs-3'>
+					<div class='panel panel-default'>
+						<div style='padding:10px'>
+							<span class='pull-right'><i class='fa fa-fw fa-user'></i> <%=content[:reader]%></span>
+							<%if content[:privacy]%> 
+								<span class='text-info'><span>公開</span></span>
+							<%else%>
+								<span class='text-error'><span>非公開</span></span>
+							<%end%>
+						</div>
+						<div>
+							<img src='<%=content[:root_url]%><%=content[:logo]%>' style='width:100%'/>
+						</div>
+						<div style='padding:10px;border-top:1px solid #ddd'>
+							<span class='text-muted'>
+								<%if account[:language][:type] == 'zh-tw'%>
+									<span>知識代碼</span>
+								<%elsif account[:language][:type] == 'zh-cn'%> 
+									<span>知识代码</span>
+								<%else%>
+									<span>Knowledge Code</span>
+								<%end%>
+							</span>
+							<span class='pull-right'><%=content[:code]%></span>
+						</div>
+						<div style='border-top:1px solid #ddd'><img ng-src='https://chart.googleapis.com/chart?cht=qr&chs=140x140&chl=<%=content[:page]%>'/></div>
+						<div style='padding:10px;border-top:1px solid #ddd'>
+							<div class='row'>
+								<div class='col-xs-3'><i class='fa fa-star'></i> 5</div>
+								<div class='col-xs-6'>
+									<div class='progress' style='height:12px'>
+										<div class='progress-bar' style='width:<%=content[:rating][5]%>%'></div>
+									</div>
+								</div>
+								<div class='span3'><%=content[:rating][0]%></div>
+							</div>
+							<div class='row'>
+								<div class='col-xs-3'><i class='fa fa-star'></i> 4</div>
+								<div class='col-xs-6'>
+									<div class='progress' style='height:12px'>
+										<div class='progress-bar' style='width:<%=content[:rating][6]%>%'></div>
+									</div>
+								</div>
+								<div class='span3'><%=content[:rating][1]%></div>
+							</div>
+							<div class='row'>
+								<div class='col-xs-3'><i class='fa fa-star'></i> 3</div>
+								<div class='col-xs-6'>
+									<div class='progress' style='height:12px'>
+										<div class='progress-bar' style='width:<%=content[:rating][7]%>%'></div>
+									</div>
+								</div>
+								<div class='span3'><%=content[:rating][2]%></div>
+							</div>
+							<div class='row'>
+								<div class='col-xs-3'><i class='fa fa-star'></i> 2</div>
+								<div class='col-xs-6'>
+									<div class='progress' style='height:12px'>
+										<div class='progress-bar' style='width:<%=content[:rating][8]%>%'></div>
+									</div>
+								</div>
+								<div class='span3'><%=content[:rating][3]%></div>
+							</div>
+							<div class='row'>
+								<div class='col-xs-3'><i class='fa fa-star'></i> 1</div>
+								<div class='col-xs-6'>
+									<div class='progress' style='height:12px'>
+										<div class='progress-bar' style='width:<%=content[:rating][9]%>%'></div>
+									</div>
+								</div>
+								<div class='span3'><%=content[:rating][4]%></div>
+							</div>
+						</div>
+						<div style='padding:10px;border-top:1px solid #ddd'>
+							<span class='text-muted'>
+								<% if account[:language][:type] == 'zh-tw'%>
+									<span>編輯者</span>
+								<% elsif account[:language][:type] == 'zh-cn'%>
+									<span>编辑者</span>
+								<%else%>
+									<span>Editor</span>
+								<%end%>
+							</span>
+							<div style='margin-top:10px'>
+							<%content[:editors].each do |e|%>
+								<a href='<%=content[:root_url]+e[:page]%>' target='_blank' style='text-decoration:none'>
+									<img src='<%=content[:root_url]+e[:photo]%>' style='width:24px;height:24px;margin:2px'/>
+								</a>
+							<%end%>
+							</div>
+						</div>
+						<div style='padding:10px;border-top:1px solid #ddd'>
+							<div class='text-muted'>Download Time</div>
+							<div class='text-info' style='margin-top:8px'><%=Time.now%></div>
+						</div>
+					</div>
+				</div>
+				<div class='col-xs-9'>
+					<div class='panel panel-default'>
+						<div class='panel-body'>
+							<h2><%=content[:name]%></h2>
+							<div style='padding:10px'>
+								<%if content[:description] != nil%>
+									<%=content[:description].html_safe%>
+								<%end%>
+							</div>
+						</div>
+					</div>
+					<div style='margin-top:20px'>
+						<%content[:chapters].each_with_index do |c,i|%>						
+							<div class='panel panel-primary'>
+								<div class='panel-heading'>
+									<h3 class='panel-title'>#{c[:name]}</h3>
+								</div>
+								<div class='panel-body'>
+									<table class='table table-hover table-condensed' style='margin:0'>
+										<tbody>
+										<%c[:units].each_with_index do |u,j|%>
+										<tr>
+											<td style='width:20px;border:0;border-bottom:1px solid #ddd'>
+												<span>
+												<%	if u[:unit_type] == 'video'
+														css = 'fa-film'
+													elsif u[:unit_type] == 'web'
+														css = 'fa-link'
+													elsif u[:unit_type] == 'embed'
+														css = 'fa-code'
+													elsif u[:unit_type] == 'quiz'
+														css = 'fa-pencil-square-o'
+													elsif u[:unit_type] == 'poll'
+														css = 'fa-thumbs-o-up'
+													elsif u[:unit_type] == 'qa'
+														css = 'fa-question'
+													elsif u[:unit_type] == 'draw'
+														css = 'fa-picture-o'
+													end
+												%>
+												<i class="fa fa-fw <%=css%>"></i>
+												</span>
+											</td>
+											<td style='border:0;border-bottom:1px solid #ddd'>
+												<a href='javascript:;' ng-click='preview(<%=i%>, <%=j%>'>
+													<div style='max-width:600px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden'><%=u[:name]%></div>
+												</a>
+											</td>
+										</tr>
+										<%end%>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						<%end%>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div ng-switch-when='preview' style='min-width:970px'>
+			<div style='min-height:42px;padding:4px;background:#ffffff;border-bottom:1px solid #ddd'>
+				<a class='btn btn-default disabled' style='border:none'>{{model.currentUnit.name}}</a>
+				<div class='pull-right'>
+					<a class='btn btn-default' style='border:none' ng-click='toggleMaximum()'>
+						<i class='fa fa-fw' ng-class='{"fa-compress": model.maximum, "fa-expand": !model.maximum}'></i>
+					</a>
+					<a class='btn btn-default' style='border:none' ng-click='closePreview()'>
+						<i class='fa fa-fw fa-sign-out'></i>
+					</a>
+				</div>
+			</div>
+			<div>
+				<div style='display:table'>
+					<div style='display:table-cell;vertical-align:top'>
+						<div ng-style='{width:model.contentWidth+"px", height:model.contentHeight+"px"}' style='background:#fff' ng-switch='model.currentUnit.unit_type'>
+							<div ng-switch-when='video' style='height:100%;padding:5px;background:#000' ng-bind-html='model.currentUnit.video_content' id='videoContainer'></div>
+							<div ng-switch-when='web' style='height:100%;overflow:auto;-webkit-overflow-scrolling:touch'>
+								<iframe ng-src='{{model.currentUnit.content_url}}' width='100%' height='99%' frameborder='0'></iframe>
+							</div>
+							<div ng-switch-when='embed' style='height:100%' ng-bind-html='model.currentUnit.content'></div>
+							<div ng-switch-when='quiz' style='height:100%;overflow:auto'>
+								<div style='padding:10px'>
+									<div style='border:1px solid #ddd;margin-bottom:10px;padding:10px' ng-repeat='quiz in model.currentUnit.quizzes'>
+										<span class='pull-left'>
+											<span ng-if='$index<9'>0</span>{{$index+1}}.</span>
+										</span>
+										<div ng-bind-html='quiz.content'></div>
+										<div style='margin-top:20px'>
+											<div ng-repeat='option in quiz.options' ng-switch='quiz.quiz_type'>
+												<label class='checkbox' ng-switch-when='multi' style='font-size:16px'>
+													<input type='checkbox' name='{{quiz.uqid}}' ng-model='option.answer'/>
+													<span ng-hide='option.latex!=undefined&&option.latex'>{{option.item}}</span>
+													<img ng-src='{{option.latex_url}}' border='0' ng-show='option.latex!=undefined&&option.latex'/>
+												</label>
+												<label class='radio' ng-switch-when='single' style='font-size:16px'>
+													<input type='radio' name='{{quiz.uqid}}' value='{{option.value}}' ng-model='quiz.single'/>
+													<span ng-hide='option.latex!=undefined&&option.latex'>{{option.item}}</span>
+													<img ng-src='{{option.latex_url}}' border='0' ng-show='option.latex!=undefined&&option.latex'/>
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div ng-switch-when='poll' style='height:100%;overflow:auto'>
+								<div style='padding:10px'>
+									<h3 style='padding:30px'>
+										<div ng-bind-html='model.currentUnit.content.content'></div>
+										<div style='margin-top:20px'>
+											<label class='checkbox' style='cursor:pointer' ng-repeat='option in model.currentUnit.content.options'>
+												<input type='checkbox' name='{{model.currentUnit.uqid}}' ng-model='option.answer'/>
+												<span ng-switch='option.latex!=undefined&&option.latex'>
+													<span ng-switch-when='true'><img ng-src='{{option.latex_url}}' border='0'/></span>
+													<span ng-switch-when='false'>{{option.item}}</span>
+												</span>
+											</label>
+										</div>
+									</h3>
+								</div>
+							</div>
+							<div ng-switch-when='qa' style='height:100%;overflow:auto'>
+								<div style='padding:10px'>
+									<h3><div ng-bind-html='model.currentUnit.content'></div></h3>
+									<div style='margin-top:20px'>
+										<div id='qa-result' style='height:200px'></div>
+									</div>
+								</div>
+							</div>
+							<div ng-switch-when='draw'>
+								<div id='draw-board' ng-style='{width:model.contentWidth+"px", height:model.contentHeight+"px", background:model.currentUnit.backgroundImage}' style='background:rgba(0,0,0,0);bottom:0'>
+									<canvas></canvas>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div style='width:320px;display:table-cell;vertical-align:top' ng-show='!model.maximum'>
+						<div ng-style='{height:model.contentHeight+"px"}' style='overflow:auto;padding:10px;word-break:break-all;background:#fff;border-left:1px solid #ddd;' ng-bind-html='model.currentUnit.description'></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id='footer' class='container' style='text-align:center;margin-top:20px'>
+		<span>{{copyright}}</span>
+		<a class='btn btn-link' style='color:#333;text-decoration:none' target='_blank' href='mailto:{{service_email}}'><i class='fa fa-fw fa-envelope'></i> Contact</a>
+	</div>
+	<script>
+		angular.module('1know', [])
+		.config(function($sceProvider) {
+			$sceProvider.enabled(false);
+		})
+		.controller('MainCtrl', function($scope, $http, $timeout, $window) {
+			$scope.web_name = $window.web_name;
+			$scope.logo = $window.logo;
+			$scope.copyright = $window.copyright;
+			$scope.service_email = $window.service_email;
+			$scope.preview = function(i, j) {
+				delete $scope.model.currentUnit;
+				$scope.model.currentUnit = $scope.model.knowledge.chapters[i].units[j];
+				if ($scope.model.currentUnit === undefined) return;
+				$scope.model.layout = 'preview';
+				if ($scope.model.currentUnit.unit_type === 'video') {
+					var videoPath = $scope.model.currentUnit.content_url.match(/^(?:([A-Za-z]+):)?\/\/(?:.*?)\.?(youtube|vimeo|youku)\.(?:.*?)\/([0-9]+|[^#]*v=([0-9a-zA-Z\-\_]+)|v_show\/id_([0-9a-zA-Z]+))?/);
+					if (videoPath !== null && videoPath.length === 6) {
+						var content = '';
+						if (videoPath[2] === 'youtube')
+							content = ['<iframe src="http://www.youtube.com/embed/', videoPath[4], '?autohide=1&rel=0&showinfo=0" width="100%" height="100%" frameborder="0"></iframe>'].join('');
+						else if (videoPath[2] === 'vimeo')
+							content = ['<iframe src="https://player.vimeo.com/video/', videoPath[3], '" width="100%" height="100%" frameborder="0"></iframe>'].join('');
+						else if (videoPath[2] === 'youku')
+							content = ['<iframe src="http://player.youku.com/embed/', videoPath[5], '" width="100%" height="100%" frameborder="0"></iframe>'].join('');
+						$scope.model.currentUnit.video_content = content;
+						$scope.changeSize();
+					}
+					else {
+						var videoId = Date.now();
+						$scope.model.currentUnit.video_content =
+							['<video id="video-', videoId,'" class="video-js vjs-default-skin vjs-big-play-centered" style="width:100%;height:100%">',
+								'<source src="', $scope.model.currentUnit.content_url, ($scope.model.currentUnit.content_url.indexOf("?") != -1 ? '&' : '?'), videoId, '" type="video/mp4" />',
+								'<source src="', $scope.model.currentUnit.content_url, ($scope.model.currentUnit.content_url.indexOf("?") != -1 ? '&' : '?'), videoId, '" type="video/flv" />',
+								'<source src="', $scope.model.currentUnit.content_url, ($scope.model.currentUnit.content_url.indexOf("?") != -1 ? '&' : '?'), videoId, '" type="audio/mp3" />',
+								'<source src="', $scope.model.currentUnit.content_url, ($scope.model.currentUnit.content_url.indexOf("?") != -1 ? '&' : '?'), videoId, '" type="audio/acc" />',
+							'</video>'].join('');
+						$timeout(function() {
+							var option = {
+								controls: 'true',
+								preload: 'auto',
+								width: '100%',
+								height: '100%'
+							}
+							videojs(['video-', videoId].join(''), option, function() {
+								$scope.changeSize();
+							});
+						},100);
+					}
+				}
+				else if ($scope.model.currentUnit.unit_type === 'draw') {
+					$scope.changeSize();
+					$timeout(function() {
+						$('#draw-board').html('<canvas></canvas>');
+						$('#draw-board').literallycanvas({
+							imageURLPrefix: '/library/literallycanvas/img',
+							backgroundColor: 'rgba(0, 0, 0, 0)',
+							primaryColor: '#f00'
+						});
+						if ($scope.model.currentUnit.content.background !== '') {
+							$('#draw-board .custom-button').before('<div id="draw-background" class="btn btn-xs btn-primary" style="margin:-4px 4px 0 0;">Background Image</div>');
+							$('#draw-background').click(function() {
+								$timeout(function() {
+									if ($scope.model.currentUnit.backgroundImage === undefined)
+										$scope.model.currentUnit.backgroundImage = ['url(', $scope.model.currentUnit.content.background, ') no-repeat'].join('');
+									else
+										delete $scope.model.currentUnit.backgroundImage;
+								},100);
+							});
+						}
+					},100);
+				}
+				else
+					$scope.changeSize();
+				window.scrollTo(0, 0);
+			}
+			$scope.closePreview = function() {
+				delete $scope.model.currentUnit;
+				$scope.model.layout = 'content';
+				if ($scope.model.maximum)
+					$scope.toggleMaximum();
+			}
+			$scope.toggleMaximum = function() {
+				$scope.model.maximum = !$scope.model.maximum;
+				if ($scope.model.maximum) {
+					$('#header').hide();
+					$('#footer').hide();
+				}
+				else {
+					$('#header').show();
+					$('#footer').show();
+				}
+				$scope.changeSize();
+			}
+			$scope.changeSize = function() {
+				if ($scope.model.maximum) {
+					$scope.model.contentWidth = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth);
+					$scope.model.contentHeight = (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight) - 42;
+				}
+				else {
+					$scope.model.contentWidth = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) - 320;
+					$scope.model.contentHeight = (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight) - 118;
+				}
+				$scope.model.contentWidth = $scope.model.contentWidth < 650 ? 650 : $scope.model.contentWidth;
+				if ($scope.model.currentUnit) {
+					if ($scope.model.currentUnit.unit_type === 'draw') {
+						$('#draw-board canvas').attr({ 'width': $scope.model.contentWidth, 'height': $scope.model.contentHeight});
+						$('#draw-board canvas').css({ 'width': $scope.model.contentWidth, 'height': $scope.model.contentHeight});
+						if ($('#draw-board').literallyCanvasInstance() !== undefined)
+							$('#draw-board').literallyCanvasInstance().repaint();
+					}
+				}
+			}
+			window.onresize = function() {
+				$scope.$apply(function() {
+					$scope.changeSize();
+				});
+			}
+			$scope.model = {
+				layout: 'content',
+				maximum: false,
+				knowledge: <%=content.to_json.html_safe%>
+			};
+		})
+	</script>
+</body>
+</html>

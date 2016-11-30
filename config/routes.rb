@@ -102,6 +102,9 @@ Oneknow::Application.routes.draw do
     get    'discovery/channels/:channelUqid/knowledges' => 'discovery#channel_knowledge'
     get    'discovery/knowledges' => 'discovery#knowledge'
     get    'discovery/knowledges/:itemUqid/units' => 'discovery#list_unit'
+    #front object
+    get    'discovery/frontobjects' => 'discovery#get_front_objs'
+    post    'discovery/frontknowledges' => 'discovery#get_front_knowledgeset'
 
     # -------------
     # learning
@@ -355,6 +358,12 @@ Oneknow::Application.routes.draw do
     post   'sys/permission/search_code' => 'sysadmin#search_permission_code'
     post   'sys/permission/reset/:id' => 'sysadmin#reset_permission_code'
 
+    #首頁配置
+    get    'sys/frontpage' => 'sysadmin#get_frontpage_config'
+    post   'sys/frontpage' => 'sysadmin#set_frontpage_config'
+    get    'sys/frontpage/getKnowledage/:uqid' => 'sysadmin#get_frontpage_knowledge'
+    get    'sys/frontpage/objects' => 'sysadmin#get_frontpage_objects'
+    post   'sys/frontpage/objects' => 'sysadmin#set_frontpage_objects'
 
     # 系統配置
     get    'sys/sysConfig' => 'sysadmin#get_sys_config'

@@ -1,936 +1,936 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="1know">
 <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# object: http://ogp.me/ns/object#">
-    <title><%= @content[:name] %></title>
+	<title><%= @content[:name] %></title>
 
-    <meta charset="UTF-8">
+	<meta charset="UTF-8">
 
-    <meta name="keywords" content="1know, oneknow, ischool, flip, classroom, e-learning" />
-    <meta name="description" content="<%= @content[:description].gsub(/<\/?[^>]*>/, "")[0, 120] if @content[:description] != nil %>..." />
-    <meta name="author" content="ischool" />
+	<meta name="keywords" content="1know, oneknow, ischool, flip, classroom, e-learning" />
+	<meta name="description" content="<%= @content[:description].gsub(/<\/?[^>]*>/, "")[0, 120] if @content[:description] != nil %>..." />
+	<meta name="author" content="ischool" />
 
-    <meta property="fb:app_id" content="143261322503748" />
-    <% if @content[:u] and @content[:n] %>
-    <meta property="og:url" content="<%= @content[:page] %>?k=<%= @content[:k] %>&u=<%= @content[:u] %>&n=<%= @content[:n] %>" />
-    <% elsif @content[:u] %>
-    <meta property="og:url" content="<%= @content[:page] %>?k=<%= @content[:k] %>&u=<%= @content[:u] %>" />
-    <% else %>
-    <meta property="og:url" content="<%= @content[:page] %>?k=<%= @content[:k] %>" />
-    <% end%>
-    <meta property="og:title" content="<%= @content[:name] %>" />
-    <meta property="og:description" content="<%= @content[:description].gsub(/<\/?[^>]*>/, "")[0, 120] if @content[:description] != nil %>..." />
-    <meta property="og:image" content="<%= @content[:logo] %>" />
+	<meta property="fb:app_id" content="143261322503748" />
+	<% if @content[:u] and @content[:n] %>
+	<meta property="og:url" content="<%= @content[:page] %>?k=<%= @content[:k] %>&u=<%= @content[:u] %>&n=<%= @content[:n] %>" />
+	<% elsif @content[:u] %>
+	<meta property="og:url" content="<%= @content[:page] %>?k=<%= @content[:k] %>&u=<%= @content[:u] %>" />
+	<% else %>
+	<meta property="og:url" content="<%= @content[:page] %>?k=<%= @content[:k] %>" />
+	<% end%>
+	<meta property="og:title" content="<%= @content[:name] %>" />
+	<meta property="og:description" content="<%= @content[:description].gsub(/<\/?[^>]*>/, "")[0, 120] if @content[:description] != nil %>..." />
+	<meta property="og:image" content="<%= @content[:logo] %>" />
 
-    <link rel="icon" href="<%= @content[:logo]%>" />
+	<link rel="icon" href="<%= @content[:logo]%>" />
 
-    <link rel="stylesheet" href="/library/bootstrap/css/bootstrap.css" />
-    <link rel="stylesheet" href="/library/font-awesome/css/font-awesome.css" />
-    <link rel="stylesheet" href="/library/video-js/video-js.css" />
-    <link rel="stylesheet" href="/library/literallycanvas/literallycanvas.css" />
-    <link rel="stylesheet" href="/css/default.css">
+	<link rel="stylesheet" href="/library/bootstrap/css/bootstrap.css" />
+	<link rel="stylesheet" href="/library/font-awesome/css/font-awesome.css" />
+	<link rel="stylesheet" href="/library/video-js/video-js.css" />
+	<link rel="stylesheet" href="/library/literallycanvas/literallycanvas.css" />
+	<link rel="stylesheet" href="/css/default.css">
 
-    <script src="/library/jquery/jquery-1.11.0.min.js"></script>
-    <script src="/library/angularjs/angular.min.js"></script>
-    <script src="/library/angularjs/angular-route.min.js"></script>
-    <script src="/library/angularjs/angular-translate.min.js"></script>
-    <script src="/library/angularjs/ui-bootstrap-tpls-0.10.0.min.js"></script>
-    <script src="/library/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/library/underscore/underscore.min.js"></script>
-    <script src="/library/literallycanvas/literallycanvas.js"></script>
-    <script src="/library/video-js/video.js"></script>
-    <script src="/library/video-js/plugins/vjs.youtube.js"></script>
-    <script src="/library/video-js/plugins/vjs.vimeo.js"></script>
-    <script src="/library/video-js/plugins/vjs.speed.js"></script>
-    <script src="/library/youku/youku.js"></script>
-    <script src="/library/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	<script src="/library/jquery/jquery-1.11.0.min.js"></script>
+	<script src="/library/angularjs/angular.min.js"></script>
+	<script src="/library/angularjs/angular-route.min.js"></script>
+	<script src="/library/angularjs/angular-translate.min.js"></script>
+	<script src="/library/angularjs/ui-bootstrap-tpls-0.10.0.min.js"></script>
+	<script src="/library/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/library/underscore/underscore.min.js"></script>
+	<script src="/library/literallycanvas/literallycanvas.js"></script>
+	<script src="/library/video-js/video.js"></script>
+	<script src="/library/video-js/plugins/vjs.youtube.js"></script>
+	<script src="/library/video-js/plugins/vjs.vimeo.js"></script>
+	<script src="/library/video-js/plugins/vjs.speed.js"></script>
+	<script src="/library/youku/youku.js"></script>
+	<script src="/library/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
-    <script src="/js/language.js"></script>
-    <script>
-        var web_name = "<%=@APP_CONFIG['web_name']%>";
-        var hide_account_type = "<%=@APP_CONFIG['hide_account_type']%>";
-        var logo = "<%=@APP_CONFIG['logo']%>";
-        var copyright = "<%=@APP_CONFIG['copyright']%>";
-        var service_email = "<%=@APP_CONFIG['service_email']%>";
-    </script>
+	<script src="/js/language.js"></script>
+	<script>
+		var web_name = "<%=@APP_CONFIG['web_name']%>";
+		var hide_account_type = "<%=@APP_CONFIG['hide_account_type']%>";
+		var logo = "<%=@APP_CONFIG['logo']%>";
+		var copyright = "<%=@APP_CONFIG['copyright']%>";
+		var service_email = "<%=@APP_CONFIG['service_email']%>";
+	</script>
 </head>
 
 <body ng-controller="WatchCtrl as watchCtrl">
-    <div id="fb-root"></div>
-
-    <div>
-        <div id="drawDescriptionModal" class="modal fade" style="z-index:1480">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div ng-bind-html="watchCtrl.currentUnit.content.description" style="width:100%;height:100%"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <nav class="navbar navbar-static-top navbar-inverse" style="min-width:880px;z-index:1280;padding:0 10px">
-            <div class="navbar-header pull-right">
-                <a href="javascript:;" class="navbar-brand logo" style="padding:7px 15px" ng-click="watchCtrl.openKnow()">
-                    <img ng-show="watchCtrl.logo" ng-src="{{ watchCtrl.logo }}">
-                    <span ng-show="!watchCtrl.logo && watchCtrl.web_name" class="logo-header">{{ watchCtrl.web_name }}</span>
-                    <span ng-show="!watchCtrl.logo && !watchCtrl.web_name" class="logo-header"><span style="color:#f00">1</span>Know</span>
-                </a>
-            </div>
-            <div class="collapse navbar-collapse">
-                <ul class="nav navbar-nav">
-                    <li>
-                        <a href="javascript:;" style="padding:9px" ng-click="watchCtrl.preUnit()">
-                            <i class="fa fa-fw fa-chevron-left"></i>
-                        </a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" style="padding:9px;width:360px">
-                            <div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
-                                <span>
-                                    <i class="fa fa-fw" ng-class="{
-                                        'fa-film': watchCtrl.currentUnit.unit_type == 'video',
-                                        'fa-link': watchCtrl.currentUnit.unit_type == 'web',
-                                        'fa-code': watchCtrl.currentUnit.unit_type == 'embed',
-                                        'fa-pencil-square-o': watchCtrl.currentUnit.unit_type == 'quiz',
-                                        'fa-thumbs-o-up': watchCtrl.currentUnit.unit_type == 'poll',
-                                        'fa-question': watchCtrl.currentUnit.unit_type == 'qa',
-                                        'fa-picture-o': watchCtrl.currentUnit.unit_type == 'draw'
-                                        }"></i>
-                                </span>
-                                <span>{{watchCtrl.currentUnit.name}}</span>
-                            </div>
-                        </a>
-                        <ul class="dropdown-menu" style="width:360px;max-height:420px;overflow:auto">
-                            <li ng-repeat="unit in watchCtrl.units">
-                                <div ng-if="unit.unit_type=='chapter'" style="padding:5px 10px">
-                                    <span class="label label-danger">{{unit.name}}</span>
-                                </div>
-                                <a href="javascript:;" ng-if="unit.unit_type!='chapter'" ng-click="watchCtrl.chooseUnit(unit)">
-                                    <div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
-                                        <i class="text-success fa fa-fw fa-check" ng-show="unit.completed"></i>
-                                        <span>
-                                            <i class="fa fa-fw" ng-class="{
-                                                'fa-film': unit.unit_type == 'video',
-                                                'fa-link': unit.unit_type == 'web',
-                                                'fa-code': unit.unit_type == 'embed',
-                                                'fa-pencil-square-o': unit.unit_type == 'quiz',
-                                                'fa-thumbs-o-up': unit.unit_type == 'poll',
-                                                'fa-question': unit.unit_type == 'qa',
-                                                'fa-picture-o': unit.unit_type == 'draw'
-                                                }"></i>
-                                        </span>
-                                        <span>{{unit.name}}</span>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:;" style="padding:9px" ng-click="watchCtrl.nextUnit()">
-                            <i class="fa fa-fw fa-chevron-right"></i>
-                        </a>
-                    </li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right" style="margin:0">
-                    <li class="dropdown">
-                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" style="padding:9px">
-                            <i class="fa fa-fw fa-cog"></i>
-                            <span translate="E032" remark="設定"></span>
-                        </a>
-                        <ul class="dropdown-menu" style="overflow:auto;z-index:1280">
-                            <li>
-                                <a href="javascript:;" ng-click="watchCtrl.toggleUnitDesc()">
-                                    <i class="fa fa-fw" ng-class="{'fa-check-square-o': watchCtrl.showUnitDesc, 'fa-square-o': !watchCtrl.showUnitDesc}"></i>
-                                    <span translate="E035" remark="顯示補充教材"></span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:;" ng-click="watchCtrl.toggleMaximum()">
-                                    <i class="fa fa-fw" ng-class="{'fa-check-square-o': !watchCtrl.maximum, 'fa-square-o': watchCtrl.maximum}"></i>
-                                    <span translate="E036" remark="顯示右邊欄位"></span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" style="padding:9px">
-                            <i class="fa fa-fw fa-globe"></i> {{watchCtrl.language.title}}
-                        </a>
-                        <ul class="dropdown-menu" style="overflow:auto;z-index:1280">
-                            <li><a href="javascript:;" ng-click="watchCtrl.changeLanguage('en-us')">English</a></li>
-                            <li><a href="javascript:;" ng-click="watchCtrl.changeLanguage('zh-tw')">繁體中文</a></li>
-                            <li><a href="javascript:;" ng-click="watchCtrl.changeLanguage('zh-cn')">简体中文</a></li>
-                            <li><a href="javascript:;" ng-click="watchCtrl.changeLanguage('es-es')">Español (Perú)</a></li>
-                            <li><a href="javascript:;" ng-click="watchCtrl.changeLanguage('de-de')">Deutsch</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-
-        <div style="position:relative" style="min-width:880px">
-            <div class="down-animate" ng-show="watchCtrl.noteBoard.show" style="position:absolute;z-index:1080">
-                <div id="note-board" ng-style="{width:watchCtrl.noteWidth+'px', height:watchCtrl.noteHeight+'px'}" style="background:rgba(0,0,0,0);bottom:0">
-                    <canvas></canvas>
-                </div>
-            </div>
-
-            <div class="down-animate" ng-show="watchCtrl.currentUnit.showVideoQuiz" style="position:absolute;z-index:1080;width:100%;background-color:rgba(34,34,34,0.5)" ng-style="{height:watchCtrl.contentHeight+'px'}">
-                <div style="background:#fff;margin:10% auto;padding:20px;width:600px;max-height:400px;overflow:auto">
-                    <div ng-bind-html="watchCtrl.currentUnit.currentQuiz.content"></div>
-                    <div style="margin-top:20px">
-                        <div ng-repeat="option in watchCtrl.currentUnit.currentQuiz.options">
-                            <label class="checkbox" ng-if="watchCtrl.currentUnit.currentQuiz.quiz_type=='multi'" style="cursor:pointer">
-                                <input type="checkbox" name="{{watchCtrl.currentUnit.currentQuiz.uqid}}" ng-model="option.answer"/>
-                                <span ng-if="!option.latex">{{option.item}}</span>
-                                <span ng-if="option.latex" mathjax-bind="option.item"></span>
-                                <span ng-if="option.correct&&watchCtrl.currentUnit.currentQuiz.isCheck">(<i class="fa fa-fw fa-circle-o text-success"></i>)</span>
-                            </label>
-                            <label class="radio" ng-if="watchCtrl.currentUnit.currentQuiz.quiz_type=='single'" style="cursor:pointer">
-                                <input type="radio" name="{{quiz.uqid}}" value="{{option.value}}" ng-model="watchCtrl.currentUnit.currentQuiz.single"/>
-                                <span ng-if="!option.latex">{{option.item}}</span>
-                                <span ng-if="option.latex" mathjax-bind="option.item"></span>
-                                <span ng-if="option.correct&&watchCtrl.currentUnit.currentQuiz.isCheck">(<i class="fa fa-fw fa-circle-o text-success"></i>)</span>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="alert" ng-class="{'alert-success':watchCtrl.currentUnit.currentQuiz.correct,'alert-danger':!watchCtrl.currentUnit.currentQuiz.correct}"
-                        style="margin:20px 0 0;padding:5px" ng-bind-html="watchCtrl.currentUnit.currentQuiz.solution" ng-if="watchCtrl.currentUnit.currentQuiz.isCheck&&watchCtrl.currentUnit.currentQuiz.solution"></div>
-                    <div style="margin-top:20px">
-                        <a class="btn btn-primary" ng-click="watchCtrl.checkQuizSolution()" ng-if="!watchCtrl.currentUnit.currentQuiz.isCheck">
-                            <span translate="E039" remark="檢查答案"></span>
-                        </a>
-                        <a class="btn btn-primary" ng-click="watchCtrl.continueLearning()" ng-if="watchCtrl.currentUnit.currentQuiz.isCheck">
-                            <span translate="E040" remark="繼續學習"></span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div style="display:table;background:#fff">
-                <div style="display:table-cell;vertical-align:top">
-                    <div ng-style="{width:watchCtrl.contentWidth+'px', height:watchCtrl.contentHeight+'px'}">
-                        <div ng-if="watchCtrl.currentUnit.unit_type=='video'" style="width:100%;height:100%;display:table">
-                            <div ng-if="watchCtrl.currentUnit.sub_type=='audio'" ng-style="{width:watchCtrl.contentWidth+'px', height:(watchCtrl.contentHeight-90)+'px'}" style="word-break:break-all" ng-bind-html="watchCtrl.currentUnit.description"></div>
-                            <div id="videoContainer"></div>
-                        </div>
-                        <div ng-if="watchCtrl.currentUnit.unit_type=='web'" ng-style="{width:watchCtrl.contentWidth+'px', height:watchCtrl.contentHeight+'px'}" style="overflow:auto;-webkit-overflow-scrolling:touch">
-                            <iframe _sandbox="allow-popups allow-forms allow-same-origin allow-scripts"
-                                ng-src="{{watchCtrl.currentUnit.content_url}}"
-                                ng-style="{width:watchCtrl.contentWidth+'px', height:(watchCtrl.contentHeight-5)+'px'}"
-                                frameborder="0"></iframe>
-                        </div>
-                        <div ng-if="watchCtrl.currentUnit.unit_type=='embed'" ng-style="{width:watchCtrl.contentWidth+'px', height:watchCtrl.contentHeight+'px'}" style="overflow:auto" ng-bind-html="watchCtrl.currentUnit.content"></div>
-                        <div ng-if="watchCtrl.currentUnit.unit_type=='quiz'" ng-style="{width:watchCtrl.contentWidth+'px', height:watchCtrl.contentHeight+'px'}" style="overflow:auto;padding:10px">
-                            <div class="panel panel-default" ng-repeat="quiz in watchCtrl.currentUnit.quizzes">
-                                <div class="panel-body">
-                                    <span class="pull-left">
-                                        <span ng-if="quiz.correct!=null">(<i class="fa fa-fw" ng-class="{'fa-check text-success': quiz.correct, 'fa-times text-danger': !quiz.correct}"></i>)</span>
-                                        <span><span ng-if="$index<9">0</span>{{$index+1}}.</span>
-                                    </span>
-                                    <div ng-bind-html="quiz.content"></div>
-                                    <div style="margin-top:20px">
-                                        <div ng-repeat="option in quiz.options" ng-switch="quiz.quiz_type">
-                                            <label class="checkbox" ng-switch-when="multi" style="cursor:pointer">
-                                                <input type="checkbox" name="{{quiz.uqid}}" ng-model="option.answer"/>
-                                                <span ng-if="!option.latex">{{option.item}}</span>
-                                                <span ng-if="option.latex" mathjax-bind="option.item"></span>
-                                            </label>
-                                            <label class="radio" ng-switch-when="single" style="cursor:pointer">
-                                                <input type="radio" name="{{quiz.uqid}}" value="{{option.value}}" ng-model="quiz.single"/>
-                                                <span ng-if="!option.latex">{{option.item}}</span>
-                                                <span ng-if="option.latex" mathjax-bind="option.item"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div style="margin:10px 0">
-                                <a class="btn btn-primary" ng-click="watchCtrl.checkQuizResult()">
-                                    <span translate="E039" remark="檢查答案"></span>
-                                </a>
-                            </div>
-                        </div>
-                        <div ng-if="watchCtrl.currentUnit.unit_type=='poll'" ng-style="{width:watchCtrl.contentWidth+'px', height:watchCtrl.contentHeight+'px'}" style="overflow:auto;padding:10px">
-                            <h3 style="padding:30px">
-                                <div ng-bind-html="watchCtrl.currentUnit.content.content"></div>
-                                <div style="margin-top:20px">
-                                    <label class="checkbox" style="cursor:pointer" ng-repeat="option in watchCtrl.currentUnit.content.options">
-                                        <input type="checkbox" name="{{watchCtrl.currentUnit.uqid}}" ng-model="option.answer"/>
-                                        <span ng-if="!option.latex">{{option.item}}</span>
-                                        <span ng-if="option.latex" mathjax-bind="option.item"></span>
-                                    </label>
-                                </div>
-                            </h3>
-                        </div>
-                        <div ng-if="watchCtrl.currentUnit.unit_type=='qa'" ng-style="{width:watchCtrl.contentWidth+'px', height:watchCtrl.contentHeight+'px'}" style="overflow:auto;padding:10px">
-                            <h3><div ng-bind-html="watchCtrl.currentUnit.content"></div></h3>
-                            <div style="margin-top:20px">
-                                <div id="qa-result" style="height:200px"></div>
-                            </div>
-                        </div>
-                        <div ng-if="watchCtrl.currentUnit.unit_type=='draw'" ng-style="{width:watchCtrl.contentWidth+'px', height:watchCtrl.contentHeight+'px'}">
-                            <div id="draw-board" ng-style="{width:watchCtrl.contentWidth+'px', height:watchCtrl.contentHeight+'px', background:watchCtrl.currentUnit.backgroundImage}" style="background:rgba(0,0,0,0);bottom:0">
-                                <canvas></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div style="display:table-cell;vertical-align:top" ng-if="!watchCtrl.maximum">
-                    <div ng-style="{height:watchCtrl.contentHeight+'px'}" style="width:280px;border-left:1px solid #ddd;">
-                        <div id="notes" style="height:{{watchCtrl.textNoteHeight}}px;overflow:auto;padding:5px">
-                            <div id="time-{{item.timeCeil}}" class="note-card" style="cursor:pointer" ng-style="{'background-color': item.color}" ng-repeat="item in watchCtrl.currentUnit.notes" ng-click="watchCtrl.openNote(item)">
-                                <div ng-switch="item.type">
-                                    <div ng-switch-when="text" ng-bind-html="item.htmlContent"></div>
-                                    <div ng-switch-when="image"><img ng-src="{{item.content.screenshot}}" style="width:200px"/></div>
-                                </div>
-                                <div style="margin-top:4px">
-                                    <span class="text-info" ng-if="watchCtrl.currentUnit.unit_type=='video'">{{item.timeDesc}}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div style="border-top:1px solid #ddd;height:240px;overflow:auto;padding:10px;word-break:break-all;box-shadow:0px -3px 15px rgba(0,0,0,0.3)" ng-if="watchCtrl.showUnitDesc" ng-bind-html="watchCtrl.currentUnit.description"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        angular.module('1know', ['ui.bootstrap', 'pascalprecht.translate'])
-        .config(function($sceProvider, $locationProvider, $translateProvider) {
-            $sceProvider.enabled(false);
-            $locationProvider.html5Mode(true);
-            $translateProvider.translations('zh-tw', translations['zh-tw']);
-            $translateProvider.translations('zh-cn', translations['zh-cn']);
-            $translateProvider.translations('en-us', translations['en-us']);
-            $translateProvider.translations('es-es', translations['es-es']);
-            $translateProvider.translations('de-de', translations['de-de']);
-        })
-        .directive("mathjaxBind", function() {
-            return {
-                restrict: "A",
-                controller: ["$scope", "$element", "$attrs",
-                    function($scope, $element, $attrs) {
-                        $scope.$watch($attrs.mathjaxBind, function(texExpression) {
-                            var texScript = angular.element("<script type='math/tex'>").html(texExpression ? texExpression :  "");
-                            $element.html("");
-                            $element.append(texScript);
-                            MathJax.Hub.Queue(["Reprocess", MathJax.Hub, $element[0]]);
-                        });
-                    }
-                ]
-            };
-        })
-        .controller('WatchCtrl', function($scope, $http, $location, $timeout, $interval, $compile, $translate, $window) {
-            var self = this;
-
-            self.web_name = $window.web_name;
-            self.logo = $window.logo;
-            self.copyright = $window.copyright;
-            self.service_email = $window.service_email;
-
-            $translate.uses('zh-cn');
-            self.language = {title: '简体中文',type: 'zh-cn'};
-
-            self.changeLanguage = function(lang) {
-                lang = lang.toLowerCase();
-
-                if (lang === 'code')
-                    lang = {title: 'Language Code',type: 'code'};
-                else if (lang === 'zh-tw')
-                    lang = {title: '繁體中文',type: 'zh-tw'};
-                else if (lang === 'zh-cn')
-                    lang = {title: '简体中文',type: 'zh-cn'};
-                else if (lang === 'es-es')
-                    lang = {title: 'Español (Perú)',type: 'es-es'};
-                else if (lang === 'de-de')
-                    lang = {title: 'Deutsch',type: 'de-de'};
-                else
-                    lang = {title: 'English',type: 'en-us'};
-
-                self.language = lang;
-
-                $translate.uses(lang.type);
-            }
-
-            self.toggleUnitDesc = function() {
-                self.showUnitDesc = !self.showUnitDesc;
-
-                if (self.showUnitDesc)
-                    self.textNoteHeight = self.contentHeight - 240;
-                else
-                    self.textNoteHeight = self.contentHeight;
-            }
-
-            self.toggleMaximum = function() {
-                self.maximum = !self.maximum;
-                self.changeSize();
-            }
-
-            self.openNote = function(item) {
-                if (item.type === 'text')
-                    self.videoSeekTo(item);
-                else if (item.type === 'image')
-                    self.showImageNote(item);
-            }
-
-            self.videoSeekTo = function(item) {
-                if (self.videoPlayer.type === 'youku') {
-                    self.videoPlayer.target.seekTo(item.time);
-                    self.videoOnPause(self.videoPlayer);
-                }
-                else if (self.videoPlayer.type === 'videojs') {
-                    self.videoPlayer.target.currentTime(item.time);
-                }
-            }
-
-            self.videoOnPlaying = function() {
-                if(angular.isDefined(self.promise))
-                    $interval.cancel(self.promise);
-
-                self.promise = $interval(function() {
-                    if (self.currentUnit.unit_type === 'video') {
-                        if (self.currentUnit.quizzes.length > 0) {
-                            var currentVideoTime = 0;
-                            if (self.videoPlayer.type === 'youku')
-                                currentVideoTime = Math.ceil(self.videoPlayer.target.currentTime());
-                            else if (self.videoPlayer.type === 'videojs')
-                                currentVideoTime = Math.ceil(self.videoPlayer.target.currentTime());
-
-                            angular.forEach(self.currentUnit.quizzes, function(item) {
-                                if (Math.ceil(item.video_time) === currentVideoTime) {
-                                    self.videoPause();
-                                    self.currentUnit.currentQuiz = item;
-                                    self.currentUnit.showVideoQuiz = true;
-                                }
-                            });
-                        }
-                    }
-                }, 1000);
-            }
-
-            self.videoPlay = function() {
-                if (self.videoPlayer.type === 'youku')
-                    self.videoPlayer.target.playVideo();
-                else if (self.videoPlayer.type === 'videojs') {
-                    self.videoPlayer.target.play();
-                }
-            }
-
-            self.videoPause = function() {
-                if (self.videoPlayer.type === 'youku') {
-                    self.videoPlayer.target.pauseVideo();
-                    self.videoOnPause();
-                }
-                else if (self.videoPlayer.type === 'videojs') {
-                    self.videoPlayer.target.pause();
-                }
-            }
-
-            self.preUnit = function() {
-                for (var i = self.currentUnit.playIndex - 1; i >= 0; i--) {
-                    var preUnit = self.units[i];
-                    if (preUnit.unit_type !== 'chapter') {
-                        self.chooseUnit(preUnit);
-                        i = -1;
-                        return;
-                    }
-                }
-            }
-
-            self.nextUnit = function() {
-                for (var i = self.currentUnit.playIndex + 1; i < self.units.length; i++) {
-                    var nextUnit = self.units[i];
-                    if (nextUnit.unit_type !== 'chapter') {
-                        self.chooseUnit(nextUnit);
-                        i = self.units.length;
-                        return;
-                    }
-                }
-            }
-
-            self.chooseUnit = function(unit) {
-                if(angular.isDefined(self.promise))
-                    $interval.cancel(self.promise);
-
-                self.noteBoard = { show: false }
-                self.currentUnit = unit;
-                self.showUnitDesc = unit.description !== '';
-                self.currentUnit.absUrl = [$location.protocol(), '://', $location.host(),($location.port() == 80?'':':'+$location.port()), '/watch?k=', $location.search().k, '&u=', unit.uqid].join('');
-
-                if ($location.search().n)
-                    $location.search({k: $location.search().k, u: unit.uqid, n: $location.search().n});
-                else
-                    $location.search({k: $location.search().k, u: unit.uqid});
-
-                $('#videoContainer').html('');
-
-                self.changeSize();
-
-                if (unit.unit_type === 'video') {
-                    $timeout(function() {
-                        var videoPath = unit.content_url.match(/^(?:([A-Za-z]+):)?\/\/(?:.*?)\.?(youtube|vimeo|youku)\.(?:.*?)\/([0-9]+|v_show\/id_([0-9a-zA-Z]+)|[^#]*v=([0-9a-zA-Z\-\_]+))?/);
-
-                        if (videoPath !== null && videoPath.length === 6) {
-                            if (videoPath[2] === 'youku') {
-                                $('#videoContainer').html('<div id="videoPlayer" style="width:100%;height:100%"></div>');
-
-                                var player = new YKU.Player('videoPlayer',{
-                                    client_id: 'c865b5756563acee',
-                                    vid: videoPath[4],
-                                    width: '100%',
-                                    height: '100%'
-                                });
-
-                                self.videoPlayer = {target: player, type: 'youku'};
-
-                                $(['#videoPlayer'].join('')).attr('ng-style', '{width:watchCtrl.contentWidth+\'px\', height:watchCtrl.contentHeight+\'px\'}');
-                                $compile(document.getElementById('videoPlayer'))($scope);
-                            }
-                            else {
-                                if (videoPath[2] === 'youtube')
-                                    unit.content_url = unit.content_url.split('&list')[0];
-
-                                var videoId = Date.now();
-                                var option = {
-                                    controls: true,
-                                    preload: 'auto',
-                                    forceSSL: true,
-                                    forceHTML5: true,
-                                    autoplay: self.unitAutoplay,
-                                    techOrder: videoPath[2] === 'youtube' ? ['youtube'] : (videoPath[2] === 'vimeo' ? ['vimeo'] : []),
-                                    src: unit.content_url,
-                                    ytcontrols: true
-                                }
-
-                                $('#videoContainer').html(
-                                    ['<video id="video-', videoId,'"',
-                                        ' src="', unit.content_url, (unit.content_url.indexOf("?") != -1 ? '&' : '?'), videoId, '"',
-                                        ' width="100%" height="100%"',
-                                        ' class="video-js vjs-default-skin vjs-big-play-centered">',
-                                    '</video>'].join('')
-                                );
-
-                                videojs(['video-', videoId].join(''), option, function() {
-                                    var player = this;
-                                    player.on("play", function() {
-                                        self.videoOnPlaying();
-                                    });
-                                    self.videoPlayer = {target: player, type: 'videojs'};
-                                });
-
-                                $(['#video-', videoId].join('')).attr('ng-style', '{width:watchCtrl.contentWidth+\'px\', height:watchCtrl.contentHeight+\'px\'}');
-                                $compile(document.getElementById(['video-', videoId].join('')))($scope);
-                            }
-                        }
-                        else {
-                            var mp3 = unit.content_url.match(/([a-z\-_0-9\/\:\.]*\.mp3)/i);
-
-                            var videoId = Date.now();
-                            var option = {
-                                controls: true,
-                                preload: 'auto',
-                                plugins: {
-                                    speed: [
-                                        { text: '0.5', rate: 0.5 },
-                                        { text: '0.75', rate: 0.75 },
-                                        { text: '正常', rate: 1, selected: true },
-                                        { text: '1.5', rate: 1.5 },
-                                        { text: '2', rate: 2 }
-                                    ]
-                                }
-                            };
-
-                            if (mp3 === null) {
-                                $('#videoContainer').html(
-                                    ['<video id="video-', videoId,'"',
-                                        ' src="', unit.content_url, (unit.content_url.indexOf("?") != -1 ? '&' : '?'), videoId, '"',
-                                        ' width="100%" height="100%"',
-                                        ' class="video-js vjs-default-skin vjs-big-play-centered">',
-                                    '</video>'].join('')
-                                );
-
-                                videojs(['video-', videoId].join(''), option, function() {
-                                    var player = this;
-                                    player.on("play", function() {
-                                        self.videoOnPlaying();
-                                    });
-                                    self.videoPlayer = {target: player, type: 'videojs'};
-                                });
-
-                                $(['#video-', videoId].join('')).attr('ng-style', '{width:watchCtrl.contentWidth+\'px\', height:watchCtrl.contentHeight+\'px\'}');
-                                $compile(document.getElementById(['video-', videoId].join('')))($scope);
-                            }
-                            else {
-                                unit.sub_type = 'audio';
-                                self.showUnitDesc = false;
-
-                                if (self.currentUnit.description === '')
-                                    self.currentUnit.description = ['<div style="font-size:16px;padding:10px">', translations[$utility.LANGUAGE.type]['E049'], '</div>'].join('');//-- 補充教材 --
-
-                                $('#videoContainer').html(
-                                    ['<video id="video-', videoId,'"',
-                                        ' src="', unit.content_url, (unit.content_url.indexOf("?") != -1 ? '&' : '?'), videoId, '"',
-                                        ' width="100%" height="90px"',
-                                        ' class="video-js vjs-default-skin vjs-big-play-centered">',
-                                    '</video>'].join('')
-                                );
-
-                                videojs(['video-', videoId].join(''), option, function() {
-                                    var player = this;
-                                    player.on("play", function() {
-                                        self.videoOnPlaying();
-                                    });
-                                    self.videoPlayer = {target: player, type: 'videojs'};
-                                });
-                            }
-                        }
-                    },100);
-                }
-                else {
-                    if (unit.unit_type === 'quiz' && self.currentUnit.quizzes === undefined) {
-                        $http.get([$utility.SERVICE_URL, '/learning/units/', self.currentUnit.uqid, '/quizzes'].join(''))
-                        .success(function(response, status) {
-                            angular.forEach(response, function(quiz) {
-                                quiz.correct = null;
-                            });
-
-                            self.currentUnit.quizzes = response;
-
-                            if (self.currentUnit.study_result !== null) {
-                                angular.forEach(self.currentUnit.quizzes, function(quiz, index) {
-                                    var answer = self.currentUnit.study_result.result[index].answer;
-
-                                    if (quiz.quiz_type === 'multi') {
-                                        angular.forEach(answer, function(key) {
-                                            angular.forEach(quiz.options, function(option) {
-                                                if (key === option.value) option.answer = true;
-                                            });
-                                        });
-                                    }
-                                    else {
-                                        quiz.single = answer[0];
-                                    }
-                                });
-                            }
-                        });
-                    }
-                    else if (self.currentUnit.unit_type === 'poll' && self.currentUnit.study_result !== null) {
-                        var answer = self.currentUnit.study_result.result;
-                        angular.forEach(answer, function(key) {
-                            angular.forEach(self.currentUnit.content.options, function(option) {
-                                if (key === option.value) option.answer = true;
-                            });
-                        });
-                    }
-                    else if (self.currentUnit.unit_type === 'qa') {
-                        if ($('#qa-result').redactor() !== undefined)
-                            $('#qa-result').redactor('destroy');
-
-                        $('#qa-result').html(self.currentUnit.study_result == null ? '' : self.currentUnit.study_result.result);
-                        $('#qa-result').redactor({
-                            iframe: true,
-                            buttons: ['html', '|', 'formatting', '|', 'bold', 'italic', 'deleted', '|', 'unorderedlist', 'orderedlist', '|', 'image', 'video', 'link'],
-                            plugins: ['fontcolor', 'fontsize']
-                        });
-                    }
-                    else if (self.currentUnit.unit_type === 'draw') {
-                        $timeout(function() {
-                            $('#draw-board').html('<canvas></canvas>');
-                            $('#draw-board').literallycanvas({
-                                imageURLPrefix: '/library/literallycanvas/img',
-                                backgroundColor: 'rgba(0, 0, 0, 0)',
-                                primaryColor: '#f00'
-                            });
-
-                            $('#draw-board .custom-button').before(
-                                ['<div class="btn-group" style="margin:-4px 4px 0 0">',
-                                    '<div id="draw-replay-high" class="btn btn-xs btn-primary">',
-                                        '<span translate="E045" remark="快速播放"></span>',
-                                    '</div>',
-                                    '<div id="draw-replay-normal" class="btn btn-xs btn-primary">',
-                                        '<span translate="E046" remark="正常播放"></span>',
-                                    '</div>',
-                                '</div>'].join(''));
-
-                            var lc = $('#draw-board').literallyCanvasInstance();
-                            if (self.currentUnit.study_result)
-                                lc.addShapes(self.currentUnit.study_result.result.strokes);
-
-                            $('#draw-replay-high').click(function() {
-                                lc.terminal = true;
-                                lc.playStrokes(100);
-                            });
-                            $('#draw-replay-normal').click(function() {
-                                lc.terminal = true;
-                                lc.playStrokes(1);
-                            });
-
-                            if (self.currentUnit.content.description !== '') {
-                                $('#draw-board .custom-button').before('<div id="draw-description" class="btn btn-xs btn-primary" style="margin:-4px 4px 0"><span translate="E047" remark="塗鴉說明"></span></div>');
-                                $('#draw-description').click(function() {
-                                    $('#drawDescriptionModal').modal('show');
-                                });
-                            }
-
-                            if (self.currentUnit.content.background !== '') {
-                                $('#draw-board .custom-button').before('<div id="draw-background" class="btn btn-xs btn-primary" style="margin:-4px 0 0"><span translate="E048" remark="背景圖片"></span></div>');
-                                $('#draw-background').click(function() {
-                                    $timeout(function() {
-                                        if (self.currentUnit.backgroundImage === undefined)
-                                            self.currentUnit.backgroundImage = ['url(', self.currentUnit.content.background, ') no-repeat'].join('');
-                                        else
-                                            delete self.currentUnit.backgroundImage;
-                                    },100);
-                                });
-                            }
-
-                            $compile(document.getElementById('literally-toolbar'))($scope);
-                        },100);
-                    }
-                    else if (self.currentUnit.unit_type === 'embed') {
-                        if ($(self.currentUnit.content).find('embed').length > 0)
-                            self.currentUnit.content = $(self.currentUnit.content).find('embed').css('width', '100%').css('height', '100%')[0].outerHTML;
-                        else if ($(self.currentUnit.content).find('iframe').length > 0)
-                            self.currentUnit.content = $(self.currentUnit.content).find('iframe').css('width', '100%').css('height', '100%')[0].outerHTML;
-                        else if ($(self.currentUnit.content)[0].nodeName === 'EMBED')
-                            self.currentUnit.content = $(self.currentUnit.content).css('width', '100%').css('height', '100%')[0].outerHTML;
-                        else if ($(self.currentUnit.content)[0].nodeName === 'IFRAME')
-                            self.currentUnit.content = $(self.currentUnit.content).css('width', '100%').css('height', '100%')[0].outerHTML;
-                    }
-                }
-            }
-
-            self.checkQuizSolution = function() {
-                var quiz = self.currentUnit.currentQuiz;
-
-                if (quiz.quiz_type === 'multi') {
-                    angular.forEach(quiz.options, function(option) {
-                        if (option.answer !== undefined && option.answer === true) {
-                            quiz.correct += parseInt(option.value, 10);
-                        }
-                    });
-
-                    if (parseInt(quiz.answer, 10) === parseInt(quiz.correct, 10)) {
-                        quiz.correct = true;
-                    }
-                    else
-                        quiz.correct = false;
-                }
-                else {
-                    if (parseInt(quiz.answer, 10) === parseInt(quiz.single, 10)) {
-                        quiz.correct = true;
-                    }
-                    else
-                        quiz.correct = false;
-                }
-
-                self.currentUnit.currentQuiz.isCheck = true;
-            }
-
-            self.continueLearning = function() {
-                self.videoPlay();
-                delete self.currentUnit.currentQuiz.isCheck;
-                delete self.currentUnit.currentQuiz;
-                delete self.currentUnit.showVideoQuiz;
-            }
-
-            self.checkQuizResult = function() {
-                var quizzes = self.currentUnit.quizzes;
-                var correct_count = 0, correct = [], answer = [];
-
-                angular.forEach(quizzes, function(quiz) {
-                    quiz.correct = 0, correct = [], answer = [];
-                    if (quiz.quiz_type === 'multi') {
-                        angular.forEach(quiz.options, function(option) {
-                            if (option.answer !== undefined && option.answer === true) {
-                                quiz.correct += parseInt(option.value, 10);
-                                answer.push(parseInt(option.value, 10));
-                            }
-                            if (option.correct)
-                                correct.push(parseInt(option.value, 10));
-                        });
-
-                        if (parseInt(quiz.answer, 10) === parseInt(quiz.correct, 10)) {
-                            quiz.correct = true;
-                            correct_count += 1;
-                        }
-                        else
-                            quiz.correct = false;
-                    }
-                    else {
-                        answer.push(parseInt(quiz.single, 10));
-                        correct.push(parseInt(quiz.answer, 10));
-
-                        if (parseInt(quiz.answer, 10) === parseInt(quiz.single, 10)) {
-                            quiz.correct = true;
-                            correct_count += 1;
-                        }
-                        else
-                            quiz.correct = false;
-                    }
-                });
-            }
-
-            self.timeToFormat = function(time) {
-                if (time !== null && time !== '') {
-                    time = Math.ceil(time);
-
-                    format_time = [Math.floor(time/3600), Math.floor((time % 3600)/60), (time % 60)];
-                    format_time[0] = format_time[0] > 0 && format_time[0] < 10 ? ['0', format_time[0], ':'].join('') : (format_time[0] >= 10 ? [format_time[0], ':'].join('') : '');
-                    format_time[1] = format_time[1] > 0 && format_time[1] < 10 ? ['0', format_time[1], ':'].join('') : (format_time[1] >= 10 ? [format_time[1], ':'].join('') : '00:');
-                    format_time[2] = format_time[2] > 0 && format_time[2] < 10 ? ['0', format_time[2], ''].join('') : (format_time[2] >= 10 ? [format_time[2], ''].join('') : '00');
-
-                    return format_time.join('');
-                }
-                else
-                    return '';
-            }
-
-            self.changeSize = function() {
-                if (self.maximum) {
-                    self.contentWidth = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth);
-                    self.contentWidth = self.contentWidth < 880 ? 880 : self.contentWidth;
-                }
-                else {
-                    self.contentWidth = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) - 280;
-                    self.contentWidth = self.contentWidth < 600 ? 600 : self.contentWidth;
-                }
-
-                self.contentHeight = (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight) - 38;
-
-                self.noteWidth = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth);
-                self.noteHeight = (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight) - 38;
-
-                if (self.currentUnit.unit_type === 'draw') {
-                    $('#draw-board canvas').attr({ 'width': self.contentWidth, 'height': self.contentHeight});
-                    $('#draw-board canvas').css({ 'width': self.contentWidth, 'height': self.contentHeight});
-                    if ($('#draw-board').literallyCanvasInstance() !== undefined)
-                        $('#draw-board').literallyCanvasInstance().repaint();
-                }
-
-                if ($('#note-board canvas').length === 1) {
-                    $('#note-board canvas').attr({ 'width': self.noteWidth, 'height': self.noteHeight});
-                    $('#note-board canvas').css({ 'width': self.noteWidth, 'height': self.noteHeight});
-                    if ($('#note-board').literallyCanvasInstance() !== undefined)
-                        $('#note-board').literallyCanvasInstance().repaint();
-                }
-
-                if (self.showUnitDesc)
-                    self.textNoteHeight = self.contentHeight - 240;
-                else
-                    self.textNoteHeight = self.contentHeight;
-            }
-
-            window.onresize = function() {
-                $scope.$apply(function() {
-                    self.changeSize();
-                });
-            }
-
-            self.openNoteBoard = function(fn) {
-                self.noteBoard.show = !self.noteBoard.show;
-
-                if (self.noteBoard.show) {
-                    $timeout(function() {
-                        $('#note-board').html('<canvas></canvas>');
-                        $('#note-board').literallycanvas({
-                            imageURLPrefix: '/library/literallycanvas/img',
-                            backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                            primaryColor: '#f00'
-                        });
-
-                        $('.colorpicker.alpha').css('z-index', '1280');
-
-                        $('#note-board .custom-button').before(
-                            ['<div id="note-close" class="btn btn-xs btn-danger" style="margin:-4px 4px 0 0">',
-                                '<span translate="E043" remark="關閉"></span>',
-                            '</div>',
-                            '<div class="btn-group" style="margin:-4px 4px 0 0">',
-                                '<div id="note-replay-high" class="btn btn-xs btn-primary">',
-                                    '<span translate="E045" remark="快速播放"></span>',
-                                '</div>',
-                                '<div id="note-replay-normal" class="btn btn-xs btn-primary">',
-                                    '<span translate="E046" remark="正常播放"></span>',
-                                '</div>',
-                            '</div>'].join(''));
-
-                        var lc = $('#note-board').literallyCanvasInstance();
-                        self.noteBoard.lc = lc;
-
-                        $('#note-close').click(function() {
-                            $timeout(function() {
-                                self.openNoteBoard();
-                            },100);
-                        });
-
-                        $('#note-replay-high').click(function() {
-                            lc.terminal = true;
-                            lc.playStrokes(100);
-                        });
-                        $('#note-replay-normal').click(function() {
-                            lc.terminal = true;
-                            lc.playStrokes(1);
-                        });
-
-                        $('#note-board .toolbar-row:first').hide();
-                        $('#note-board .toolbar-row:last .toolbar-row-left:first').hide();
-
-                        $compile(document.getElementById('literally-toolbar'))($scope);
-
-                        if (fn) fn();
-                    },100);
-                }
-                else
-                    self.videoPlay();
-            }
-
-            self.showImageNote = function(item) {
-                self.openNoteBoard(function() {
-                    if (self.currentUnit.unit_type === 'video') {
-                        self.videoSeekTo(item);
-                        self.videoPause();
-                    }
-
-                    var lc = self.noteBoard.lc;
-                    lc.shapes = [];
-                    lc.addShapes(item.content.strokes);
-                });
-            }
-
-            self.openKnow = function() {
-                window.location.href = [$location.protocol(), '://', $location.host(),($location.port() == 80?'':':'+$location.port()), '/knowledge/', $location.search().k].join('');
-            }
-
-            self.init = function() {
-                self.noteBoard = { show: false };
-
-                $http.post([$location.protocol(), '://', $location.host(),($location.port() == 80?'':':'+$location.port()), '/watch.json'].join(''), {k: $location.search().k, n: $location.search().n})
-                .success(function(response, status) {
-                    self.units = response;
-
-                    var unit = response[1];
-                    angular.forEach(response, function(item, index) {
-                        item.playIndex = index;
-
-                        if (item.uqid === $location.search().u)
-                            unit = item;
-
-                        angular.forEach(item.notes, function(item) {
-                            item.timeCeil = Math.ceil(item.time);
-                            item.timeDesc = self.timeToFormat(item.time);
-                            if (item.type === 'text')
-                                item.htmlContent = item.content.replace(/\r\n|\r|\n/g, '<br/>');
-                        });
-                    });
-
-                    self.chooseUnit(unit);
-                });
-            }
-
-            self.init();
-        })
-    </script>
+	<div id="fb-root"></div>
+
+	<div>
+		<div id="drawDescriptionModal" class="modal fade" style="z-index:1480">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body">
+						<div ng-bind-html="watchCtrl.currentUnit.content.description" style="width:100%;height:100%"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<nav class="navbar navbar-static-top navbar-inverse" style="min-width:880px;z-index:1280;padding:0 10px">
+			<div class="navbar-header pull-right">
+				<a href="javascript:;" class="navbar-brand logo" style="padding:7px 15px" ng-click="watchCtrl.openKnow()">
+					<img ng-show="watchCtrl.logo" ng-src="{{ watchCtrl.logo }}">
+					<span ng-show="!watchCtrl.logo && watchCtrl.web_name" class="logo-header">{{ watchCtrl.web_name }}</span>
+					<span ng-show="!watchCtrl.logo && !watchCtrl.web_name" class="logo-header"><span style="color:#f00">1</span>Know</span>
+				</a>
+			</div>
+			<div class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="javascript:;" style="padding:9px" ng-click="watchCtrl.preUnit()">
+							<i class="fa fa-fw fa-chevron-left"></i>
+						</a>
+					</li>
+					<li class="dropdown">
+						<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" style="padding:9px;width:360px">
+							<div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
+								<span>
+									<i class="fa fa-fw" ng-class="{
+										'fa-film': watchCtrl.currentUnit.unit_type == 'video',
+										'fa-link': watchCtrl.currentUnit.unit_type == 'web',
+										'fa-code': watchCtrl.currentUnit.unit_type == 'embed',
+										'fa-pencil-square-o': watchCtrl.currentUnit.unit_type == 'quiz',
+										'fa-thumbs-o-up': watchCtrl.currentUnit.unit_type == 'poll',
+										'fa-question': watchCtrl.currentUnit.unit_type == 'qa',
+										'fa-picture-o': watchCtrl.currentUnit.unit_type == 'draw'
+										}"></i>
+								</span>
+								<span>{{watchCtrl.currentUnit.name}}</span>
+							</div>
+						</a>
+						<ul class="dropdown-menu" style="width:360px;max-height:420px;overflow:auto">
+							<li ng-repeat="unit in watchCtrl.units">
+								<div ng-if="unit.unit_type=='chapter'" style="padding:5px 10px">
+									<span class="label label-danger">{{unit.name}}</span>
+								</div>
+								<a href="javascript:;" ng-if="unit.unit_type!='chapter'" ng-click="watchCtrl.chooseUnit(unit)">
+									<div style="text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
+										<i class="text-success fa fa-fw fa-check" ng-show="unit.completed"></i>
+										<span>
+											<i class="fa fa-fw" ng-class="{
+												'fa-film': unit.unit_type == 'video',
+												'fa-link': unit.unit_type == 'web',
+												'fa-code': unit.unit_type == 'embed',
+												'fa-pencil-square-o': unit.unit_type == 'quiz',
+												'fa-thumbs-o-up': unit.unit_type == 'poll',
+												'fa-question': unit.unit_type == 'qa',
+												'fa-picture-o': unit.unit_type == 'draw'
+												}"></i>
+										</span>
+										<span>{{unit.name}}</span>
+									</div>
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;" style="padding:9px" ng-click="watchCtrl.nextUnit()">
+							<i class="fa fa-fw fa-chevron-right"></i>
+						</a>
+					</li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right" style="margin:0">
+					<li class="dropdown">
+						<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" style="padding:9px">
+							<i class="fa fa-fw fa-cog"></i>
+							<span translate="E032" remark="設定"></span>
+						</a>
+						<ul class="dropdown-menu" style="overflow:auto;z-index:1280">
+							<li>
+								<a href="javascript:;" ng-click="watchCtrl.toggleUnitDesc()">
+									<i class="fa fa-fw" ng-class="{'fa-check-square-o': watchCtrl.showUnitDesc, 'fa-square-o': !watchCtrl.showUnitDesc}"></i>
+									<span translate="E035" remark="顯示補充教材"></span>
+								</a>
+							</li>
+							<li>
+								<a href="javascript:;" ng-click="watchCtrl.toggleMaximum()">
+									<i class="fa fa-fw" ng-class="{'fa-check-square-o': !watchCtrl.maximum, 'fa-square-o': watchCtrl.maximum}"></i>
+									<span translate="E036" remark="顯示右邊欄位"></span>
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" style="padding:9px">
+							<i class="fa fa-fw fa-globe"></i> {{watchCtrl.language.title}}
+						</a>
+						<ul class="dropdown-menu" style="overflow:auto;z-index:1280">
+							<li><a href="javascript:;" ng-click="watchCtrl.changeLanguage('en-us')">English</a></li>
+							<li><a href="javascript:;" ng-click="watchCtrl.changeLanguage('zh-tw')">繁體中文</a></li>
+							<li><a href="javascript:;" ng-click="watchCtrl.changeLanguage('zh-cn')">简体中文</a></li>
+							<li><a href="javascript:;" ng-click="watchCtrl.changeLanguage('es-es')">Español (Perú)</a></li>
+							<li><a href="javascript:;" ng-click="watchCtrl.changeLanguage('de-de')">Deutsch</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</nav>
+
+		<div style="position:relative" style="min-width:880px">
+			<div class="down-animate" ng-show="watchCtrl.noteBoard.show" style="position:absolute;z-index:1080">
+				<div id="note-board" ng-style="{width:watchCtrl.noteWidth+'px', height:watchCtrl.noteHeight+'px'}" style="background:rgba(0,0,0,0);bottom:0">
+					<canvas></canvas>
+				</div>
+			</div>
+
+			<div class="down-animate" ng-show="watchCtrl.currentUnit.showVideoQuiz" style="position:absolute;z-index:1080;width:100%;background-color:rgba(34,34,34,0.5)" ng-style="{height:watchCtrl.contentHeight+'px'}">
+				<div style="background:#fff;margin:10% auto;padding:20px;width:600px;max-height:400px;overflow:auto">
+					<div ng-bind-html="watchCtrl.currentUnit.currentQuiz.content"></div>
+					<div style="margin-top:20px">
+						<div ng-repeat="option in watchCtrl.currentUnit.currentQuiz.options">
+							<label class="checkbox" ng-if="watchCtrl.currentUnit.currentQuiz.quiz_type=='multi'" style="cursor:pointer">
+								<input type="checkbox" name="{{watchCtrl.currentUnit.currentQuiz.uqid}}" ng-model="option.answer"/>
+								<span ng-if="!option.latex">{{option.item}}</span>
+								<span ng-if="option.latex" mathjax-bind="option.item"></span>
+								<span ng-if="option.correct&&watchCtrl.currentUnit.currentQuiz.isCheck">(<i class="fa fa-fw fa-circle-o text-success"></i>)</span>
+							</label>
+							<label class="radio" ng-if="watchCtrl.currentUnit.currentQuiz.quiz_type=='single'" style="cursor:pointer">
+								<input type="radio" name="{{quiz.uqid}}" value="{{option.value}}" ng-model="watchCtrl.currentUnit.currentQuiz.single"/>
+								<span ng-if="!option.latex">{{option.item}}</span>
+								<span ng-if="option.latex" mathjax-bind="option.item"></span>
+								<span ng-if="option.correct&&watchCtrl.currentUnit.currentQuiz.isCheck">(<i class="fa fa-fw fa-circle-o text-success"></i>)</span>
+							</label>
+						</div>
+					</div>
+					<div class="alert" ng-class="{'alert-success':watchCtrl.currentUnit.currentQuiz.correct,'alert-danger':!watchCtrl.currentUnit.currentQuiz.correct}"
+						style="margin:20px 0 0;padding:5px" ng-bind-html="watchCtrl.currentUnit.currentQuiz.solution" ng-if="watchCtrl.currentUnit.currentQuiz.isCheck&&watchCtrl.currentUnit.currentQuiz.solution"></div>
+					<div style="margin-top:20px">
+						<a class="btn btn-primary" ng-click="watchCtrl.checkQuizSolution()" ng-if="!watchCtrl.currentUnit.currentQuiz.isCheck">
+							<span translate="E039" remark="檢查答案"></span>
+						</a>
+						<a class="btn btn-primary" ng-click="watchCtrl.continueLearning()" ng-if="watchCtrl.currentUnit.currentQuiz.isCheck">
+							<span translate="E040" remark="繼續學習"></span>
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<div style="display:table;background:#fff">
+				<div style="display:table-cell;vertical-align:top">
+					<div ng-style="{width:watchCtrl.contentWidth+'px', height:watchCtrl.contentHeight+'px'}">
+						<div ng-if="watchCtrl.currentUnit.unit_type=='video'" style="width:100%;height:100%;display:table">
+							<div ng-if="watchCtrl.currentUnit.sub_type=='audio'" ng-style="{width:watchCtrl.contentWidth+'px', height:(watchCtrl.contentHeight-90)+'px'}" style="word-break:break-all" ng-bind-html="watchCtrl.currentUnit.description"></div>
+							<div id="videoContainer"></div>
+						</div>
+						<div ng-if="watchCtrl.currentUnit.unit_type=='web'" ng-style="{width:watchCtrl.contentWidth+'px', height:watchCtrl.contentHeight+'px'}" style="overflow:auto;-webkit-overflow-scrolling:touch">
+							<iframe _sandbox="allow-popups allow-forms allow-same-origin allow-scripts"
+								ng-src="{{watchCtrl.currentUnit.content_url}}"
+								ng-style="{width:watchCtrl.contentWidth+'px', height:(watchCtrl.contentHeight-5)+'px'}"
+								frameborder="0"></iframe>
+						</div>
+						<div ng-if="watchCtrl.currentUnit.unit_type=='embed'" ng-style="{width:watchCtrl.contentWidth+'px', height:watchCtrl.contentHeight+'px'}" style="overflow:auto" ng-bind-html="watchCtrl.currentUnit.content"></div>
+						<div ng-if="watchCtrl.currentUnit.unit_type=='quiz'" ng-style="{width:watchCtrl.contentWidth+'px', height:watchCtrl.contentHeight+'px'}" style="overflow:auto;padding:10px">
+							<div class="panel panel-default" ng-repeat="quiz in watchCtrl.currentUnit.quizzes">
+								<div class="panel-body">
+									<span class="pull-left">
+										<span ng-if="quiz.correct!=null">(<i class="fa fa-fw" ng-class="{'fa-check text-success': quiz.correct, 'fa-times text-danger': !quiz.correct}"></i>)</span>
+										<span><span ng-if="$index<9">0</span>{{$index+1}}.</span>
+									</span>
+									<div ng-bind-html="quiz.content"></div>
+									<div style="margin-top:20px">
+										<div ng-repeat="option in quiz.options" ng-switch="quiz.quiz_type">
+											<label class="checkbox" ng-switch-when="multi" style="cursor:pointer">
+												<input type="checkbox" name="{{quiz.uqid}}" ng-model="option.answer"/>
+												<span ng-if="!option.latex">{{option.item}}</span>
+												<span ng-if="option.latex" mathjax-bind="option.item"></span>
+											</label>
+											<label class="radio" ng-switch-when="single" style="cursor:pointer">
+												<input type="radio" name="{{quiz.uqid}}" value="{{option.value}}" ng-model="quiz.single"/>
+												<span ng-if="!option.latex">{{option.item}}</span>
+												<span ng-if="option.latex" mathjax-bind="option.item"></span>
+											</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div style="margin:10px 0">
+								<a class="btn btn-primary" ng-click="watchCtrl.checkQuizResult()">
+									<span translate="E039" remark="檢查答案"></span>
+								</a>
+							</div>
+						</div>
+						<div ng-if="watchCtrl.currentUnit.unit_type=='poll'" ng-style="{width:watchCtrl.contentWidth+'px', height:watchCtrl.contentHeight+'px'}" style="overflow:auto;padding:10px">
+							<h3 style="padding:30px">
+								<div ng-bind-html="watchCtrl.currentUnit.content.content"></div>
+								<div style="margin-top:20px">
+									<label class="checkbox" style="cursor:pointer" ng-repeat="option in watchCtrl.currentUnit.content.options">
+										<input type="checkbox" name="{{watchCtrl.currentUnit.uqid}}" ng-model="option.answer"/>
+										<span ng-if="!option.latex">{{option.item}}</span>
+										<span ng-if="option.latex" mathjax-bind="option.item"></span>
+									</label>
+								</div>
+							</h3>
+						</div>
+						<div ng-if="watchCtrl.currentUnit.unit_type=='qa'" ng-style="{width:watchCtrl.contentWidth+'px', height:watchCtrl.contentHeight+'px'}" style="overflow:auto;padding:10px">
+							<h3><div ng-bind-html="watchCtrl.currentUnit.content"></div></h3>
+							<div style="margin-top:20px">
+								<div id="qa-result" style="height:200px"></div>
+							</div>
+						</div>
+						<div ng-if="watchCtrl.currentUnit.unit_type=='draw'" ng-style="{width:watchCtrl.contentWidth+'px', height:watchCtrl.contentHeight+'px'}">
+							<div id="draw-board" ng-style="{width:watchCtrl.contentWidth+'px', height:watchCtrl.contentHeight+'px', background:watchCtrl.currentUnit.backgroundImage}" style="background:rgba(0,0,0,0);bottom:0">
+								<canvas></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div style="display:table-cell;vertical-align:top" ng-if="!watchCtrl.maximum">
+					<div ng-style="{height:watchCtrl.contentHeight+'px'}" style="width:280px;border-left:1px solid #ddd;">
+						<div id="notes" style="height:{{watchCtrl.textNoteHeight}}px;overflow:auto;padding:5px">
+							<div id="time-{{item.timeCeil}}" class="note-card" style="cursor:pointer" ng-style="{'background-color': item.color}" ng-repeat="item in watchCtrl.currentUnit.notes" ng-click="watchCtrl.openNote(item)">
+								<div ng-switch="item.type">
+									<div ng-switch-when="text" ng-bind-html="item.htmlContent"></div>
+									<div ng-switch-when="image"><img ng-src="{{item.content.screenshot}}" style="width:200px"/></div>
+								</div>
+								<div style="margin-top:4px">
+									<span class="text-info" ng-if="watchCtrl.currentUnit.unit_type=='video'">{{item.timeDesc}}</span>
+								</div>
+							</div>
+						</div>
+						<div style="border-top:1px solid #ddd;height:240px;overflow:auto;padding:10px;word-break:break-all;box-shadow:0px -3px 15px rgba(0,0,0,0.3)" ng-if="watchCtrl.showUnitDesc" ng-bind-html="watchCtrl.currentUnit.description"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		angular.module('1know', ['ui.bootstrap', 'pascalprecht.translate'])
+		.config(function($sceProvider, $locationProvider, $translateProvider) {
+			$sceProvider.enabled(false);
+			$locationProvider.html5Mode(true);
+			$translateProvider.translations('zh-tw', translations['zh-tw']);
+			$translateProvider.translations('zh-cn', translations['zh-cn']);
+			$translateProvider.translations('en-us', translations['en-us']);
+			$translateProvider.translations('es-es', translations['es-es']);
+			$translateProvider.translations('de-de', translations['de-de']);
+		})
+		.directive("mathjaxBind", function() {
+			return {
+				restrict: "A",
+				controller: ["$scope", "$element", "$attrs",
+					function($scope, $element, $attrs) {
+						$scope.$watch($attrs.mathjaxBind, function(texExpression) {
+							var texScript = angular.element("<script type='math/tex'>").html(texExpression ? texExpression :  "");
+							$element.html("");
+							$element.append(texScript);
+							MathJax.Hub.Queue(["Reprocess", MathJax.Hub, $element[0]]);
+						});
+					}
+				]
+			};
+		})
+		.controller('WatchCtrl', function($scope, $http, $location, $timeout, $interval, $compile, $translate, $window) {
+			var self = this;
+
+			self.web_name = $window.web_name;
+			self.logo = $window.logo;
+			self.copyright = $window.copyright;
+			self.service_email = $window.service_email;
+
+			$translate.uses('zh-cn');
+			self.language = {title: '简体中文',type: 'zh-cn'};
+
+			self.changeLanguage = function(lang) {
+				lang = lang.toLowerCase();
+
+				if (lang === 'code')
+					lang = {title: 'Language Code',type: 'code'};
+				else if (lang === 'zh-tw')
+					lang = {title: '繁體中文',type: 'zh-tw'};
+				else if (lang === 'zh-cn')
+					lang = {title: '简体中文',type: 'zh-cn'};
+				else if (lang === 'es-es')
+					lang = {title: 'Español (Perú)',type: 'es-es'};
+				else if (lang === 'de-de')
+					lang = {title: 'Deutsch',type: 'de-de'};
+				else
+					lang = {title: 'English',type: 'en-us'};
+
+				self.language = lang;
+
+				$translate.uses(lang.type);
+			}
+
+			self.toggleUnitDesc = function() {
+				self.showUnitDesc = !self.showUnitDesc;
+
+				if (self.showUnitDesc)
+					self.textNoteHeight = self.contentHeight - 240;
+				else
+					self.textNoteHeight = self.contentHeight;
+			}
+
+			self.toggleMaximum = function() {
+				self.maximum = !self.maximum;
+				self.changeSize();
+			}
+
+			self.openNote = function(item) {
+				if (item.type === 'text')
+					self.videoSeekTo(item);
+				else if (item.type === 'image')
+					self.showImageNote(item);
+			}
+
+			self.videoSeekTo = function(item) {
+				if (self.videoPlayer.type === 'youku') {
+					self.videoPlayer.target.seekTo(item.time);
+					self.videoOnPause(self.videoPlayer);
+				}
+				else if (self.videoPlayer.type === 'videojs') {
+					self.videoPlayer.target.currentTime(item.time);
+				}
+			}
+
+			self.videoOnPlaying = function() {
+				if(angular.isDefined(self.promise))
+					$interval.cancel(self.promise);
+
+				self.promise = $interval(function() {
+					if (self.currentUnit.unit_type === 'video') {
+						if (self.currentUnit.quizzes.length > 0) {
+							var currentVideoTime = 0;
+							if (self.videoPlayer.type === 'youku')
+								currentVideoTime = Math.ceil(self.videoPlayer.target.currentTime());
+							else if (self.videoPlayer.type === 'videojs')
+								currentVideoTime = Math.ceil(self.videoPlayer.target.currentTime());
+
+							angular.forEach(self.currentUnit.quizzes, function(item) {
+								if (Math.ceil(item.video_time) === currentVideoTime) {
+									self.videoPause();
+									self.currentUnit.currentQuiz = item;
+									self.currentUnit.showVideoQuiz = true;
+								}
+							});
+						}
+					}
+				}, 1000);
+			}
+
+			self.videoPlay = function() {
+				if (self.videoPlayer.type === 'youku')
+					self.videoPlayer.target.playVideo();
+				else if (self.videoPlayer.type === 'videojs') {
+					self.videoPlayer.target.play();
+				}
+			}
+
+			self.videoPause = function() {
+				if (self.videoPlayer.type === 'youku') {
+					self.videoPlayer.target.pauseVideo();
+					self.videoOnPause();
+				}
+				else if (self.videoPlayer.type === 'videojs') {
+					self.videoPlayer.target.pause();
+				}
+			}
+
+			self.preUnit = function() {
+				for (var i = self.currentUnit.playIndex - 1; i >= 0; i--) {
+					var preUnit = self.units[i];
+					if (preUnit.unit_type !== 'chapter') {
+						self.chooseUnit(preUnit);
+						i = -1;
+						return;
+					}
+				}
+			}
+
+			self.nextUnit = function() {
+				for (var i = self.currentUnit.playIndex + 1; i < self.units.length; i++) {
+					var nextUnit = self.units[i];
+					if (nextUnit.unit_type !== 'chapter') {
+						self.chooseUnit(nextUnit);
+						i = self.units.length;
+						return;
+					}
+				}
+			}
+
+			self.chooseUnit = function(unit) {
+				if(angular.isDefined(self.promise))
+					$interval.cancel(self.promise);
+
+				self.noteBoard = { show: false }
+				self.currentUnit = unit;
+				self.showUnitDesc = unit.description !== '';
+				self.currentUnit.absUrl = [$location.protocol(), '://', $location.host(),($location.port() == 80?'':':'+$location.port()), '/watch?k=', $location.search().k, '&u=', unit.uqid].join('');
+
+				if ($location.search().n)
+					$location.search({k: $location.search().k, u: unit.uqid, n: $location.search().n});
+				else
+					$location.search({k: $location.search().k, u: unit.uqid});
+
+				$('#videoContainer').html('');
+
+				self.changeSize();
+
+				if (unit.unit_type === 'video') {
+					$timeout(function() {
+						var videoPath = unit.content_url.match(/^(?:([A-Za-z]+):)?\/\/(?:.*?)\.?(youtube|vimeo|youku)\.(?:.*?)\/([0-9]+|v_show\/id_([0-9a-zA-Z]+)|[^#]*v=([0-9a-zA-Z\-\_]+))?/);
+
+						if (videoPath !== null && videoPath.length === 6) {
+							if (videoPath[2] === 'youku') {
+								$('#videoContainer').html('<div id="videoPlayer" style="width:100%;height:100%"></div>');
+
+								var player = new YKU.Player('videoPlayer',{
+									client_id: 'c865b5756563acee',
+									vid: videoPath[4],
+									width: '100%',
+									height: '100%'
+								});
+
+								self.videoPlayer = {target: player, type: 'youku'};
+
+								$(['#videoPlayer'].join('')).attr('ng-style', '{width:watchCtrl.contentWidth+\'px\', height:watchCtrl.contentHeight+\'px\'}');
+								$compile(document.getElementById('videoPlayer'))($scope);
+							}
+							else {
+								if (videoPath[2] === 'youtube')
+									unit.content_url = unit.content_url.split('&list')[0];
+
+								var videoId = Date.now();
+								var option = {
+									controls: true,
+									preload: 'auto',
+									forceSSL: true,
+									forceHTML5: true,
+									autoplay: self.unitAutoplay,
+									techOrder: videoPath[2] === 'youtube' ? ['youtube'] : (videoPath[2] === 'vimeo' ? ['vimeo'] : []),
+									src: unit.content_url,
+									ytcontrols: true
+								}
+
+								$('#videoContainer').html(
+									['<video id="video-', videoId,'"',
+										' src="', unit.content_url, (unit.content_url.indexOf("?") != -1 ? '&' : '?'), videoId, '"',
+										' width="100%" height="100%"',
+										' class="video-js vjs-default-skin vjs-big-play-centered">',
+									'</video>'].join('')
+								);
+
+								videojs(['video-', videoId].join(''), option, function() {
+									var player = this;
+									player.on("play", function() {
+										self.videoOnPlaying();
+									});
+									self.videoPlayer = {target: player, type: 'videojs'};
+								});
+
+								$(['#video-', videoId].join('')).attr('ng-style', '{width:watchCtrl.contentWidth+\'px\', height:watchCtrl.contentHeight+\'px\'}');
+								$compile(document.getElementById(['video-', videoId].join('')))($scope);
+							}
+						}
+						else {
+							var mp3 = unit.content_url.match(/([a-z\-_0-9\/\:\.]*\.mp3)/i);
+
+							var videoId = Date.now();
+							var option = {
+								controls: true,
+								preload: 'auto',
+								plugins: {
+									speed: [
+										{ text: '0.5', rate: 0.5 },
+										{ text: '0.75', rate: 0.75 },
+										{ text: '正常', rate: 1, selected: true },
+										{ text: '1.5', rate: 1.5 },
+										{ text: '2', rate: 2 }
+									]
+								}
+							};
+
+							if (mp3 === null) {
+								$('#videoContainer').html(
+									['<video id="video-', videoId,'"',
+										' src="', unit.content_url, (unit.content_url.indexOf("?") != -1 ? '&' : '?'), videoId, '"',
+										' width="100%" height="100%"',
+										' class="video-js vjs-default-skin vjs-big-play-centered">',
+									'</video>'].join('')
+								);
+
+								videojs(['video-', videoId].join(''), option, function() {
+									var player = this;
+									player.on("play", function() {
+										self.videoOnPlaying();
+									});
+									self.videoPlayer = {target: player, type: 'videojs'};
+								});
+
+								$(['#video-', videoId].join('')).attr('ng-style', '{width:watchCtrl.contentWidth+\'px\', height:watchCtrl.contentHeight+\'px\'}');
+								$compile(document.getElementById(['video-', videoId].join('')))($scope);
+							}
+							else {
+								unit.sub_type = 'audio';
+								self.showUnitDesc = false;
+
+								if (self.currentUnit.description === '')
+									self.currentUnit.description = ['<div style="font-size:16px;padding:10px">', translations[$utility.LANGUAGE.type]['E049'], '</div>'].join('');//-- 補充教材 --
+
+								$('#videoContainer').html(
+									['<video id="video-', videoId,'"',
+										' src="', unit.content_url, (unit.content_url.indexOf("?") != -1 ? '&' : '?'), videoId, '"',
+										' width="100%" height="90px"',
+										' class="video-js vjs-default-skin vjs-big-play-centered">',
+									'</video>'].join('')
+								);
+
+								videojs(['video-', videoId].join(''), option, function() {
+									var player = this;
+									player.on("play", function() {
+										self.videoOnPlaying();
+									});
+									self.videoPlayer = {target: player, type: 'videojs'};
+								});
+							}
+						}
+					},100);
+				}
+				else {
+					if (unit.unit_type === 'quiz' && self.currentUnit.quizzes === undefined) {
+						$http.get([$utility.SERVICE_URL, '/learning/units/', self.currentUnit.uqid, '/quizzes'].join(''))
+						.success(function(response, status) {
+							angular.forEach(response, function(quiz) {
+								quiz.correct = null;
+							});
+
+							self.currentUnit.quizzes = response;
+
+							if (self.currentUnit.study_result !== null) {
+								angular.forEach(self.currentUnit.quizzes, function(quiz, index) {
+									var answer = self.currentUnit.study_result.result[index].answer;
+
+									if (quiz.quiz_type === 'multi') {
+										angular.forEach(answer, function(key) {
+											angular.forEach(quiz.options, function(option) {
+												if (key === option.value) option.answer = true;
+											});
+										});
+									}
+									else {
+										quiz.single = answer[0];
+									}
+								});
+							}
+						});
+					}
+					else if (self.currentUnit.unit_type === 'poll' && self.currentUnit.study_result !== null) {
+						var answer = self.currentUnit.study_result.result;
+						angular.forEach(answer, function(key) {
+							angular.forEach(self.currentUnit.content.options, function(option) {
+								if (key === option.value) option.answer = true;
+							});
+						});
+					}
+					else if (self.currentUnit.unit_type === 'qa') {
+						if ($('#qa-result').redactor() !== undefined)
+							$('#qa-result').redactor('destroy');
+
+						$('#qa-result').html(self.currentUnit.study_result == null ? '' : self.currentUnit.study_result.result);
+						$('#qa-result').redactor({
+							iframe: true,
+							buttons: ['html', '|', 'formatting', '|', 'bold', 'italic', 'deleted', '|', 'unorderedlist', 'orderedlist', '|', 'image', 'video', 'link'],
+							plugins: ['fontcolor', 'fontsize']
+						});
+					}
+					else if (self.currentUnit.unit_type === 'draw') {
+						$timeout(function() {
+							$('#draw-board').html('<canvas></canvas>');
+							$('#draw-board').literallycanvas({
+								imageURLPrefix: '/library/literallycanvas/img',
+								backgroundColor: 'rgba(0, 0, 0, 0)',
+								primaryColor: '#f00'
+							});
+
+							$('#draw-board .custom-button').before(
+								['<div class="btn-group" style="margin:-4px 4px 0 0">',
+									'<div id="draw-replay-high" class="btn btn-xs btn-primary">',
+										'<span translate="E045" remark="快速播放"></span>',
+									'</div>',
+									'<div id="draw-replay-normal" class="btn btn-xs btn-primary">',
+										'<span translate="E046" remark="正常播放"></span>',
+									'</div>',
+								'</div>'].join(''));
+
+							var lc = $('#draw-board').literallyCanvasInstance();
+							if (self.currentUnit.study_result)
+								lc.addShapes(self.currentUnit.study_result.result.strokes);
+
+							$('#draw-replay-high').click(function() {
+								lc.terminal = true;
+								lc.playStrokes(100);
+							});
+							$('#draw-replay-normal').click(function() {
+								lc.terminal = true;
+								lc.playStrokes(1);
+							});
+
+							if (self.currentUnit.content.description !== '') {
+								$('#draw-board .custom-button').before('<div id="draw-description" class="btn btn-xs btn-primary" style="margin:-4px 4px 0"><span translate="E047" remark="塗鴉說明"></span></div>');
+								$('#draw-description').click(function() {
+									$('#drawDescriptionModal').modal('show');
+								});
+							}
+
+							if (self.currentUnit.content.background !== '') {
+								$('#draw-board .custom-button').before('<div id="draw-background" class="btn btn-xs btn-primary" style="margin:-4px 0 0"><span translate="E048" remark="背景圖片"></span></div>');
+								$('#draw-background').click(function() {
+									$timeout(function() {
+										if (self.currentUnit.backgroundImage === undefined)
+											self.currentUnit.backgroundImage = ['url(', self.currentUnit.content.background, ') no-repeat'].join('');
+										else
+											delete self.currentUnit.backgroundImage;
+									},100);
+								});
+							}
+
+							$compile(document.getElementById('literally-toolbar'))($scope);
+						},100);
+					}
+					else if (self.currentUnit.unit_type === 'embed') {
+						if ($(self.currentUnit.content).find('embed').length > 0)
+							self.currentUnit.content = $(self.currentUnit.content).find('embed').css('width', '100%').css('height', '100%')[0].outerHTML;
+						else if ($(self.currentUnit.content).find('iframe').length > 0)
+							self.currentUnit.content = $(self.currentUnit.content).find('iframe').css('width', '100%').css('height', '100%')[0].outerHTML;
+						else if ($(self.currentUnit.content)[0].nodeName === 'EMBED')
+							self.currentUnit.content = $(self.currentUnit.content).css('width', '100%').css('height', '100%')[0].outerHTML;
+						else if ($(self.currentUnit.content)[0].nodeName === 'IFRAME')
+							self.currentUnit.content = $(self.currentUnit.content).css('width', '100%').css('height', '100%')[0].outerHTML;
+					}
+				}
+			}
+
+			self.checkQuizSolution = function() {
+				var quiz = self.currentUnit.currentQuiz;
+
+				if (quiz.quiz_type === 'multi') {
+					angular.forEach(quiz.options, function(option) {
+						if (option.answer !== undefined && option.answer === true) {
+							quiz.correct += parseInt(option.value, 10);
+						}
+					});
+
+					if (parseInt(quiz.answer, 10) === parseInt(quiz.correct, 10)) {
+						quiz.correct = true;
+					}
+					else
+						quiz.correct = false;
+				}
+				else {
+					if (parseInt(quiz.answer, 10) === parseInt(quiz.single, 10)) {
+						quiz.correct = true;
+					}
+					else
+						quiz.correct = false;
+				}
+
+				self.currentUnit.currentQuiz.isCheck = true;
+			}
+
+			self.continueLearning = function() {
+				self.videoPlay();
+				delete self.currentUnit.currentQuiz.isCheck;
+				delete self.currentUnit.currentQuiz;
+				delete self.currentUnit.showVideoQuiz;
+			}
+
+			self.checkQuizResult = function() {
+				var quizzes = self.currentUnit.quizzes;
+				var correct_count = 0, correct = [], answer = [];
+
+				angular.forEach(quizzes, function(quiz) {
+					quiz.correct = 0, correct = [], answer = [];
+					if (quiz.quiz_type === 'multi') {
+						angular.forEach(quiz.options, function(option) {
+							if (option.answer !== undefined && option.answer === true) {
+								quiz.correct += parseInt(option.value, 10);
+								answer.push(parseInt(option.value, 10));
+							}
+							if (option.correct)
+								correct.push(parseInt(option.value, 10));
+						});
+
+						if (parseInt(quiz.answer, 10) === parseInt(quiz.correct, 10)) {
+							quiz.correct = true;
+							correct_count += 1;
+						}
+						else
+							quiz.correct = false;
+					}
+					else {
+						answer.push(parseInt(quiz.single, 10));
+						correct.push(parseInt(quiz.answer, 10));
+
+						if (parseInt(quiz.answer, 10) === parseInt(quiz.single, 10)) {
+							quiz.correct = true;
+							correct_count += 1;
+						}
+						else
+							quiz.correct = false;
+					}
+				});
+			}
+
+			self.timeToFormat = function(time) {
+				if (time !== null && time !== '') {
+					time = Math.ceil(time);
+
+					format_time = [Math.floor(time/3600), Math.floor((time % 3600)/60), (time % 60)];
+					format_time[0] = format_time[0] > 0 && format_time[0] < 10 ? ['0', format_time[0], ':'].join('') : (format_time[0] >= 10 ? [format_time[0], ':'].join('') : '');
+					format_time[1] = format_time[1] > 0 && format_time[1] < 10 ? ['0', format_time[1], ':'].join('') : (format_time[1] >= 10 ? [format_time[1], ':'].join('') : '00:');
+					format_time[2] = format_time[2] > 0 && format_time[2] < 10 ? ['0', format_time[2], ''].join('') : (format_time[2] >= 10 ? [format_time[2], ''].join('') : '00');
+
+					return format_time.join('');
+				}
+				else
+					return '';
+			}
+
+			self.changeSize = function() {
+				if (self.maximum) {
+					self.contentWidth = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth);
+					self.contentWidth = self.contentWidth < 880 ? 880 : self.contentWidth;
+				}
+				else {
+					self.contentWidth = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) - 280;
+					self.contentWidth = self.contentWidth < 600 ? 600 : self.contentWidth;
+				}
+
+				self.contentHeight = (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight) - 38;
+
+				self.noteWidth = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth);
+				self.noteHeight = (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight) - 38;
+
+				if (self.currentUnit.unit_type === 'draw') {
+					$('#draw-board canvas').attr({ 'width': self.contentWidth, 'height': self.contentHeight});
+					$('#draw-board canvas').css({ 'width': self.contentWidth, 'height': self.contentHeight});
+					if ($('#draw-board').literallyCanvasInstance() !== undefined)
+						$('#draw-board').literallyCanvasInstance().repaint();
+				}
+
+				if ($('#note-board canvas').length === 1) {
+					$('#note-board canvas').attr({ 'width': self.noteWidth, 'height': self.noteHeight});
+					$('#note-board canvas').css({ 'width': self.noteWidth, 'height': self.noteHeight});
+					if ($('#note-board').literallyCanvasInstance() !== undefined)
+						$('#note-board').literallyCanvasInstance().repaint();
+				}
+
+				if (self.showUnitDesc)
+					self.textNoteHeight = self.contentHeight - 240;
+				else
+					self.textNoteHeight = self.contentHeight;
+			}
+
+			window.onresize = function() {
+				$scope.$apply(function() {
+					self.changeSize();
+				});
+			}
+
+			self.openNoteBoard = function(fn) {
+				self.noteBoard.show = !self.noteBoard.show;
+
+				if (self.noteBoard.show) {
+					$timeout(function() {
+						$('#note-board').html('<canvas></canvas>');
+						$('#note-board').literallycanvas({
+							imageURLPrefix: '/library/literallycanvas/img',
+							backgroundColor: 'rgba(0, 0, 0, 0.1)',
+							primaryColor: '#f00'
+						});
+
+						$('.colorpicker.alpha').css('z-index', '1280');
+
+						$('#note-board .custom-button').before(
+							['<div id="note-close" class="btn btn-xs btn-danger" style="margin:-4px 4px 0 0">',
+								'<span translate="E043" remark="關閉"></span>',
+							'</div>',
+							'<div class="btn-group" style="margin:-4px 4px 0 0">',
+								'<div id="note-replay-high" class="btn btn-xs btn-primary">',
+									'<span translate="E045" remark="快速播放"></span>',
+								'</div>',
+								'<div id="note-replay-normal" class="btn btn-xs btn-primary">',
+									'<span translate="E046" remark="正常播放"></span>',
+								'</div>',
+							'</div>'].join(''));
+
+						var lc = $('#note-board').literallyCanvasInstance();
+						self.noteBoard.lc = lc;
+
+						$('#note-close').click(function() {
+							$timeout(function() {
+								self.openNoteBoard();
+							},100);
+						});
+
+						$('#note-replay-high').click(function() {
+							lc.terminal = true;
+							lc.playStrokes(100);
+						});
+						$('#note-replay-normal').click(function() {
+							lc.terminal = true;
+							lc.playStrokes(1);
+						});
+
+						$('#note-board .toolbar-row:first').hide();
+						$('#note-board .toolbar-row:last .toolbar-row-left:first').hide();
+
+						$compile(document.getElementById('literally-toolbar'))($scope);
+
+						if (fn) fn();
+					},100);
+				}
+				else
+					self.videoPlay();
+			}
+
+			self.showImageNote = function(item) {
+				self.openNoteBoard(function() {
+					if (self.currentUnit.unit_type === 'video') {
+						self.videoSeekTo(item);
+						self.videoPause();
+					}
+
+					var lc = self.noteBoard.lc;
+					lc.shapes = [];
+					lc.addShapes(item.content.strokes);
+				});
+			}
+
+			self.openKnow = function() {
+				window.location.href = [$location.protocol(), '://', $location.host(),($location.port() == 80?'':':'+$location.port()), '/knowledge/', $location.search().k].join('');
+			}
+
+			self.init = function() {
+				self.noteBoard = { show: false };
+
+				$http.post([$location.protocol(), '://', $location.host(),($location.port() == 80?'':':'+$location.port()), '/watch.json'].join(''), {k: $location.search().k, n: $location.search().n})
+				.success(function(response, status) {
+					self.units = response;
+
+					var unit = response[1];
+					angular.forEach(response, function(item, index) {
+						item.playIndex = index;
+
+						if (item.uqid === $location.search().u)
+							unit = item;
+
+						angular.forEach(item.notes, function(item) {
+							item.timeCeil = Math.ceil(item.time);
+							item.timeDesc = self.timeToFormat(item.time);
+							if (item.type === 'text')
+								item.htmlContent = item.content.replace(/\r\n|\r|\n/g, '<br/>');
+						});
+					});
+
+					self.chooseUnit(unit);
+				});
+			}
+
+			self.init();
+		})
+	</script>
 </body>
 </html>

@@ -404,4 +404,68 @@ class Private::DiscoveryController < ApplicationController
 			render :json => { error: "We're sorry, but something went wrong." }
 		end
 	end
+
+	def get_front_objs
+		collector = []
+		collector.push('front_slider_obj') if APP_CONFIG['front_slider_activate']
+		collector.push('front_twobanner_obj') if APP_CONFIG['front_twobanner_activate']
+		cfg = Sysconfig.where( :target => 'frontpage' , :name => collector )
+		set = {}
+		cfg.each do |o|
+			id = o[:content].split(',')
+			set["#{o[:name]}"] = []
+			id.each do |i|
+				set["#{o[:name]}"].push(FrontObject.where( :id => i ).first)
+			end
+		end
+		set[:front_tags] = FrontObject.order( "knowledges" ).where( :bTag => true ).all if APP_CONFIG['front_tagfunction_activate']
+		render :json => set
+	end
+
+	def get_front_knowledgeset
+		set = "and k.uqid in (\'"+params[:set].join("\',\'")+"\')"
+		start_index = params['start-index'] != nil ? params['start-index'] : 0
+		max_results = params['max-results'] != nil ? params['max-results'] : 20
+		offset = "offset #{start_index} limit #{max_results}"
+		items = Knowledge.find_by_sql(
+			"select k.id, k.uqid, k.name, k.last_update, k.is_public, k.total_time, u.uqid u_uqid, u.first_name, u.last_name, u.userid, u.nouser, r.reader_size, r.total_rate, r.rate_count, r.average_rate
+			from knowledge k
+				join draft_knowledge dk on dk.uqid = k.uqid
+				left join draft_knowledge_editor dke on dke.ref_know_id = dk.id and dke.role = 'owner'
+				left join \"user\" u on u.id = dke.ref_user_id
+				left join (select r.ref_know_id, count(r.id) reader_size,
+						sum(case when r.rating is null then 0 else r.rating end) total_rate,
+						sum(case when r.rating is null then 0 else 1 end) rate_count,
+						case when sum(case when r.rating is null then 0 else 1 end) <> 0
+							then sum(case when r.rating is null then 0 else r.rating end) / sum(case when r.rating is null then 0 else 1 end)
+							else 0 end average_rate
+					from reader r
+					group by r.ref_know_id) as r on r.ref_know_id = k.id
+			where k.is_public = true #{set} order by k.last_update desc
+			#{offset}")
+		content = []
+		items.each {|item|
+			content.push({
+				uqid: item.uqid,
+				name: item.name,
+				last_update: item.last_update,
+				is_public: item.is_public,
+				total_time: item.total_time.to_i,
+				units: item.units.size,
+				readers: item.reader_size || 0,
+				rate_count: item.rate_count || 0,
+				total_rate: item.total_rate || 0,
+				average_rate: item.average_rate || 0,
+				logo: get_image('knowledge', { uqid: item.uqid }),
+				page: "#{request.protocol}#{request.host_with_port}/knowledge/#{item.uqid}",
+				editor: {
+					first_name: item.first_name,
+					last_name: item.last_name,
+					full_name: parse_full_name(item.first_name, item.last_name, item.userid, item.nouser),
+					page: "#{request.protocol}#{request.host_with_port}/user/#{item.u_uqid}",
+				}
+			})
+		}
+		render :json => content
+	end
 end

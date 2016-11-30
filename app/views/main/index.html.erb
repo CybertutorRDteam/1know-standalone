@@ -78,10 +78,18 @@
 <body>
 	<script>
 		var web_name = "<%=@APP_CONFIG['web_name']%>";
-		var hide_account_type = "<%=@APP_CONFIG['hide_account_type']%>";
+		var hide_account_type = <%=@APP_CONFIG['hide_account_type']%>;
+		var hide_sys_introduce = <%=@APP_CONFIG['hide_sys_introduce']%>;
 		var logo = "<%=@APP_CONFIG['logo']%>";
 		var copyright = "<%=@APP_CONFIG['copyright']%>";
 		var service_email = "<%=@APP_CONFIG['service_email']%>";
+		var frontCfg = {
+			hideDefaultDiscovery: <%=@APP_CONFIG['front_hide_default_discovery']%>,
+			hideSearchBanner: <%=@APP_CONFIG['front_hide_search_banner']%>,
+			sliderActivate: <%=@APP_CONFIG['front_slider_activate']%>,
+			twobannerActivate: <%=@APP_CONFIG['front_twobanner_activate']%>,
+			tagfunctionActivate: <%=@APP_CONFIG['front_tagfunction_activate']%>
+		};
 	</script>
 	<% if @content[:role] == 'NotLogin' %>
 	<script>

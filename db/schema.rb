@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161118024801) do
+ActiveRecord::Schema.define(version: 20161125060933) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -280,6 +280,17 @@ ActiveRecord::Schema.define(version: 20161118024801) do
 
   add_index "friend", ["ref_from_user_id"], name: "friend_ref_user_id_idx1", using: :btree
   add_index "friend", ["ref_to_user_id"], name: "friend_ref_user_id_idx2", using: :btree
+
+  create_table "frontobject", force: true do |t|
+    t.string   "name",                        null: false
+    t.text     "description"
+    t.text     "knowledges"
+    t.string   "bImg"
+    t.string   "sImg"
+    t.boolean  "bTag",        default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "group", force: true do |t|
     t.text     "name"
