@@ -412,18 +412,26 @@ class Private::DiscoveryController < ApplicationController
 		cfg = Sysconfig.where( :target => 'frontpage' , :name => collector )
 		set = {}
 		cfg.each do |o|
-			id = o[:content].split(',')
+			id = JSON.parse(o[:content])
 			set["#{o[:name]}"] = []
 			id.each do |i|
 				set["#{o[:name]}"].push(FrontObject.where( :id => i ).first)
 			end
 		end
-		set[:front_tags] = FrontObject.order( "knowledges" ).where( :bTag => true ).all if APP_CONFIG['front_tagfunction_activate']
+		tags = FrontObject.order( "knowledges" ).where( :bTag => true ).all.to_a.map(&:serializable_hash) if APP_CONFIG['front_tagfunction_activate']
+		if !tags.nil?
+			storage = []
+			setting = JSON.parse(APP_CONFIG['front_tag_seq'])
+			tags.each_with_index do |t,i|
+				tags[i][:seq] = setting.index(t['id'])
+			end
+			set[:front_tags] = tags
+		end
 		render :json => set
 	end
 
 	def get_front_knowledgeset
-		set = "and k.uqid in (\'"+params[:set].join("\',\'")+"\')"
+		set = "and k.uqid in (\'"+params[:set].gsub(',',"\',\'")+"\')"
 		start_index = params['start-index'] != nil ? params['start-index'] : 0
 		max_results = params['max-results'] != nil ? params['max-results'] : 20
 		offset = "offset #{start_index} limit #{max_results}"

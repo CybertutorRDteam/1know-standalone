@@ -121,6 +121,8 @@ class Private::CreationController < ApplicationController
 		ke.role = 'owner'
 		ke.save()
 
+		update_frontobject_knowledges(params[:setInto].to_s,item.uqid)
+
 		content = {
 			uqid: item.uqid,
 			name: item.name,
@@ -2104,7 +2106,44 @@ class Private::CreationController < ApplicationController
 		end
 	end
 
+	#insert into frontObject's knowledge and return which not include
+	def frontobj_knowledge
+		uqid = params['itemUqid']
+		setInto = params['setInto']
+		output = update_frontobject_knowledges(setInto,uqid)
+		render :json => output
+	end
+
 	private
+
+	def update_frontobject_knowledges(setInto,uqid)
+		fo = FrontObject.where(:bTag => true).all
+		result = []
+		fo.each do |o|
+			if not uqid.nil?
+				if setInto.index(o.id.to_s).nil?
+					if not o.knowledges.index(uqid).nil?
+						a = o.knowledges.split(',')
+						a.delete(uqid)
+						o.knowledges = a.join(',')
+					end
+				else
+					if o.knowledges.index(uqid).nil?
+						a = o.knowledges.split(',')
+						a.push(uqid)
+						o.knowledges = a.join(',')
+					end
+				end
+				o.save! if o.valid?
+			end
+			result.push({
+				id: o.id,
+				name: o.name,
+				knowledges: o.knowledges
+			})
+		end
+		return result
+	end
 
 	def update_know(unit)
 		dk = unit.chapter.knowledge

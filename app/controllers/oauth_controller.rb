@@ -5,7 +5,7 @@ require "uuid"
 class OauthController < ApplicationController
 	def callback
 		@params = {
-			url: 'https://auth.ischoolcenter.com/oauth/authorize.php',
+			url: [APP_CONFIG['OAuth_server'], '/oauth/authorize.php'].join(''),
 			client_id: APP_CONFIG['client_id'],
 			redirect_uri: APP_CONFIG['redirect_uri'],
 			response_type: 'code',
@@ -15,7 +15,7 @@ class OauthController < ApplicationController
 	end
 
 	def ischool
-		uri = URI('https://auth.ischoolcenter.com/oauth/token.php')
+		uri = URI([APP_CONFIG['OAuth_server'], '/oauth/token.php'].join(''))
 		response = Net::HTTP.post_form(uri,
 			'grant_type' => 'authorization_code',
 			'code' => params[:code],
@@ -25,7 +25,7 @@ class OauthController < ApplicationController
 		)
 		token = JSON.parse(response.body)
 
-		uri = URI("https://auth.ischoolcenter.com/services/me.php?access_token=#{token['access_token']}&token_type=bearer")
+		uri = URI([APP_CONFIG['OAuth_server'], "/services/me.php?access_token=#{token['access_token']}&token_type=bearer"].join(''))
 		result = Net::HTTP.get_response(uri)
 		target = JSON.parse(result.body)
 		

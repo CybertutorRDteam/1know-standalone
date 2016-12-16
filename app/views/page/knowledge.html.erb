@@ -589,7 +589,7 @@
                 var top = (screen.height/2)-(height/2);
                 var left = (screen.width/2)-(width/2);
                 var state = encodeURIComponent(['subscribe_knowledge:', self.knowledge.uqid].join(''));
-                var target = ['https://auth.ischool.com.tw/oauth/authorize.php?client_id=a266592ce660b43f980d49b4079d53ed&response_type=code&state=', state, '&redirect_uri=', window.location.origin, '/oauth/ischool&lang=', self.lang, '&scope=User.Mail,User.BasicInfo'].join('');
+                var target = [APP_CONFIG['OAuth_server'], '/oauth/authorize.php?client_id=a266592ce660b43f980d49b4079d53ed&response_type=code&state=', state, '&redirect_uri=', window.location.origin, '/oauth/ischool&lang=', self.lang, '&scope=User.Mail,User.BasicInfo'].join('');
 
                 window.open(target, '1409620722041', ['width=',width,',height=',height,',menubar=0,titlebar=0,status=0,top=',top,',left=',left].join(''));
             }

@@ -23,6 +23,7 @@ var _1know = angular.module('1know', ['ngRoute', 'ngAnimate', 'pascalprecht.tran
 	$scope.logo = $window.logo;
 	$scope.copyright = $window.copyright;
 	$scope.service_email = $window.service_email;
+	var oauth_server = $window.oauth_server;
 
 	$scope.sendACode = function() {
 		$scope.isActivateSuccess = false;
@@ -50,7 +51,7 @@ var _1know = angular.module('1know', ['ngRoute', 'ngAnimate', 'pascalprecht.tran
 
 	$scope.signout = function() {
 		$(document.body).append('<iframe id="logout" style="display:none;"></iframe>');
-		$('iframe#logout').attr('src', 'https://auth.ischoolcenter.com/logout.php');
+		$('iframe#logout').attr('src', oauth_server + '/logout.php');
 		$('iframe#logout').load(function() {
 			$('iframe#logout').remove();
 			$http.post( '/account/logout')

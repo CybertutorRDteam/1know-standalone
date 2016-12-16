@@ -274,6 +274,9 @@ Oneknow::Application.routes.draw do
     get    'creation/knowledges/:knowUqid/chapters' => 'creation#list_chapter'
     get    'creation/knowledges/:knowUqid/units' => 'creation#list_unit'
 
+    get    'creation/knowledges/get/tag' => 'creation#frontobj_knowledge'
+    post   'creation/knowledges/set/tag/:itemUqid' => 'creation#frontobj_knowledge'
+
     # 知識 - 編輯者
     post   'creation/knowledges/:knowUqid/editors' => 'creation#add_knowledge_editor'
     get    'creation/knowledges/:knowUqid/editors/:itemUqid' => 'creation#list_knowledge_editor'
@@ -361,7 +364,7 @@ Oneknow::Application.routes.draw do
     #首頁配置
     get    'sys/frontpage' => 'sysadmin#get_frontpage_config'
     post   'sys/frontpage' => 'sysadmin#set_frontpage_config'
-    get    'sys/frontpage/getKnowledage/:uqid' => 'sysadmin#get_frontpage_knowledge'
+    post   'sys/frontpage/getKnowledage' => 'sysadmin#get_frontpage_knowledge'
     get    'sys/frontpage/objects' => 'sysadmin#get_frontpage_objects'
     post   'sys/frontpage/objects' => 'sysadmin#set_frontpage_objects'
 

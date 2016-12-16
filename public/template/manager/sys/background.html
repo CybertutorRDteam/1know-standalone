@@ -1,0 +1,200 @@
+<div style="margin:20px auto">
+	<!--ng-if="mainCtrl.account.domain=='xxx.com.tw'"-->
+	<div class="btn-group">
+		<a class="btn btn-default" ng-class="{'btn-primary': backgroundCtrl.target == 'user', active: backgroundCtrl.target == 'user'}" ng-click="backgroundCtrl.changeTarget('user')">
+			<span translate="系統狀態_M001" remark="使用者"></span>
+		</a>
+		<a class="btn btn-default" ng-class="{'btn-primary': backgroundCtrl.target == 'knowledge', active: backgroundCtrl.target == 'knowledge'}" ng-click="backgroundCtrl.changeTarget('knowledge')">
+			<span translate="系統狀態_M002" remark="知識"></span>
+		</a>
+		<a class="btn btn-default" ng-class="{'btn-primary': backgroundCtrl.target == 'group', active: backgroundCtrl.target == 'group'}" ng-click="backgroundCtrl.changeTarget('group')">
+			<span translate="系統狀態_M003" remark="群組"></span>
+		</a>
+		<a class="btn btn-default" ng-class="{'btn-primary': backgroundCtrl.target == 'channel', active: backgroundCtrl.target == 'channel'}" ng-click="backgroundCtrl.changeTarget('channel')">
+			<span translate="系統狀態_M004" remark="頻道"></span>
+		</a>
+	</div>
+
+	<div style="margin-top:20px">
+		<div ng-if="backgroundCtrl.target=='user'" class="side-animate">
+			<div class="row">
+				<div class="col-xs-9">
+					<span style="font-size:20px">
+						<span class="text-danger">{{backgroundCtrl.userParams.size.nouser_total}} ({{backgroundCtrl.userParams.size.nouser_today}})</span> /
+						<span class="text-info">{{backgroundCtrl.userParams.size.user_total}} ({{backgroundCtrl.userParams.size.user_today}})</span> /
+						<span class="text-success">{{backgroundCtrl.userParams.size.user_total+backgroundCtrl.userParams.size.nouser_total}} ({{backgroundCtrl.userParams.size.user_today+backgroundCtrl.userParams.size.nouser_today}})</span>
+					</span>
+				</div>
+				<div class="col-xs-3">
+					<div class="input-group">
+						<input type="text" class="form-control" style="height:30px;padding:5px" ng-model="backgroundCtrl.userParams.keyword" ng-keyup="backgroundCtrl.queryUserByKeyword($event)"/>
+						<span class="input-group-btn">
+							<a class="btn btn-primary btn-sm" ng-click="backgroundCtrl.queryUserByIndex(0)"><i class="fa fa-fw fa-refresh"></i></a>
+						</span>
+					</div>
+				</div>
+			</div>
+
+			<div style="background:#fff;margin-top:20px">
+				<table class="table table-striped table-bordered table-condensed">
+					<tbody>
+						<tr ng-repeat="user in backgroundCtrl.users">
+							<td>
+								<a href="/private/utility/cacheImage?type=user&uqid={{user.uqid}}" target="_blank">
+									<img ng-src="{{user.photo}}" style="width:24px;height:24px" ng-if="!user.nouser"/>
+									<i class="fa fa-fw fa-user text-danger" style="font-size:1.3em" ng-if="user.nouser"></i>
+								</a>
+								<a href="{{user.page}}" target="_blank" style="margin-left:4px">{{user.full_name}}</a>
+							</td>
+							<td><div style="word-break:break-word">{{user.email}}</div></td>
+							<td><div style="word-break:break-word">{{user.last_login_ip}}</div></td>
+							<td><span>{{user.last_login_time | date:'yyyy/MM/dd @HH:mm'}}</span></td>
+							<td>
+								<span class="label label-danger" ng-if="user.account_type=='free'">FREE</span>
+								<span class="label label-success" ng-if="user.account_type=='plus'">PLUS</span>
+								<span class="label label-primary" ng-if="user.account_type=='pro'">PRO</span>
+								<span class="label label-warning" ng-if="user.account_type=='vip'">VIP</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div style="margin-top:20px;text-align:right">
+				<a class="btn btn-primary" ng-click="backgroundCtrl.queryUserByIndex(backgroundCtrl.userParams.start_index + 1)" ng-if="backgroundCtrl.userParams.more"><span translate="系統狀態_M006" remark="顯示更多"></span>...</a>
+			</div>
+		</div>
+
+		<div ng-if="backgroundCtrl.target=='knowledge'" class="side-animate">
+			<div class="row">
+				<div class="col-xs-9">
+					<span style="font-size:20px">
+						<span class="text-danger">{{backgroundCtrl.knowParams.size.private}}</span> /
+						<span class="text-info">{{backgroundCtrl.knowParams.size.public}}</span> /
+						<span class="text-success">{{backgroundCtrl.knowParams.size.private+backgroundCtrl.knowParams.size.public}}</span>
+					</span>
+				</div>
+				<div class="col-xs-3">
+					<div class="input-group">
+						<input type="text" class="form-control" style="height:30px;padding:5px" ng-model="backgroundCtrl.knowParams.keyword" ng-keyup="backgroundCtrl.queryKnowByKeyword($event)"/>
+						<span class="input-group-btn">
+							<a class="btn btn-primary btn-sm" ng-click="backgroundCtrl.queryKnowByIndex(0)"><i class="fa fa-fw fa-refresh"></i></a>
+						</span>
+					</div>
+				</div>
+			</div>
+
+			<div style="background:#fff;margin-top:20px">
+				<table class="table table-striped table-bordered table-condensed">
+					<tbody>
+						<tr ng-repeat="know in backgroundCtrl.knowledges">
+							<td>
+								<a href="{{know.page}}" target="_blank">
+									<img ng-src="{{know.logo}}" style="width:24px;height:24px"/>
+									<span style="margin-left:4px">{{know.name}}</span>
+								</a>
+							</td>
+							<td><a href="{{know.owner.page}}" target="_blank">{{know.owner.full_name}}</a></td>
+							<td>
+								<span><i class="fa fa-fw fa-user"></i> {{know.archived}}/{{know.reader}}</span>
+							</td>
+							<td>
+								<span style="margin-right:4px" class="text-primary" ng-if="know.privacy"><i class="fa fa-fw fa-unlock"></i></span>
+								<span style="margin-right:4px" class="text-danger" ng-if="!know.privacy"><i class="fa fa-fw fa-lock"></i></span>
+								<span class="text-danger" ng-if="know.destroyed"><i class="fa fa-fw fa-trash-o"></i></span>
+							</td>
+							<td><span>{{know.last_update | date:'yyyy/MM/dd @ HH:mm'}}</span></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div style="margin-top:20px;text-align:right">
+				<a class="btn btn-primary" ng-click="backgroundCtrl.queryKnowByIndex(backgroundCtrl.knowParams.start_index + 1)" ng-if="backgroundCtrl.knowParams.more"><span translate="系統狀態_M006" remark="顯示更多"></span>...</a>
+			</div>
+		</div>
+
+		<div ng-if="backgroundCtrl.target=='group'" class="side-animate">
+			<div class="row">
+				<div class="col-xs-9">
+					<span class="text-danger" style="font-size:20px">{{backgroundCtrl.groupParams.size}}</span>
+				</div>
+				<div class="col-xs-3">
+					<div class="input-group">
+						<input type="text" class="form-control" style="height:30px;padding:5px" ng-model="backgroundCtrl.groupParams.keyword" ng-keyup="backgroundCtrl.queryGroupByKeyword($event)"/>
+						<span class="input-group-btn">
+							<a class="btn btn-primary btn-sm" ng-click="backgroundCtrl.queryGroupByIndex(0)"><i class="fa fa-fw fa-refresh"></i></a>
+						</span>
+					</div>
+				</div>
+			</div>
+
+			<div style="background:#fff;margin-top:20px">
+				<table class="table table-striped table-bordered table-condensed">
+					<tbody>
+						<tr ng-repeat="group in backgroundCtrl.groups">
+							<td>
+								<a href="{{group.page}}" target="_blank">
+									<img ng-src="{{group.logo}}" style="width:24px;height:24px"/>
+									<span style="margin-left:4px">{{group.name}}</span>
+								</a>
+							</td>
+							<td><a href="{{know.user.page}}" target="_blank">{{group.user.full_name}}</a></td>
+							<td>
+								<span><i class="fa fa-fw fa-user"></i> {{group.member}}</span>
+							</td>
+							<td>
+								<span style="margin-right:4px" class="text-primary" ng-if="group.public"><i class="fa fa-fw fa-unlock"></i></span>
+								<span style="margin-right:4px" class="text-danger" ng-if="!group.public"><i class="fa fa-fw fa-lock"></i></span>
+								<span class="text-danger" ng-if="group.destroyed"><i class="fa fa-fw fa-trash-o"></i></span>
+							</td>
+							<td><span>{{group.last_update | date:'yyyy/MM/dd @ HH:mm'}}</span></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div style="margin-top:20px;text-align:right">
+				<a class="btn btn-primary" ng-click="backgroundCtrl.queryGroupByIndex(backgroundCtrl.groupParams.start_index + 1)" ng-if="backgroundCtrl.groupParams.more"><span translate="系統狀態_M006" remark="顯示更多"></span>...</a>
+			</div>
+		</div>
+
+		<div ng-if="backgroundCtrl.target=='channel'" class="side-animate">
+			<div class="row">
+				<div class="col-xs-9">
+					<span class="text-info" style="font-size:20px">{{backgroundCtrl.channelParams.size}}</span>
+				</div>
+				<div class="col-xs-3">
+					<div class="input-group">
+						<input type="text" class="form-control" style="height:30px;padding:5px" ng-model="backgroundCtrl.channelParams.keyword" ng-keyup="backgroundCtrl.queryChannelByKeyword($event)"/>
+						<span class="input-group-btn">
+							<a class="btn btn-primary btn-sm" ng-click="backgroundCtrl.queryChannelByIndex(0)"><i class="fa fa-fw fa-refresh"></i></a>
+						</span>
+					</div>
+				</div>
+			</div>
+
+			<div style="background:#fff;margin-top:20px">
+				<table class="table table-striped table-bordered table-condensed">
+					<tbody>
+						<tr ng-repeat="channel in backgroundCtrl.channels">
+							<td>
+								<a href="{{channel.page}}" target="_blank">
+									<img ng-src="{{channel.logo}}" style="width:24px;height:24px"/>
+									<span style="margin-left:4px">{{channel.name}}</span>
+								</a>
+							</td>
+							<td><a href="{{channel.owner.page}}" target="_blank">{{channel.owner.full_name}}</a></td>
+							<td><span><i class="fa fa-fw fa-user"></i> {{channel.subscriber}}</span></td>
+							<td><span>{{channel.last_update | date:'yyyy/MM/dd @ HH:mm'}}</span></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div style="margin-top:20px;text-align:right">
+				<a class="btn btn-primary" ng-click="backgroundCtrl.queryChannelByIndex(backgroundCtrl.channelParams.start_index + 1)" ng-if="backgroundCtrl.channelParams.more"><span translate="系統狀態_M006" remark="顯示更多"></span>...</a>
+			</div>
+		</div>
+	</div>
+</div>

@@ -72,7 +72,7 @@ class AccountController < ApplicationController
 	def login
 		reset_session
 		
-		uri = URI("https://auth.ischoolcenter.com/oauth/token.php")
+		uri = URI([APP_CONFIG['OAuth_server'], "/oauth/token.php"].join(''))
 		response = Net::HTTP.post_form(uri,
 			'grant_type' => 'password',
 			'scope' => 'User.Mail,User.BasicInfo',
@@ -84,7 +84,7 @@ class AccountController < ApplicationController
 		token = JSON.parse(response.body)
 		
 		if !token['error']
-			uri = URI("https://auth.ischool.com.tw/services/me.php?access_token=#{token['access_token']}&token_type=bearer")
+			uri = URI([APP_CONFIG['OAuth_server'], "/services/me.php?access_token=#{token['access_token']}&token_type=bearer"].join(''))
 			result = Net::HTTP.get_response(uri)
 			account = JSON.parse(result.body)
 

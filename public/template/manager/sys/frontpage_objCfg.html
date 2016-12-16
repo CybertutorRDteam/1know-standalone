@@ -1,92 +1,138 @@
 <div>
-	<h4><span translate="物件設置_集合設置">集合設置</span></h4>
-	<button class="pull-right btn btn-warning" ng-show="frontpageCtrl.currentConfig.id" ng-click="frontpageCtrl.reNew()" translate="物件設置_新增集合"></button>
-	<form class="form-horizontal" id="objectUploadForm" ng-submit="frontpageCtrl.saveObject()">
-		<div class="my-config-container">
-			<h5><span translate="物件設置_集合基本設置">集合基本設置</span></h5>
-			<div class="form-group">
-				<label for="front_object_name" class="col-sm-3 control-label" translate="物件設置_集合名稱">集合名稱</label>
-				<div class="col-sm-9">
-					<input id="front_object_name" name="front_object_name" type="text" class="form-control" ng-model="frontpageCtrl.currentConfig.name">
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="front_object_description" class="col-sm-3 control-label" translate="物件設置_集合描述">集合描述</label>
-				<div class="col-sm-9">
-					<input id="front_object_description" name="front_object_description" type="text" class="form-control" ng-model="frontpageCtrl.currentConfig.description">
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="front_object_description" class="col-sm-3 control-label" translate="物件設置_做為標籤">做為標籤</label>
-				<div class="checkbox col-sm-8">
-					<label><input type="checkbox" ng-model="frontpageCtrl.currentConfig.useForTag"></label>
-				</div>
-			</div>
-			
-			<div class="row">
-				<div class="col-sm-6 text-center">
-					<h4 for="front_object_bigImg"><span translate="物件設置_大圖示">大圖示</span></h4>
-					<img ng-src="{{frontpageCtrl.currentConfig.bigImg}}" id="bImg" onclick="$('#tramsformer1').click();return false;">
-				</div>
-				<div class="col-sm-6 text-center">
-					<h4 for="front_object_smallImg"><span translate="物件設置_小圖示">小圖示</span></h4>
-					<img ng-src="{{frontpageCtrl.currentConfig.smallImg}}" id="sImg" onclick="$('#tramsformer2').click();return false;">
-				</div>
-			</div>
-			<style type="text/css">
-				img#bImg,
-				img#sImg{width: 60%;border-radius: 3px;transition: all 200ms ease-out;cursor: pointer;}
-				img#bImg:hover,
-				img#sImg:hover{box-shadow: 0 0 6px rgba(35, 173, 278, 1)}
-			</style>
-			<input type="hidden" name="front_object_id" ng-value="frontpageCtrl.currentConfig.id">
-			<input type="file" id="tramsformer1" style="display: none;" accept="image/*" data-for="#bImg_storage" onchange="cvImg(this)">
-			<input type="file" id="tramsformer2" style="display: none;" accept="image/*" data-for="#sImg_storage" onchange="cvImg(this)">
-			<input type="text" id="bImg_storage" style="display: none;" accept="image/*" ng-model="frontpageCtrl.currentConfig.bigImg">
-			<input type="text" id="sImg_storage" style="display: none;" accept="image/*" ng-model="frontpageCtrl.currentConfig.smallImg">
-			<hr>
-			<h5><span translate="物件設置_集合課程設置">集合課程設置</span></h5>
-			<div class="row">
-				<div class="input-group col-sm-4" style="float: left;padding: 5px;" ng-repeat="item in frontpageCtrl.currentConfig.knowledges">
-					<input value="{{item.name}}" type="text" class="form-control" disabled>
-					<span class="input-group-btn">
-						<button class="btn btn-danger" ng-click="frontpageCtrl.removeKnoeledage(item.id)">-</button>
-					</span>
-				</div>
-			</div>
-			<div class="form-group row" style="margin-top: 10px;">
-				<label for="front_add_knowledage" class="col-sm-3 control-label" translate="物件設置_課程新增">課程新增</label>
-				<div class="input-group col-sm-8">
-					<input id="front_add_knowledage" name="front_add_knowledage" type="text" class="form-control" ng-model="frontpageCtrl.insert">
-					<span class="input-group-btn">
-						<button class="btn btn-success" type="button" ng-click="frontpageCtrl.addKnowledage()">+</button>
-					</span>
-				</div>
-				<p class="col-sm-offset-3 col-sm-8 help-block">{{'物件設置_課程新增提示'|translate}}</p>
-			</div>
-		</div>
-		<div class="text-center" style="margin: 5px;">
-			<input class="btn btn-primary" name="commit" type="submit" value="{{'物件設置_儲存'|translate}}">
-		</div>
-	</form>
-	<hr>
 	<style type="text/css">
-		.objs {cursor: pointer;border: 1px solid #CCC;min-height: 125px;border-radius: 3px;transition: all 200ms ease-out;}
+		.objs {cursor: pointer;border: 1px solid #CCC;height: 125px;border-radius: 3px;transition: all 200ms ease-out;}
 		.objs:hover {box-shadow: 0 0 6px rgba(35, 173, 278, 1)}
-		.objs > *{margin-right: 10px;margin-left: 10px;word-wrap: break-word;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;}
-		.objs > h3{-webkit-line-clamp: 1;}
+		.objs .detailbox > *{margin-right: 10px;margin-left: 10px;word-wrap: break-word;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;}
+		.objs > img{height: 97%;width: 98%;float: left;margin-left: 1%;margin-top: 1%;}
 	</style>
-	<div ng-show="frontpageCtrl.objects.length > 0">
+	<div>
 		<h4><span translate="物件設置_集合列表">集合列表</span></h4>
+		<div class="clearfix" style="margin-top: -25px;">
+			<div class="pull-right">
+				<label for="searchObjKey"><i class="fa fa-search"></i></label>
+				<input type="text" id="searchObjKey" placeholder="搜寻" ng-model="searchObjKey">
+			</div>
+		</div>
 		<div class="row my-config-container" style="min-height: 300px; margin-bottom: 50px">
-			<div class="col-sm-4" ng-repeat="obj in frontpageCtrl.objects" style="padding: 5px;">
-				<div ng-click="frontpageCtrl.focusItem(obj)" class="objs">
-					<div class="pull-right" style="text-align: center;margin:0;width:25px;height:25px;background: rgb(249, 253, 3)">{{obj.id}}</div>
-					<h3>{{obj.name}}</h3>
-					<p>{{obj.description}}</p>
+			<div class="col-sm-4" ng-repeat="obj in frontpageCtrl.objects | filter: {name: searchObjKey}" style="padding: 5px;">
+				<div ng-click="frontpageCtrl.focusItem(obj)" class="objs" onmouseenter="$('img',$(this)).stop().fadeOut()" onmouseleave="$('img',$(this)).stop().fadeIn()">
+					<img ng-src="/images/frontobject/{{obj.sImg}}">
+					<div class="detailbox" >
+						<h3>{{obj.name}}</h3>
+					</div>
+				</div>
+			</div>
+			<div ng-show="!searchObjKey" class="col-sm-4" style="padding: 5px;">
+				<div href='#' ng-click="frontpageCtrl.reNew()" class="objs" style="border: 0;height: auto;">
+					<div><img src="/img/addIcon.png" width="60%" height="60%" style="height: 120px;margin-left: 20%"></div>
 				</div>
 			</div>
 		</div>
+	</div>
+	<div id="editBlock" ng-show="editCtrl">
+		<hr id="editAnchor">
+		<h4><span translate="物件設置_集合設置">集合設置</span></h4>
+		<button class="pull-right btn btn-warning" ng-show="frontpageCtrl.currentConfig.id" ng-click="frontpageCtrl.reNew()" translate="物件設置_新增集合"></button>
+		<form class="form-horizontal" id="objectUploadForm" ng-submit="frontpageCtrl.saveObject()">
+			<div class="my-config-container">
+				<h5><span translate="物件設置_集合基本設置">集合基本設置</span></h5>
+				<div class="form-group">
+					<label for="front_object_name" class="col-sm-2 control-label" translate="物件設置_集合名稱">集合名稱</label>
+					<div class="col-sm-10">
+						<input id="front_object_name" name="front_object_name" type="text" class="form-control" ng-model="frontpageCtrl.currentConfig.name">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="front_object_description" class="col-sm-2 control-label" translate="物件設置_集合描述">集合描述</label>
+					<div class="col-sm-10">
+						<div id="front_object_description" style="height:140px"></div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="front_object_description" class="col-sm-2 control-label" translate="物件設置_做為標籤">做為標籤</label>
+					<div class="checkbox col-sm-10">
+						<label><input type="checkbox" ng-model="frontpageCtrl.currentConfig.useForTag"></label>
+					</div>
+				</div>
+				<style type="text/css">
+					#bigImg_container,#smallImg_container{margin:10px 20%;}
+				</style>
+				<div id="bigImg_container"></div>
+				<div class="form-group">
+					<label for="front_object_bigImg" class="col-sm-2 control-label" translate="物件設置_大圖示">大圖示</label>
+					<div class="col-sm-10">
+						<input id="front_object_bigImg" name="front_object_bigImg" type="file" class="form-control" data-for="#bigImg_container" data-edit="bImg">
+					</div>
+				</div>
+				<div id="smallImg_container"></div>
+				<div class="form-group">
+					<label for="front_object_smallImg" class="col-sm-2 control-label" translate="物件設置_小圖示">小圖示</label>
+					<div class="col-sm-10">
+						<input id="front_object_smallImg" name="front_object_smallImg" type="file" class="form-control" data-for="#smallImg_container" data-edit="sImg">
+					</div>
+				</div>
+				
+				<!--div class="row">
+					<div class="col-sm-6 text-center">
+						<h4 for="front_object_bigImg"><span translate="物件設置_大圖示">大圖示</span></h4>
+						<img ng-src="{{frontpageCtrl.currentConfig.bigImg}}" id="bImg" onclick="$('#tramsformer1').click();return false;">
+					</div>
+					<div class="col-sm-6 text-center">
+						<h4 for="front_object_smallImg"><span translate="物件設置_小圖示">小圖示</span></h4>
+						<img ng-src="{{frontpageCtrl.currentConfig.smallImg}}" id="sImg" onclick="$('#tramsformer2').click();return false;">
+					</div>
+				</div>
+				<style type="text/css">
+					img#bImg,
+					img#sImg{width: 60%;border-radius: 3px;transition: all 200ms ease-out;cursor: pointer;}
+					img#bImg:hover,
+					img#sImg:hover{box-shadow: 0 0 6px rgba(35, 173, 278, 1)}
+				</style>
+				<input type="hidden" name="front_object_id" ng-value="frontpageCtrl.currentConfig.id">
+				<input type="file" id="tramsformer1" style="display: none;" accept="image/*" data-for="#bImg_storage" onchange="cvImg(this)">
+				<input type="file" id="tramsformer2" style="display: none;" accept="image/*" data-for="#sImg_storage" onchange="cvImg(this)">
+				<input type="text" id="bImg_storage" style="display: none;" accept="image/*" ng-model="frontpageCtrl.currentConfig.bigImg">
+				<input type="text" id="sImg_storage" style="display: none;" accept="image/*" ng-model="frontpageCtrl.currentConfig.smallImg"-->
+				<hr>
+				<h5><span translate="物件設置_集合課程設置">集合課程設置</span></h5>
+				<div class="row">
+					<div class="input-group col-sm-4" style="float: left;padding: 5px;" ng-repeat="item in frontpageCtrl.currentConfig.knowledges">
+						<input value="{{item.name}}" type="text" class="form-control" disabled>
+						<span class="input-group-btn">
+							<button class="btn btn-danger" ng-click="frontpageCtrl.toggleKnowledage(item)">-</button>
+						</span>
+					</div>
+				</div>
+				<div class="form-group row" style="margin-top: 10px;">
+					<label for="front_add_knowledage" class="col-sm-3 control-label" translate="物件設置_課程新增">課程新增</label>
+					<div class="input-group col-sm-8">
+						<input id="front_add_knowledage" name="front_add_knowledage" type="text" class="form-control" ng-init="insertKey=''" ng-model="insertKey">
+					</div>
+					<p class="col-sm-offset-3 col-sm-8 help-block">{{'物件設置_課程新增提示'|translate}}</p>
+				</div>
+				<style type="text/css">
+					#searchPool{margin-top: 10px;margin-bottom: 10px;}
+					#searchPool .objBox{border: 1px solid #CCC;height: 98px;border-radius: 3px;transition: all 200ms ease-out;}
+					#searchPool .objBox:hover{box-shadow: 0 0 6px rgba(35, 173, 278, 1)}
+					#searchPool .objBox > img{float: left;width: 96px;height: 96px;}
+					#searchPool .objBox > div{text-align: center;margin:0;width:25px;height:25px;background: rgb(249, 253, 3)}
+					#searchPool .objBox > h3{margin-left: 35%;-webkit-line-clamp: 1;word-wrap: break-word;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;}
+				</style>
+				<div id="searchPool" class="row">
+					<div class="col-sm-6" ng-repeat="item in frontpageCtrl.searchPool">
+						<div class="objBox" ng-click="frontpageCtrl.toggleKnowledage(item)">
+							<img ng-src="{{item.logo}}">
+							<!--div class="pull-right">+</div-->
+							<h3>{{item.name}}</h3>
+						</div>
+					</div>
+				</div>
+				<p ng-show="frontpageCtrl.searchPool.length==0">{{'物件配置_查無結果'|translate}}</p>
+			</div>
+			<div class="text-center" style="margin: 5px;">
+				<input class="btn btn-primary" name="commit" type="submit" value="{{'物件設置_儲存'|translate}}">
+			</div>
+		</form>
 	</div>
 </div>
 <div id="errorMessageModal" class="modal fade" style="z-index:1480">

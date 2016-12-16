@@ -91,7 +91,7 @@ class Private::PersonalController  < ApplicationController
 	end
 
 	def set_password
-		uri = URI("https://auth.ischoolcenter.com/service/changepassword.php?account=#{session[:userinfo][:userid]}&password=#{params[:oldpassword]}&newpassword=#{params[:newpassword]}")
+		uri = URI([APP_CONFIG['OAuth_server'], "/service/changepassword.php?account=#{session[:userinfo][:userid]}&password=#{params[:oldpassword]}&newpassword=#{params[:newpassword]}"].join(''))
 		http = Net::HTTP.get_response(uri)
 		result = JSON.parse(http.body)
 

@@ -155,9 +155,8 @@ _1know.controller('DiscoveryCtrl', function($scope, $http, $location, $routePara
 
 	//frontpage
 	self.loadFrontObjects = function(){
-		var check = false;
-		$.each(frontCfg,function(i,o){ check = check || o; });
-		if(!check) return;
+		var cfg = self.frontCfg;
+		if(!(cfg.sliderActivate || cfg.twobannerActivate || cfg.tagfunctionActivate)) return;
 		$http.get([$utility.SERVICE_URL, '/discovery/frontobjects'].join(''))
 		.success(function(response, status){
 			if(!response.error){
@@ -182,11 +181,9 @@ _1know.controller('DiscoveryCtrl', function($scope, $http, $location, $routePara
 		return {'background': "url('/images/frontobject/"+o.sImg+"')", 'background-size': '100% 100%', 'background-repeat': 'no-repeat'};
 	}
 	self.get_frontObject_knowledges = function(tid, o, offset){
-		var tmp = JSON.parse(o), payload = {};
-		if (tmp == null) return;
-		payload.set = $.map(tmp,function(obj,idx){
-			return obj.uqid;
-		});
+		var payload = {};
+		if (o == null) return;
+		payload.set = o;
 		payload.start_index = offset? offset:0;
 		$http.post([$utility.SERVICE_URL, '/discovery/frontknowledges'].join(''), payload)
 		.success(function(response, status){

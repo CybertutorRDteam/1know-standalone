@@ -6,6 +6,8 @@
 					<h4 ng-if="creationCtrl.target=='knowledge'" translate="F001" remark="知識名稱"></h4>
 					<h4 ng-if="creationCtrl.target=='channel'" translate="F002" remark="頻道名稱"></h4>
 					<input type='text' class="form-control" ng-model='creationCtrl.targetName' placeholder="{{(creationCtrl.target=='knowledge'?'F001':'F002')|translate}}" remark="知識名稱|頻道名稱"/>
+					<h4 ng-if="creationCtrl.target=='knowledge'" translate="F010" remark="加入標籤"></h4>
+					<angucomplete-alt ng-if="creationCtrl.target=='knowledge'" id="searchObj" placeholder="{{'F011' | translate}}" pause="100" local-data="creationCtrl.frontObjects" search-fields="name" title-field="name" selected-object="creationCtrl.setIntoObj" minlength="1" input-class="form-control form-control-small" field-required="true" />
 					<h4 class="text-danger" ng-show="creationCtrl.errMsg!=undefined">{{creationCtrl.errMsg}}</h4>
 				</div>
 				<div class="modal-footer">

@@ -26,6 +26,11 @@ var _1know = angular.module('1know', ['ngRoute', 'ngAnimate', 'pascalprecht.tran
 		controller: 'FrontpageCtrl_mainCfg',
 		controllerAs: 'frontpageCtrl'
 	})
+	.when('/background', {
+		templateUrl: ['/template/manager/sys/background.html?', Date.now()].join(''),
+		controller: 'BackgroundCtrl',
+		controllerAs: 'backgroundCtrl'
+	})
 	.otherwise({
 		redirectTo: '/permission'
 	});
@@ -97,7 +102,7 @@ var _1know = angular.module('1know', ['ngRoute', 'ngAnimate', 'pascalprecht.tran
 		restrict: 'E'
 	}
 })
-.controller('MainCtrl', function($scope, $http, $location, $timeout, $translate, $utility) {
+.controller('MainCtrl', function($scope, $http, $location, $timeout, $translate, $window, $utility) {
 	var self = this;
 	self.visible = true;
 
@@ -105,7 +110,7 @@ var _1know = angular.module('1know', ['ngRoute', 'ngAnimate', 'pascalprecht.tran
 		self.visible = visible;
 	}
 
-	var lang = 'zh-cn';
+	var lang = $window.default_language;
 	// if (window.navigator.language !== undefined)
 	//	 lang = window.navigator.language.toLowerCase();
 	// else if (window.navigator.systemLanguage !== undefined)

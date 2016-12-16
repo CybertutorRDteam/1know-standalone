@@ -330,9 +330,9 @@
 			self.copyright = $window.copyright;
 			self.service_email = $window.service_email;
 
-			$translate.uses('zh-cn');
-			self.language = {title: '简体中文',type: 'zh-cn'};
-
+			//$translate.uses('zh-cn');
+			//self.language = {title: '简体中文',type: 'zh-cn'};
+			self.changeLanguage("<%=@APP_CONFIG['default_language']%>");
 			self.changeLanguage = function(lang) {
 				lang = lang.toLowerCase();
 

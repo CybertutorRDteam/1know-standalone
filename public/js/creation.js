@@ -46,7 +46,7 @@ _1know.controller('CreationCtrl', function($scope, $http, $location, $timeout, $
 			self.onCreate = true;
 
 			if (type === 'knowledge') {
-				$http.post([$utility.SERVICE_URL, '/creation/knowledges'].join(''), { name: self.targetName })
+				$http.post([$utility.SERVICE_URL, '/creation/knowledges'].join(''), { name: self.targetName, setInto: self.setIntoObj })
 				.success(function(response, status) {
 					if (!response.error) {
 						self.targetName = response;
@@ -76,6 +76,10 @@ _1know.controller('CreationCtrl', function($scope, $http, $location, $timeout, $
 		}
 	}
 
+	self.setIntoObj = function(e){
+		self.setIntoObj = e.originalObject.id;
+	}
+
 	self.init = function() {
 		if ($routeParams.t !== undefined) {
 			self.target = $routeParams.t;
@@ -87,6 +91,12 @@ _1know.controller('CreationCtrl', function($scope, $http, $location, $timeout, $
 		}
 		else
 			$location.path('/create/knowledge');
+		$http.get([$utility.SERVICE_URL, '/creation/knowledges/get/tag'].join(''))
+		.success(function(response, status){
+			if(!response.error){
+				self.frontObjects = response;
+			}
+		});
 	}
 
 	$scope.$watch('mainCtrl.account', function(newVal, oldVal) {

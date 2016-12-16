@@ -13,17 +13,22 @@
 				</div>
 				<div style="height:220px;background:url(/img/index_banner.png) no-repeat"></div>
 			</div>
+			<style type="text/css">
+				.pgwSlider .ps-current img{opacity: 0;}
+				.pgwSlider .ps-caption b{font-size: 28px;}
+				.pgwSlider .ps-caption{font-size: 18px;}
+			</style>
 			<div ng-show="discoveryCtrl.frontCfg.sliderActivate" style="margin-top: 20px;height: 300px">
 				<ul class="pgwSlider">
-					<li ng-repeat="obj in discoveryCtrl.frontdata.front_slider_obj" on-finish-render="ngSliderRepeatFinished">
-						<a href="javascript:;" target="_blank">
+					<li ng-repeat="obj in discoveryCtrl.frontdata.front_slider_obj track by $index" on-finish-render="ngSliderRepeatFinished">
+						<a href="javascript:void(0);" target="_blank" ng-click="discoveryCtrl.getObjDetail(obj)" data-index="{{$index}}">
 							<img ng-src="/images/frontobject/{{obj.bImg}}" alt="{{obj.name}}" data-description="{{obj.description}}">
 						</a>
 					</li>
 				</ul>
 			</div>
 			<div ng-show="discoveryCtrl.frontCfg.tagfunctionActivate && discoveryCtrl.frontdata.front_tags.length > 0">
-				<div ng-repeat="tag in discoveryCtrl.frontdata.front_tags">
+				<div ng-repeat="tag in discoveryCtrl.frontdata.front_tags | orderBy:'-seq':true">
 					<div ng-show="tag.knowledges != 'null'">
 						<h3>{{tag.name}}</h3>
 						<div class="row" ng-init="discoveryCtrl.get_frontObject_knowledges(tag.id, tag.knowledges); tag.limit = 6">
@@ -125,8 +130,9 @@
 			</div>
 		</div>
 		<div ng-if="discoveryCtrl.frontCfg.target=='objDetail'">
-			<div>
-				<img ng-src="/images/frontobject/{{select_obj.bImg}}" style="width:100%;height:220px;background-repeat:no-repeat">
+			<div class="row">
+				<img ng-src="/images/frontobject/{{select_obj.bImg}}" class="col-xs-6" style="height:220px;background-repeat:no-repeat">
+				<div ng-bind-html="select_obj.description" class="col-xs-6"></div>
 			</div>
 			<h3>{{select_obj.name}}</h3>
 			<div class="row" style="margin-top: 20px;">

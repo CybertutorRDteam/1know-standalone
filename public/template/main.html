@@ -180,8 +180,8 @@
 				<span class="icon-bar"></span>
 			</button>
 			<span>
-				<a class="navbar-brand logo" style="padding:7px 15px" href="/">
-					<img ng-show="mainCtrl.logo" ng-src="{{ mainCtrl.logo }}">
+				<a class="navbar-brand logo" ng-style="{'padding': !mainCtrl.logo? '7px 15px' : '0px'}" href="/">
+					<img ng-show="mainCtrl.logo" style="height: 40px;" ng-src="{{ mainCtrl.logo }}">
 					<span ng-show="!mainCtrl.logo && mainCtrl.web_name" class="logo-header">{{ mainCtrl.web_name }}</span>
 					<span ng-show="!mainCtrl.logo && !mainCtrl.web_name" class="logo-header"><span style="color:#f00">1</span>Know</span>
 					<small style="margin-left:8px;display:inline-block;" ng-if="!mainCtrl.hide_account_type">
@@ -227,7 +227,7 @@
 						<span style="margin:0 4px">{{mainCtrl.account.full_name}}</span><span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu">
-						<li>
+						<li ng-if="!mainCtrl.disable_personal_page">
 							<a href="#!/personal"><i class="fa fa-fw fa-list"></i> <span translate="A024" remark="個人資訊"></span></a>
 						</li>
 						<li ng-if="(mainCtrl.account.role=='ischool'||mainCtrl.account.role=='1know')&&mainCtrl.account.domain!='1know.net'">

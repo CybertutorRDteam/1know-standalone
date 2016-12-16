@@ -34,6 +34,8 @@ if (!$.browser.msie && !$.browser.webkit && !$.browser.mozilla) {
 			$sceProvider.enabled(false);
 
 			$translateProvider.translations('zh-cn', translations['zh-cn']);
+			$translateProvider.translations('zh-tw', translations['zh-tw']);
+			$translateProvider.translations('en-us', translations['en-us']);
 		})
 		.controller('WelcomeCtrl', function($scope, $http, $location, $timeout, $translate, $window) {
 			var self = this;
@@ -45,7 +47,7 @@ if (!$.browser.msie && !$.browser.webkit && !$.browser.mozilla) {
 			self.logo = $window.logo;
 			self.copyright = $window.copyright;
 			self.service_email = $window.service_email;
-
+			var oauth_server = $window.oauth_server;
 			self.BASE_URL = [$location.protocol(), '://', $location.host(), ($location.port() == 80 ? '' : ':' + $location.port())].join('');
 			self.language = {
 				title: 'English',
@@ -58,14 +60,23 @@ if (!$.browser.msie && !$.browser.webkit && !$.browser.mozilla) {
 				}, 1000);
 			}
 
-			var lang = {
-				title: '简体中文',
-				type: 'zh-cn'
-			};
-			self.language.title = lang.title;
-			self.language.type = lang.type;
-
+			var lang = $window.default_language;
+			if (lang === 'code')
+				lang = {title: 'Language Code',type: 'code'};
+			else if (lang === 'zh-tw')
+				lang = {title: '繁體中文',type: 'zh-tw'};
+			else if (lang === 'zh-cn')
+				lang = {title: '简体中文',type: 'zh-cn'};
+			else if (lang === 'es-es')
+				lang = {title: 'Español (Perú)',type: 'es-es'};
+			else if (lang === 'de-de')
+				lang = {title: 'Deutsch',type: 'de-de'};
+			else
+				lang = {title: 'English',type: 'en-us'};
+			console.log(lang)
+			self.language = lang;
 			$translate.uses(lang.type);
+
 			self.account = 'NotLogin';
 
 			window.onresize = function() {
@@ -87,7 +98,7 @@ if (!$.browser.msie && !$.browser.webkit && !$.browser.mozilla) {
 				var height = 700;
 				var top = (screen.height / 2) - (height / 2);
 				var left = (screen.width / 2) - (width / 2);
-				var target = ['https://auth.ischoolcenter.com/oauth/authorize.php?client_id=', client_id, '&response_type=code&state=ischool_authbug_code&redirect_uri=', redirect_uri, '&scope=User.Mail,User.BasicInfo'].join('');
+				var target = [oauth_server, '/oauth/authorize.php?client_id=', client_id, '&response_type=code&state=ischool_authbug_code&redirect_uri=', redirect_uri, '&scope=User.Mail,User.BasicInfo'].join('');
 
 				window.open(target, '1409620722041', ['width=', width, ',height=', height, ',menubar=0,titlebar=0,status=0,top=', top, ',left=', left].join(''));
 			}

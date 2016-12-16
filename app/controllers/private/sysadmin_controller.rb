@@ -307,7 +307,7 @@ class Private::SysadminController  < ApplicationController
 
 	# 取得首頁設置值
 	def get_frontpage_config
-		item = Sysconfig.where({ target: ["frontpage"] }).select("name, content")
+		item = Sysconfig.where({ target: ["frontpage", "frontpageObj"] }).select("name, content")
 		render :json => item
 	end
 
@@ -330,6 +330,20 @@ class Private::SysadminController  < ApplicationController
 			case key
 			when 'front_slider_activate','front_twobanner_activate','front_tagfunction_activate'
 				APP_CONFIG[key] = (value.to_s == 'true')
+			when 'front_tag_seq'
+				FrontObject.update_all bTag: false
+				begin
+					obj = FrontObject.find(JSON.parse(value))
+				rescue ActiveRecord::RecordNotFound => e
+					obj = []
+				end
+				obj.each do |o|
+					o.bTag = 1
+					o.save
+				end
+				APP_CONFIG[key] = value
+			else
+				APP_CONFIG[key] = value
 			end
 		end
 		render :json => { success: "Well done!" }
@@ -337,17 +351,24 @@ class Private::SysadminController  < ApplicationController
 
 	# 取得課程簡易資料
 	def get_frontpage_knowledge
-		items = Knowledge.find_by_sql(
-			"select k.id, k.uqid, k.name 
+		echo = {}
+		if(!params[:key].blank?)
+			items = Knowledge.find_by_sql(
+			"select k.id, k.uqid, k.name, k.logo 
 			from knowledge k 
-			where k.is_public = true and k.uqid = '#{params[:uqid]}'").first
-		items = {:error => '物件配置_查無結果'} if items.nil?
-		render :json => items
+			where k.is_public = true and k.uqid = '#{params[:key]}' or k.name like '%#{params[:key]}%'")
+		end
+		echo[:data] = items.nil?? [] : items
+		render :json => echo
 	end
 
 	# 取得集合資料
 	def get_frontpage_objects
-		objects = FrontObject.all
+		objects = FrontObject.all.to_ary
+		objects.each do |o|
+			a = o.knowledges.split(',')
+			o.knowledges = Knowledge.select('id,uqid,name,logo').where(:uqid => a).all.to_ary
+		end
 		render :json => objects
 	end
 
@@ -361,14 +382,21 @@ class Private::SysadminController  < ApplicationController
 			item = FrontObject.where( :id => obj[:id] ).first
 		end
 		item.name = obj[:name]
-		item.description = obj[:description]
-		item.knowledges = obj[:knowledges].to_json
-		item.bImg = (obj[:bigImg].nil? or obj[:bigImg].include? "/images/frontobject/")?
-			obj[:bImg] : store_frontobject_pic(obj[:bigImg], "bImg_" + hex)
-		item.sImg = (obj[:smallImg].nil? or obj[:smallImg].include? "/images/frontobject/")?
-			obj[:sImg] : store_frontobject_pic(obj[:smallImg], "sImg_" + hex)
+		item.description = obj[:description].gsub('/<(.|script)*?>/', '') if not obj[:description].nil?
+		ks = obj[:knowledges]
+		item.knowledges = ks.nil?? [] : ks
+		if (not obj[:bImg].nil?) && obj[:bImg].at(0..9) == 'data:image'
+			path = File.join(APP_CONFIG['upload_icons_url'], "/frontobject/", item.bImg)
+			File.delete(path) if File.exist?(path) and not item.bImg.empty?
+			item.bImg = store_frontobject_pic(obj[:bImg], "bImg_" + hex)	
+		end
+		if (not obj[:sImg].nil?) && obj[:sImg].at(0..9) == 'data:image'
+			path = File.join(APP_CONFIG['upload_icons_url'], "/frontobject/", item.sImg)
+			File.delete(path) if File.exist?(path) and not item.sImg.empty?
+			item.sImg = store_frontobject_pic(obj[:sImg], "sImg_" + hex)
+		end
 		item.bTag = obj[:useForTag]? 1:0
-		item.save
+		item.save! if item.valid?
 		render :json => item
 	end
 

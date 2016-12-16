@@ -9,6 +9,12 @@
 				</div>
 			</div>
 			<div class="form-group">
+				<label for="languageSelect" class="col-sm-3 control-label" translate="系統配置_全局語系">全局語系</label>
+				<div class="col-sm-4">
+					<select class="form-control" id="languageSelect" ng-model="configCtrl.currentConfig.default_language" ng-options="lang.value as lang.label for lang in configCtrl.lang_group"></select>
+				</div>
+			</div>
+			<div class="form-group">
 				<span class="col-sm-3 control-label" translate="系統配置_開啟啟動碼驗證">開啟啟動碼驗證</span>
 				<div class="col-sm-9">
 					<label class="checkbox-inline">
@@ -18,44 +24,59 @@
 				</div>
 			</div>
 			<div class="form-group">
-                <span class="col-sm-3 control-label" translate="系統配置_隱藏帳號等級圖示">隱藏帳號等級圖示</span>
-                <div class="col-sm-9">
-                    <label class="checkbox-inline" for="hide_account_type">
-                        <input id="hide_account_type" name="hide_account_type" type="checkbox" ng-model="configCtrl.currentConfig.hide_account_type">
-                        <span class="help-block" translate="系統配置_隱藏帳號等級說明">隱藏帳號等級說明</span>
-                    </label>
-                </div>
-            </div>
-            <div class="form-group">
-                <span class="col-sm-3 control-label" translate="系統配置_隱藏首頁功能簡介">隱藏首頁功能簡介</span>
-                <div class="col-sm-9">
-                    <label class="checkbox-inline" for="hide_sys_introduce">
-                        <input id="hide_sys_introduce" name="hide_sys_introduce" type="checkbox" ng-model="configCtrl.currentConfig.hide_sys_introduce">
-                        <span class="help-block" translate="系統配置_隱藏首頁功能簡介說明">隱藏位於登入頁面下方的系統功能介紹</span>
-                    </label>
-                </div>
-            </div>
-            <div class="form-group">
-                <span class="col-sm-3 control-label" translate="系統配置_關閉測試功能">取消測試功能</span>
-                <div class="col-sm-9">
-                    <label class="checkbox-inline" for="disable_trial_account">
-                        <input id="disable_trial_account" name="disable_trial_account" type="checkbox" ng-model="configCtrl.currentConfig.disable_trial_account">
-                        <span class="help-block" translate="系統配置_關閉測試功能說明">取消首頁「試試看」功能</span>
-                    </label>
-                </div>
-            </div>
-            <div class="form-group">
-                <span class="col-sm-3 control-label" translate="系統配置_關閉試用代碼功能">取消試用代碼功能</span>
-                <div class="col-sm-9">
-                    <label class="checkbox-inline" for="disable_tempuse_code">
-                        <input id="disable_tempuse_code" name="disable_tempuse_code" type="checkbox" ng-model="configCtrl.currentConfig.disable_tempuse_code">
-                        <span class="help-block" translate="系統配置_關閉試用代碼功能說明">取消首頁「訪客代碼」功能</span>
-                    </label>
-                </div>
-            </div>
+				<span class="col-sm-3 control-label" translate="系統配置_隱藏帳號等級圖示">隱藏帳號等級圖示</span>
+				<div class="col-sm-9">
+					<label class="checkbox-inline" for="hide_account_type">
+						<input id="hide_account_type" name="hide_account_type" type="checkbox" ng-model="configCtrl.currentConfig.hide_account_type">
+						<span class="help-block" translate="系統配置_隱藏帳號等級說明">隱藏帳號等級說明</span>
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<span class="col-sm-3 control-label" translate="系統配置_隱藏首頁功能簡介">隱藏首頁功能簡介</span>
+				<div class="col-sm-9">
+					<label class="checkbox-inline" for="hide_sys_introduce">
+						<input id="hide_sys_introduce" name="hide_sys_introduce" type="checkbox" ng-model="configCtrl.currentConfig.hide_sys_introduce">
+						<span class="help-block" translate="系統配置_隱藏首頁功能簡介說明">隱藏位於登入頁面下方的系統功能介紹</span>
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<span class="col-sm-3 control-label" translate="系統配置_關閉測試功能">取消測試功能</span>
+				<div class="col-sm-9">
+					<label class="checkbox-inline" for="disable_trial_account">
+						<input id="disable_trial_account" name="disable_trial_account" type="checkbox" ng-model="configCtrl.currentConfig.disable_trial_account">
+						<span class="help-block" translate="系統配置_關閉測試功能說明">取消首頁「試試看」功能</span>
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<span class="col-sm-3 control-label" translate="系統配置_關閉試用代碼功能">取消試用代碼功能</span>
+				<div class="col-sm-9">
+					<label class="checkbox-inline" for="disable_tempuse_code">
+						<input id="disable_tempuse_code" name="disable_tempuse_code" type="checkbox" ng-model="configCtrl.currentConfig.disable_tempuse_code">
+						<span class="help-block" translate="系統配置_關閉試用代碼功能說明">取消首頁「訪客代碼」功能</span>
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<span class="col-sm-3 control-label" translate="系統配置_關閉個人資訊">關閉個人資訊</span>
+				<div class="col-sm-9">
+					<label class="checkbox-inline" for="disable_personal_page">
+						<input id="disable_personal_page" name="disable_personal_page" type="checkbox" ng-model="configCtrl.currentConfig.disable_personal_page">
+						<span class="help-block" translate="系統配置_關閉個人資訊說明">關閉個人資訊頁面</span>
+					</label>
+				</div>
+			</div>
 		</div>
 		<h4 translate="系統配置_OAuth">OAuth</h4>
 		<div class="my-config-container">
+			<div class="form-group">
+				<label for="oauth_server_url" class="col-sm-3 control-label" translate="系統配置_OAuth_server_url">OAuth Server Url</label>
+				<div class="col-sm-9">
+					<input id="oauth_server_url" name="oauth_server_url" type="text" class="form-control" ng-model="configCtrl.currentConfig.oauth_server_url" placeholder="https://auth.ischoocenter.com/">
+				</div>
+			</div>
 			<div class="form-group">
 				<label for="oauth_client_id" class="col-sm-3 control-label" translate="系統配置_OAuth_client_id">OAuth Client ID</label>
 				<div class="col-sm-9">

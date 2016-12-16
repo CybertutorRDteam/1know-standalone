@@ -32,10 +32,11 @@
 					</label>
 				</div>
 			</div>
-			<div class="form-group" ng-repeat="x in [0,1,2]">
-				<label for="front_slider_param{{x}}" class="col-sm-3 control-label" translate="首頁配置_param{{x}}">第一橫福</label>
+			<div class="form-group" ng-repeat="x in frontpageCtrl.slider track by $index">
+				<label for="front_slider_param{{$index}}" class="col-sm-3 control-label" translate="首頁配置_param{{$index}}">第一橫福</label>
 				<div class="col-sm-9">
-					<input id="front_slider_param{{x}}" name="front_slider_param{{x}}" type="text" class="form-control" ng-model="frontpageCtrl.slider[x]">
+					<!--input id="front_slider_param{{$index}}" name="front_slider_param{{$index}}" type="text" class="form-control"-->
+					<select class="form-control" ng-model="frontpageCtrl.slider[$index]" ng-options="item.name for item in frontpageCtrl.objectsStorage" ng-change="frontpageCtrl.checkValid('slider')"></select>
 				</div>
 			</div>
 		</div>
@@ -50,10 +51,11 @@
 					</label>
 				</div>
 			</div>
-			<div class="form-group" ng-repeat="x in [0,1]">
-				<label for="front_twobanner_param{{x}}" class="col-sm-3 control-label" translate="首頁配置_param{{x}}">第一橫福</label>
+			<div class="form-group" ng-repeat="x in frontpageCtrl.banner track by $index">
+				<label for="front_twobanner_param{{$index}}" class="col-sm-3 control-label" translate="首頁配置_param{{$index}}">第一橫福</label>
 				<div class="col-sm-9">
-					<input id="front_twobanner_param{{x}}" name="front_twobanner_param{{x}}" type="text" class="form-control" ng-model="frontpageCtrl.banner[x]">
+					<!--input id="front_twobanner_param{{x}}" name="front_twobanner_param{{x}}" type="text" class="form-control" ng-model="frontpageCtrl.banner[x]"-->
+					<select class="form-control" ng-model="frontpageCtrl.banner[$index]" ng-options="item.name for item in frontpageCtrl.objectsStorage" ng-change="frontpageCtrl.checkValid('banner')"></select>
 				</div>
 			</div>
 		</div>
@@ -67,6 +69,28 @@
 						<span class="help-block" translate="首頁配置_啟用標籤功能">啟用標籤分類功能</span>
 					</label>
 				</div>
+			</div>
+			<style type="text/css">
+				#tagControlTool { margin:5px; border: 1px solid #DDD;display: flex; }
+				#tagControlTool > div { padding: 0px;border: 1px solid #DDD;}
+				#tagControlTool li { padding: 0.4em; margin: 0.2em;list-style-type: none; border: 1px solid #AAA}
+				#tagControlTool a.list-group-item.disabled {color: #777; cursor: not-allowed; background-color:#EEE;}
+				#tagControlTool a.list-group-item {cursor: context-menu !important;}
+				#objBox_unActive,#objBox_active { width:50%; min-height: 18em; border: 1px solid #CCC; margin-bottom: 0px; }
+				#objBox_active{ float: right; }
+				#objBox_unActive li{background-color: #DDD}
+				#objBox_active li{background-color: #f5ee26}
+			</style>
+			<span class="help-block" style="margin-left: 10px;" translate="首頁配置_標籤設定說明">#將物件向右托拉放置來啟動標籤功能</span>
+			<div id="tagControlTool">
+				<ul id="objBox_unActive" class="list-group sortConnet1" ng-model="frontpageCtrl.objectsStorage" sortable connector=".sortConnet1">
+					<a href="javascript:;" class="list-group-item disabled" translate="首頁配置_未設定為標籤">首頁配置_未設定為標籤</a>
+					<li ng-repeat="item in frontpageCtrl.objectsStorage | orderBy: '-id' | filter: {useForTag: false}" id="{{item.id}}">{{item.name}}</li>
+				</ul>
+				<ul id="objBox_active" class="list-group sortConnet1" ng-model="frontpageCtrl.objectsStorage" sortable connector=".sortConnet1" need-record>
+					<a href="javascript:;" class="list-group-item active" translate="首頁配置_設定為標籤">首頁配置_設定為標籤</a>
+					<li ng-repeat="item in frontpageCtrl.objectsStorage | orderBy: '-seq' : true | filter: {useForTag: true}" id="{{item.id}}">{{item.name}}</li>
+				</ul>
 			</div>
 		</div>
 		<div class="text-center" style="margin: 5px;">

@@ -1,5 +1,5 @@
 class MainController < ApplicationController
-	after_filter :set_access_control_headers
+	#after_filter :set_access_control_headers
 
 	def set_access_control_headers
 		headers['Access-Control-Allow-Origin'] = '*'
@@ -10,7 +10,7 @@ class MainController < ApplicationController
 
 	def index
 		@APP_CONFIG = APP_CONFIG
-		if session[:userinfo] == nil
+		if session[:userinfo] == nil or session[:userinfo][:id] == nil
 			@content = { role: 'NotLogin', host: request.host }
 			return
 		end

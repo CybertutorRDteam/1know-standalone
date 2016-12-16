@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
 		'konzesys' => {},
 		'qiniu' => {}
 	}
-	content = Sysconfig.where( :target => ["system", "subsystem", "frontpage"] ).select("name, content").to_a
+	content = Sysconfig.where( :target => ["system", "subsystem", "frontpage", "frontpageObj"] ).select("name, content").to_a
 	if !content.nil?
 		content.each do |item|
 			# logger.debug "#{item.name} is #{item.content}"
@@ -43,6 +43,8 @@ class ApplicationController < ActionController::Base
 			when 'konzesys_url'
 				APP_CONFIG['konzesys']['url'] = item.content
 			
+			when 'oauth_server_url'
+				APP_CONFIG['OAuth_server'] = item.content
 			when 'oauth_client_id'
 				APP_CONFIG['client_id'] = item.content
 			when 'oauth_client_secret'
@@ -75,6 +77,8 @@ class ApplicationController < ActionController::Base
 				APP_CONFIG['disable_trial_account'] = (item.content == 'true')
 			when 'disable_tempuse_code'
 				APP_CONFIG['disable_tempuse_code'] = (item.content == 'true')
+			when 'disable_personal_page'
+				APP_CONFIG['disable_personal_page'] = (item.content == 'true')
 
 			when 'front_hide_default_discovery'
 				APP_CONFIG['front_hide_default_discovery'] = (item.content == 'true')

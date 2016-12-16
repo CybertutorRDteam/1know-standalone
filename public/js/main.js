@@ -1,4 +1,4 @@
-var _1know = angular.module('1know', ['ngRoute', 'ngAnimate', 'pascalprecht.translate', 'mgcrea.ngStrap'])
+var _1know = angular.module('1know', ['ngRoute', 'ngAnimate', 'pascalprecht.translate', 'mgcrea.ngStrap', 'angucomplete-alt'])
 .config(function($routeProvider, $locationProvider, $sceProvider, $translateProvider) {
 	$routeProvider
 		.when('/', {
@@ -84,11 +84,11 @@ var _1know = angular.module('1know', ['ngRoute', 'ngAnimate', 'pascalprecht.tran
 			controller: 'PersonalCtrl',
 			controllerAs: 'personalCtrl'
 		})
-		.when('/background', {
+		/*.when('/background', {
 			templateUrl: ['/template/background.html?', Date.now()].join(''),
 			controller: 'BackgroundCtrl',
 			controllerAs: 'backgroundCtrl'
-		})
+		})*/
 		.otherwise({
 			redirectTo: '/'
 		});
@@ -96,7 +96,7 @@ var _1know = angular.module('1know', ['ngRoute', 'ngAnimate', 'pascalprecht.tran
 	$locationProvider.hashPrefix('!');
 	$sceProvider.enabled(false);
 
-	//$translateProvider.translations('zh-tw', translations['zh-tw']);
+	$translateProvider.translations('zh-tw', translations['zh-tw']);
 	$translateProvider.translations('zh-cn', translations['zh-cn']);
 	$translateProvider.translations('en-us', translations['en-us']);
 	// $translateProvider.translations('es-ar', translations['es-ar']);
@@ -240,9 +240,11 @@ var _1know = angular.module('1know', ['ngRoute', 'ngAnimate', 'pascalprecht.tran
 
 	self.web_name = $window.web_name;
 	self.hide_account_type = $window.hide_account_type;
+	self.disable_personal_page = $window.disable_personal_page;
 	self.logo = $window.logo;
 	self.copyright = $window.copyright;
 	self.service_email = $window.service_email;
+	var oauth_server = $window.oauth_server;
 
 	self.password = {};
 	self.auth_url = [$utility.BASE_URL, '/oauth/ischool'].join('');
@@ -394,6 +396,10 @@ var _1know = angular.module('1know', ['ngRoute', 'ngAnimate', 'pascalprecht.tran
 	}
 
 	self.showChangePassowrd = function() {
+		//to oauth personal center
+		var url = [oauth_server, '/default/profile.php'].join('');
+		window.open(url);
+		return;
 		$('#changePasswordModal').modal('show');
 		$('#changePasswordModal').on('hidden.bs.modal', function() {
 			self.password = {};
@@ -430,7 +436,7 @@ var _1know = angular.module('1know', ['ngRoute', 'ngAnimate', 'pascalprecht.tran
 
 	self.signout = function() {
 		$(document.body).append('<iframe id="logout" style="display:none;"></iframe>');
-		$('iframe#logout').attr('src', 'https://auth.ischoolcenter.com/logout.php');
+		$('iframe#logout').attr('src', oauth_server + '/logout.php');
 		$('iframe#logout').load(function() {
 			$('iframe#logout').remove();
 			$http.post([$utility.BASE_URL, '/account/logout'].join(''))

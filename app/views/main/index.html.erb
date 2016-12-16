@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="1know">
 <head>
-	<title translate="1Know 翻轉你的學習"></title>
-
+	<!--title translate="1Know 翻轉你的學習"></title-->
+	<title><%=@APP_CONFIG['web_name'].blank?? "1Know 翻轉你的學習":@APP_CONFIG['web_name']%></title>
 	<meta charset="UTF-8">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="cleartype" content="on" />
@@ -37,6 +37,8 @@
 	<link rel="stylesheet" href="/library/redactor/redactor.css" />
 	<link rel="stylesheet" href="/library/jquery.Jcrop/jquery.Jcrop.css" />
 	<link rel="stylesheet" href="/library/literallycanvas/literallycanvas.css" />
+	<link rel="stylesheet" href="/library/angucomplete/angular-angucomplete.css" />
+	
 	<link rel="stylesheet" href="/css/default.css">
 	<link rel="stylesheet" href="/css/standalone.css">
 
@@ -51,6 +53,7 @@
 	<script src="/library/angularjs/angular-strap.min.js"></script>
 	<script src="/library/angularjs/angular-strap.tpl.min.js"></script>
 	<script src="/library/angularjs/angular-translate.min.js"></script>
+	<script src="/library/angucomplete/angular-angucomplete.js"></script>
 	<script src="/library/bootstrap/js/bootstrap.min.js"></script>
 	<script src="/library/underscore/underscore.min.js"></script>
 	<script src="/library/redactor/redactor.min.js"></script>
@@ -78,10 +81,13 @@
 <body>
 	<script>
 		var web_name = "<%=@APP_CONFIG['web_name']%>";
+		var default_language = "<%=@APP_CONFIG['default_language']%>";
 		var hide_account_type = <%=@APP_CONFIG['hide_account_type']%>;
 		var hide_sys_introduce = <%=@APP_CONFIG['hide_sys_introduce']%>;
+		var disable_personal_page = <%=@APP_CONFIG['disable_personal_page']%>
 		var logo = "<%=@APP_CONFIG['logo']%>";
 		var copyright = "<%=@APP_CONFIG['copyright']%>";
+		var oauth_server = "<%=@APP_CONFIG['OAuth_server']%>"
 		var service_email = "<%=@APP_CONFIG['service_email']%>";
 		var frontCfg = {
 			hideDefaultDiscovery: <%=@APP_CONFIG['front_hide_default_discovery']%>,

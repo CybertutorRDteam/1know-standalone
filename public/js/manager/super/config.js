@@ -25,9 +25,11 @@ _1know.controller('ConfigCtrl', function($scope, $http, $location, $timeout, $ro
 	self.loadConfig = function() {
 		self.currentConfig = {
 			host_name: "",
+			default_language: "",
 			need_activation: "",
 			hide_account_type: "",
 			hide_sys_introduce: "",
+			oauth_server_url: "",
 			oauth_client_id: "",
 			oauth_client_secret: "",
 			oauth_redirect_uri: "",
@@ -56,6 +58,7 @@ _1know.controller('ConfigCtrl', function($scope, $http, $location, $timeout, $ro
 						case 'hide_sys_introduce':
 						case 'disable_trial_account':
 						case 'disable_tempuse_code':
+						case 'disable_personal_page':
 						case 'konzesys_activate':
 						case 'qiniu_activate':
 							item.content = (item.content == 'true');
@@ -75,6 +78,10 @@ _1know.controller('ConfigCtrl', function($scope, $http, $location, $timeout, $ro
 	};
 
 	self.init = function() {
+		self.lang_group = [
+			{label: "繁體中文", value: "zh-tw"},
+			{label: "简体中文", value: "zh-cn"}
+		];
 		self.loadConfig();
 	}
 

@@ -241,6 +241,11 @@
 												<span translate="G033" remark="編輯作者"></span>
 											</a>
 										</li>
+										<li ng-if="modifyKnowledgeCtrl.isActiveTag">
+											<a href="javascript:;" ng-click="modifyKnowledgeCtrl.editTag()">
+												<span translate="G083" remark="编辑标签"></span>
+											</a>
+										</li>
 										<li class="divider"></li>
 										<li>
 											<a href="javascript:;" ng-click="modifyKnowledgeCtrl.target.resetCodeAlert=true" ng-if="modifyKnowledgeCtrl.target.code!=null">
@@ -479,6 +484,28 @@
 							</a>
 							<input type="file" id="input_knowledge_logo" accept="image/*"/>
 							<div class="text-danger" style="margin-top:4px"><span translate="G067" remark="圖片最大尺寸"></span> <span>(200x200)</span></div>
+						</div>
+					</div>
+					<style type="text/css">
+						.tag-input-ctn{border:1px solid #ccc;padding:2px 3px;display:inline-block;width:500px;border-radius:3px;box-shadow:inset 0 1px 1px rgba(0,0,0,0.075)}.tag-input-ctn input{display:inline-block;float:left;height:18px;padding:0;font-size:13px;line-height:18px;color:#000;border:0;margin:2px}.tag-input-ctn input:focus{outline:0;box-shadow:0}.tag-input-ctn .input-tag{padding:2px 4px;line-height:12px;font-size:11px;background-color:#e3eaf6;display:inline-block;float:left;border-radius:2px;margin:2px 5px 2px 0;border:1px solid #a9b6d2}.tag-input-ctn .input-tag .delete-tag{display:inline-block;font-size:12px;cursor:pointer;padding:0 2px}.tag-input-ctn .input-tag .delete-tag:hover{background-color:#96b4d2}
+						.ui-autocomplete{position:absolute;z-index:1000;cursor:default;padding:0;margin-top:2px;list-style:none;background-color:#fff;border:1px solid #ccc;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;-webkit-box-shadow:0 5px 10px rgba(0,0,0,0.2);-moz-box-shadow:0 5px 10px rgba(0,0,0,0.2);box-shadow:0 5px 10px rgba(0,0,0,0.2)}.ui-autocomplete > li{padding:3px 20px}.ui-autocomplete > li.ui-state-focus{background-color:#DDD}.ui-helper-hidden-accessible{display:none}
+					</style>
+					<div ng-if="modifyKnowledgeCtrl.layout=='tag'" class="panel panel-primary">
+						<div class="panel-heading">
+							<a class="btn btn-primary btn-sm pull-right" style="border:none;margin:-5px 0" ng-click="modifyKnowledgeCtrl.changeLayout('content')">
+								<i class="fa fa-fw fa-times"></i>
+							</a>
+							<h3 class="panel-title" translate="G083" remark="編輯圖片"></h3>
+						</div>
+						<div class="panel-body">
+							<div id="tag_content">
+								<tag-input autocomplete='modifyKnowledgeCtrl.tags' taglist='modifyKnowledgeCtrl.tagList'></tag-input>
+							</div>
+						</div>
+						<div class="panel-footer">
+							<a class="btn btn-primary" ng-click="modifyKnowledgeCtrl.saveTag()">
+								<i class="fa fa-fw fa-save"></i> <span translate="G023" remark="儲存"></span>
+							</a>
 						</div>
 					</div>
 
