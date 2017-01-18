@@ -386,13 +386,17 @@ class Private::SysadminController  < ApplicationController
 		ks = obj[:knowledges]
 		item.knowledges = ks.nil?? [] : ks
 		if (not obj[:bImg].nil?) && obj[:bImg].at(0..9) == 'data:image'
-			path = File.join(APP_CONFIG['upload_icons_url'], "/frontobject/", item.bImg)
-			File.delete(path) if File.exist?(path) and not item.bImg.empty?
+			if not item.bImg.blank?
+				path = File.join(APP_CONFIG['upload_icons_url'], "/frontobject/", item.bImg)
+				File.delete(path) if File.exist?(path) and not item.bImg.empty?
+			end
 			item.bImg = store_frontobject_pic(obj[:bImg], "bImg_" + hex)	
 		end
 		if (not obj[:sImg].nil?) && obj[:sImg].at(0..9) == 'data:image'
-			path = File.join(APP_CONFIG['upload_icons_url'], "/frontobject/", item.sImg)
-			File.delete(path) if File.exist?(path) and not item.sImg.empty?
+			if not item.sImg.blank?
+				path = File.join(APP_CONFIG['upload_icons_url'], "/frontobject/", item.sImg)
+				File.delete(path) if File.exist?(path) and not item.sImg.empty?
+			end
 			item.sImg = store_frontobject_pic(obj[:sImg], "sImg_" + hex)
 		end
 		item.bTag = obj[:useForTag]? 1:0

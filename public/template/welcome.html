@@ -18,8 +18,8 @@
 
 	<div style="min-width:970px">
 		<div>
-			<div style="background-color:#c8e7fc">
-				<div style="background-color:#c8e7fc;background:url(/img/index_cover.png) no-repeat 50% 50%;width:100%;height:600px">
+			<div ng-style="{'background-color': welcomeCtrl.background.color? '#'+welcomeCtrl.background.color: '#c8e7fc'}">
+				<div style="width:100%" ng-style="{'background-color': welcomeCtrl.background.color? '#'+welcomeCtrl.background.color : '#c8e7fc'}" reset-background="welcomeCtrl.background.img">
 					<div style="padding-top:60px;text-align:center">
 						<div style="font-size:48px" translate="B001"></div>
 						<div style="font-size:30px" translate="B002"></div>

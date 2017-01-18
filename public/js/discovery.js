@@ -1,4 +1,4 @@
-_1know.controller('DiscoveryCtrl', function($scope, $http, $location, $routeParams, $utility, $window) {
+_1know.controller('DiscoveryCtrl', function($scope, $http, $location, $routeParams, $utility, $window, $interval ) {
 	var self = this;
 	self.language = $utility.LANGUAGE;
 	self.frontCfg = $window.frontCfg;
@@ -176,6 +176,24 @@ _1know.controller('DiscoveryCtrl', function($scope, $http, $location, $routePara
 			});
 		});
 	});
+	$scope.$on('ngSliderRepeatFinished2', function(event,e) {
+		var as = $(e).parent().find('article');
+		var des = $(e).parent().find('.description > p');
+		var index = 0;
+		var ani = function(){
+			if (index == as.length){index = 0;}
+			showSliderByIndex(index++);
+		}
+		var mission = $interval(ani,3000);
+		var showSliderByIndex = function(index){
+			as.stop().fadeOut().eq(index).stop().fadeIn();
+		}
+		des.each(function(i,e){
+			var t = $(e).text().substring(0,160)+"...";
+			$(e).text(t);
+		});
+		as.not(":eq(0)").hide();
+	});
 	
 	self.banner_set_bg = function(o){
 		return {'background': "url('/images/frontobject/"+o.sImg+"')", 'background-size': '100% 100%', 'background-repeat': 'no-repeat'};
@@ -237,4 +255,15 @@ _1know.controller('DiscoveryCtrl', function($scope, $http, $location, $routePara
 			}
 		}
 	}
-})
+}).directive('imgSlider', function($timeout) {
+	return {
+		restrict: 'A',
+		link: function(scope,element,attrs){
+			if (scope.$last === true) {
+				$timeout(function () {
+					scope.$emit(attrs.imgSlider,element);
+				});
+			}
+		}
+	}
+});

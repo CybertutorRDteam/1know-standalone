@@ -74,33 +74,36 @@
     <script src="/library/websocket_rails/http_connection.js"></script>
     <script src="/library/websocket_rails/websocket_connection.js"></script>
     <script src="/library/websocket_rails/channel.js"></script>
+
 	<script src="/js/chooser.js"></script>
 	<script src="/js/language.js?<%= srand %>"></script>
 </head>
 
-<body>
+<body style="background-image: none; background-color: white;">
 	<script>
 		var web_name = "<%=@APP_CONFIG['web_name']%>";
 		var default_language = "<%=@APP_CONFIG['default_language']%>";
-		var hide_account_type = <%=@APP_CONFIG['hide_account_type']%>;
-		var hide_sys_introduce = <%=@APP_CONFIG['hide_sys_introduce']%>;
-		var disable_personal_page = <%=@APP_CONFIG['disable_personal_page']%>
+		var hide_account_type = Boolean(<%=@APP_CONFIG['hide_account_type']%>);
+		var hide_sys_introduce = Boolean(<%=@APP_CONFIG['hide_sys_introduce']%>);
+		var disable_personal_page = Boolean(<%=@APP_CONFIG['disable_personal_page']%>)
 		var logo = "<%=@APP_CONFIG['logo']%>";
 		var copyright = "<%=@APP_CONFIG['copyright']%>";
 		var oauth_server = "<%=@APP_CONFIG['OAuth_server']%>"
 		var service_email = "<%=@APP_CONFIG['service_email']%>";
 		var frontCfg = {
-			hideDefaultDiscovery: <%=@APP_CONFIG['front_hide_default_discovery']%>,
-			hideSearchBanner: <%=@APP_CONFIG['front_hide_search_banner']%>,
-			sliderActivate: <%=@APP_CONFIG['front_slider_activate']%>,
-			twobannerActivate: <%=@APP_CONFIG['front_twobanner_activate']%>,
-			tagfunctionActivate: <%=@APP_CONFIG['front_tagfunction_activate']%>
+			hideDefaultDiscovery: Boolean(<%=@APP_CONFIG['front_hide_default_discovery']%>),
+			hideSearchBanner: Boolean(<%=@APP_CONFIG['front_hide_search_banner']%>),
+			sliderActivate: Boolean(<%=@APP_CONFIG['front_slider_activate']%>),
+			twobannerActivate: Boolean(<%=@APP_CONFIG['front_twobanner_activate']%>),
+			tagfunctionActivate: Boolean(<%=@APP_CONFIG['front_tagfunction_activate']%>)
 		};
 	</script>
 	<% if @content[:role] == 'NotLogin' %>
 	<script>
 		var client_id = "<%=@APP_CONFIG['client_id']%>";
 		var redirect_uri = "<%=@APP_CONFIG['redirect_uri']%>";
+		var welcome_img = "<%=@APP_CONFIG['welcome_img']%>";
+		var welcome_color = "<%=@APP_CONFIG['welcome_color']%>";
 	</script>
 	<div ng-view class="reveal-animate"></div>
 	<script src="/js/welcome.js?<%=@APP_CONFIG['version']%>"></script>

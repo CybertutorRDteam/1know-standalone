@@ -420,10 +420,11 @@ class Private::DiscoveryController < ApplicationController
 		end
 		tags = FrontObject.order( "knowledges" ).where( :bTag => true ).all.to_a.map(&:serializable_hash) if APP_CONFIG['front_tagfunction_activate']
 		if !tags.nil?
-			storage = []
 			setting = JSON.parse(APP_CONFIG['front_tag_seq'])
-			tags.each_with_index do |t,i|
-				tags[i][:seq] = setting.index(t['id'])
+			if !setting.nil?
+				tags.each_with_index do |t,i|
+					t[:seq] = setting.index(t['id'])
+				end
 			end
 			set[:front_tags] = tags
 		end

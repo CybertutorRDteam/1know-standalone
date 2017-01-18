@@ -1,11 +1,54 @@
-<div class="container" style="margin:20px auto">
+<div class="container" style="margin: 40px auto;font-family: 'Microsoft YaHei'">
 	<div ng-show="discoveryCtrl.target=='knowledge'">
 		<div ng-show=discoveryCtrl.frontCfg.target=='default'>
-			<div ng-show="discoveryCtrl.frontCfg.twobannerActivate" class="twoBanner row">
+			<div style="background-color: white">
 				<style type="text/css">
-					.twoBanner > div{ height: 125px;border: 1px solid #DDD;border-radius: 15px }
+					.mSlider{width:960px; height:384px; position: relative;}
+					.mSlider h2,.mSlider p{margin:0 !important;}
+					.mSliderContainer{background-color: #CC6666;margin: 0 auto;height: 384px;overflow: hidden}
+					.mSliderContainer > article{flex-direction: row;display: flex;align-items: center;position: absolute;width: 100%;}
+					.mSliderContainer > article > .imgPart{border-radius: 0px;border: 0;display: inline-block;position: relative;width: 640px; height:384px;}
+					.mSliderContainer > article > .imgPart > img{border-radius: 0px;display: block;width: 640px;height: 384px;}
+					.mSliderContainer > article > .textPart{padding: 32px; width: 320px; height:384px;}
+					.mSliderContainer > article > .textPart > h2{color: #FFF;font-size: 20pt;}
+					.mSliderContainer > article > .textPart > .description{color: #FFF;height:220px;margin-top: 20px;font-size: 12pt;}
+					.mSliderContainer > article > .textPart > ul{cursor: default;list-style: none;padding-left: 0;margin-top: 25px;}
+					.mSliderContainer > article > .textPart > ul > li{display: inline-block;padding: 0 1em 0 0;height:40px;width:100px;vertical-align: middle;}
+					.mSliderContainer > article > .textPart .link{color: #CC6666;font-size: 16pt;padding: 5px 20px;background-color: #FFFFFF;}
+					.mSliderContainer > article > .textPart .link:hover{text-decoration: none;}
+					/*.mSliderContainer > article > .textPart .link{background-color: transparent;box-shadow: inset 0 0 0 2px #E71D36;color: #E71D36 !important;-webkit-appearance: none;    cursor: pointer;display: inline-block;font-weight: 400;height: 2.85em;line-height: 2.95em;padding: 0 1.5em;text-align: center;text-decoration: none;white-space: nowrap;font-size: 1.2em;}
+					/*.mSlider #shortcut{width: 100%; height:120px;margin-top: 12px;}
+					.mSlider #shortcutContainer{margin: 0 auto;}
+					.mSlider #shortcutContainer .cover{-webkit-transition: opacity 0.5s ease;transition: opacity 0.5s ease;background: grey;height:120px;}
+					.mSlider #shortcutContainer .link{cursor: pointer;height: 120px;display: inline-block;}
+					.mSlider #shortcutContainer .link:not(:last-child){margin-right: 1%}*/
 				</style>
-				<div style="float:left;position: relative;width: 47%;margin-left: 1.6%;margin-right: 1.3%;height: 180px;cursor: pointer;" ng-repeat="obj in discoveryCtrl.frontdata.front_twobanner_obj" ng-style="discoveryCtrl.banner_set_bg(obj)" ng-click="discoveryCtrl.getObjDetail(obj)"></div>
+				<section class="mSlider">
+					<div class="mSliderContainer">
+						<article ng-repeat="obj in discoveryCtrl.frontdata.front_slider_obj track by $index" img-slider="ngSliderRepeatFinished2">
+							<span class="image imgPart">
+								<img ng-src="/images/frontobject/{{obj.bImg}}" alt="{{obj.name}}" />
+							</span>
+							<div class="textPart">
+								<h2>{{obj.name}}</h2>
+								<div class="description" ng-bind-html="obj.description"></div>
+								<ul>
+									<li class="pull-right">
+										<a href="javascript:void(0);" class="button alt link" ng-click="discoveryCtrl.getObjDetail(obj)" data-index="{{$index}}">More</a>
+									</li>
+								</ul>
+							</div>
+						</article>
+					</div>
+				</section>
+				<style type="text/css">
+					.twoBanner{margin-top: 15px}
+					.twoBanner .inner{display: inline-block;position: relative;height: 186px;width: 310px;cursor: pointer;}
+					.twoBanner .inner:not(:last-child){margin-right: 15px;}
+				</style>
+				<div ng-show="discoveryCtrl.frontCfg.twobannerActivate" class="twoBanner">
+					<div class="inner" ng-repeat="obj in discoveryCtrl.frontdata.front_twobanner_obj" ng-style="discoveryCtrl.banner_set_bg(obj)" ng-click="discoveryCtrl.getObjDetail(obj)"></div>
+				</div>
 			</div>
 			<div ng-show="!discoveryCtrl.frontCfg.hideSearchBanner">
 				<div class="pull-left" style="margin:20px 0 0 40px;padding:8px;background:rgba(0,0,0,0.2);"> 
@@ -13,32 +56,22 @@
 				</div>
 				<div style="height:220px;background:url(/img/index_banner.png) no-repeat"></div>
 			</div>
-			<style type="text/css">
-				.pgwSlider .ps-current img{opacity: 0;}
-				.pgwSlider .ps-caption b{font-size: 28px;}
-				.pgwSlider .ps-caption{font-size: 18px;}
+			<style type="text/css" media="screen">
+				.tagTitle{position: relative;margin-bottom: 20px;border-bottom: 2px solid #ffcccc;font-size: 20pt;margin: 20pt auto;line-height: 30pt;}
+				#tagContaint .thumbnail:hover{background-color:#ffcccc;cursor: pointer;}
 			</style>
-			<div ng-show="discoveryCtrl.frontCfg.sliderActivate" style="margin-top: 20px;height: 300px">
-				<ul class="pgwSlider">
-					<li ng-repeat="obj in discoveryCtrl.frontdata.front_slider_obj track by $index" on-finish-render="ngSliderRepeatFinished">
-						<a href="javascript:void(0);" target="_blank" ng-click="discoveryCtrl.getObjDetail(obj)" data-index="{{$index}}">
-							<img ng-src="/images/frontobject/{{obj.bImg}}" alt="{{obj.name}}" data-description="{{obj.description}}">
-						</a>
-					</li>
-				</ul>
-			</div>
 			<div ng-show="discoveryCtrl.frontCfg.tagfunctionActivate && discoveryCtrl.frontdata.front_tags.length > 0">
-				<div ng-repeat="tag in discoveryCtrl.frontdata.front_tags | orderBy:'-seq':true">
+				<div ng-repeat="tag in discoveryCtrl.frontdata.front_tags | orderBy:'-seq':true" style="margin-top: 50px;">
 					<div ng-show="tag.knowledges != 'null'">
-						<h3>{{tag.name}}</h3>
-						<div class="row" ng-init="discoveryCtrl.get_frontObject_knowledges(tag.id, tag.knowledges); tag.limit = 6">
-							<div class="col-xs-4" ng-repeat="item in discoveryCtrl.frontdata.knowledges[tag.id] | limitTo: tag.limit">
-								<div class="thumbnail" ng-click="discoveryCtrl.openKnowledge(item)">
-									<div class="card-hover" style="position:absolute"></div>
+						<div class="tagTitle">{{tag.name}}<div class="pull-right" ng-if="discoveryCtrl.frontdata.knowledges[tag.id].length > 6">more...</div></div>
+						<div class="row" id="tagContaint" ng-init="discoveryCtrl.get_frontObject_knowledges(tag.id, tag.knowledges); tag.limit = 6">
+							<div class="col-xs-4" ng-repeat="item in discoveryCtrl.frontdata.knowledges[tag.id] | limitTo: tag.limit" style="margin-top: 30px;">
+								<div class="thumbnail" ng-click="discoveryCtrl.openKnowledge(item)" style="border: none;">
+									<!--div class="card-hover" style="position:absolute"></div-->
 									<img class="pull-left" style="width:96px;height:96px" ng-src="{{item.logo}}"/>
-									<div style="margin-left:96px;height:96px;padding:15px 10px 10px 15px">
-										<div style="font-size:15px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
-										<div class="text-muted" style="font-size:13px;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.editor.full_name}}</div>
+									<div style="margin-left:96px;height:96px;padding:0px 10px 0px 15px">
+										<div style="font-size:16pt;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.name}}</div>
+										<div class="text-muted" style="font-size:12pt;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">{{item.editor.full_name}}</div>
 										<div class="text-muted" style="margin-top:10px">
 											<span>
 												<i class="fa fa-star" ng-style="{'color': item.average_rate >= 1 ? '#eeb929' : '#cacaca'}"></i>
@@ -56,7 +89,6 @@
 							</div>
 						</div>
 						<button ng-show="JSON.parse(tag.knowledges).length > 10" ng-click="tag.limit = tag.limit + 10">more...</button>
-						<hr>
 					</div>
 				</div>
 			</div>
@@ -129,13 +161,21 @@
 				</div>
 			</div>
 		</div>
-		<div ng-if="discoveryCtrl.frontCfg.target=='objDetail'">
-			<div class="row">
-				<img ng-src="/images/frontobject/{{select_obj.bImg}}" class="col-xs-6" style="height:220px;background-repeat:no-repeat">
-				<div ng-bind-html="select_obj.description" class="col-xs-6"></div>
+		<style type="text/css" media="screen">
+			#objDetail .thumbnail:hover{background-color:#ffcccc;cursor: pointer;}
+		</style>
+		<div id="objDetail" ng-if="discoveryCtrl.frontCfg.target=='objDetail'">
+			<div style="margin-bottom: 40px;font-size: 20pt;color: #350000;border-bottom: 1px solid #CC6666">
+				{{select_obj.name}} - 介绍
 			</div>
-			<h3>{{select_obj.name}}</h3>
-			<div class="row" style="margin-top: 20px;">
+			<div style="height: 368px;" class="row">
+				<img ng-src="/images/frontobject/{{select_obj.bImg}}" class="col-xs-6" style="height:288px;background-repeat:no-repeat">
+				<div ng-bind-html="select_obj.description" class="col-xs-6" style="height: 288px;"></div>
+			</div>
+			<div style="font-size: 20px;border-bottom: 1px solid #CC6666;margin: 40px 0px;">
+				课程清单
+			</div>
+			<div class="row" style="padding-bottom: 50px;border-bottom: 1px solid #CC6666;">
 				<div class="col-xs-4" ng-repeat="item in discoveryCtrl.frontdata.knowledges[select_obj.id]">
 					<div class="thumbnail" ng-click="discoveryCtrl.openKnowledge(item)">
 						<div class="card-hover" style="position:absolute"></div>
@@ -159,6 +199,7 @@
 					</div>
 				</div>
 			</div>
+			<div class="pull-right" ng-click="discoveryCtrl.frontCfg.target='default'" style="margin-top: 30px;font-size: 16pt;color: #CC6666;cursor: pointer;border: 1px solid #CCCCCC;border-radius: 3px;padding: 5px;">回发现页</div>
 		</div>
 	</div>
 

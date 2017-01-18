@@ -281,6 +281,12 @@ _1know.service('anchorSmoothScroll', function(){
 				$timeout(wait,100);
 			}
 		}
+		if(self.currentConfig.bImg){
+			$('#bigImg_container').html('<img src="/images/frontobject/'+self.currentConfig.bImg+'">');
+		}
+		if(self.currentConfig.sImg){
+			$('#smallImg_container').html('<img src="/images/frontobject/'+self.currentConfig.sImg+'">');
+		}
 		wait();
 	}
 

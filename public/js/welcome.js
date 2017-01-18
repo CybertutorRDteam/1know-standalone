@@ -47,6 +47,7 @@ if (!$.browser.msie && !$.browser.webkit && !$.browser.mozilla) {
 			self.logo = $window.logo;
 			self.copyright = $window.copyright;
 			self.service_email = $window.service_email;
+			self.background = {img: $window.welcome_img, color: $window.welcome_color};
 			var oauth_server = $window.oauth_server;
 			self.BASE_URL = [$location.protocol(), '://', $location.host(), ($location.port() == 80 ? '' : ':' + $location.port())].join('');
 			self.language = {
@@ -73,7 +74,6 @@ if (!$.browser.msie && !$.browser.webkit && !$.browser.mozilla) {
 				lang = {title: 'Deutsch',type: 'de-de'};
 			else
 				lang = {title: 'English',type: 'en-us'};
-			console.log(lang)
 			self.language = lang;
 			$translate.uses(lang.type);
 
@@ -128,5 +128,26 @@ if (!$.browser.msie && !$.browser.webkit && !$.browser.mozilla) {
 			else if (!$.browser.msie && !$.browser.webkit && !$.browser.mozilla)
 				self.supportBrowser = false;
 
-		})
+		}).directive("resetBackground",function($timeout){
+			return {
+				scope: {
+					bg: '=resetBackground'
+				},
+				link: function(scope,element,attr){
+					$timeout(function(){
+						var img = scope.bg;
+						if(img){
+							var mW = $(document).innerWidth();
+							var mH = mW/2;
+							$(element[0]).css('background', 'url('+img+') 0px 0px/cover no-repeat fixed');
+							$(element[0]).animate({width: mW, height: mH},1000);
+							$(element[0]).children().animate({'padding-top': mH/3+'px'},1000);
+							console.log(mW,mH);
+						}else{
+							$(element[0]).css('background', 'url(/img/index_cover.png) no-repeat 50% 50%').height(600);
+						}
+					});
+				}
+			}
+		});
 }
