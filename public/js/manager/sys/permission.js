@@ -1,4 +1,4 @@
-_1know.controller('PermissionCtrl', function($scope, $http, $location, $timeout, $routeParams, $utility) {
+_1know.controller('PermissionCtrl', function($scope, $http, $location, $timeout, $routeParams, $utility, $window) {
     var self = this;
 
     self.getList = function() {
@@ -133,6 +133,7 @@ _1know.controller('PermissionCtrl', function($scope, $http, $location, $timeout,
 
     self.init = function() {
         self.getList();
+        self.enableDefaultLogin = $window.enable_default_login;
         self.currShow = false;
         self.create = {
             layout: "upload",

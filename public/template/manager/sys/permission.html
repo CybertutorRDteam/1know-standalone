@@ -2,9 +2,9 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" ng-init="permissionCtrl.active.tab = 'home'">
         <li ng-class="{active: permissionCtrl.active.tab == 'home' }"><a style="cursor:pointer" ng-click="permissionCtrl.activeTab('home');" translate="使用許可_使用許可列表">使用許可列表</a></li>
-        <li ng-class="{active: permissionCtrl.active.tab == 'search' }"><a style="cursor:pointer" ng-click="permissionCtrl.activeTab('search');" translate="使用許可_重置啟動碼">重置啟動碼</a></li>
-        <li ng-class="{active: permissionCtrl.active.tab == 'create' }"><a style="cursor:pointer" ng-click="permissionCtrl.activeTab('create');" translate="使用許可_建立使用許可">建立使用許可</a></li>
-        <li ng-class="{active: permissionCtrl.active.tab == 'changes' }"><a style="cursor:pointer" ng-click="permissionCtrl.activeTab('changes');" translate="使用許可_啟動碼變更清單">啟動碼變更清單</a></li>
+        <li ng-if="permissionCtrl.enableDefaultLogin" ng-class="{active: permissionCtrl.active.tab == 'search' }"><a style="cursor:pointer" ng-click="permissionCtrl.activeTab('search');" translate="使用許可_重置啟動碼">重置啟動碼</a></li>
+        <li ng-if="permissionCtrl.enableDefaultLogin" ng-class="{active: permissionCtrl.active.tab == 'create' }"><a style="cursor:pointer" ng-click="permissionCtrl.activeTab('create');" translate="使用許可_建立使用許可">建立使用許可</a></li>
+        <li ng-if="permissionCtrl.enableDefaultLogin" ng-class="{active: permissionCtrl.active.tab == 'changes' }"><a style="cursor:pointer" ng-click="permissionCtrl.activeTab('changes');" translate="使用許可_啟動碼變更清單">啟動碼變更清單</a></li>
     </ul>
 
     <!-- Tab panes -->

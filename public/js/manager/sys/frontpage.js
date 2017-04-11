@@ -8,7 +8,7 @@ _1know.controller('FrontpageCtrl_mainCfg', function($scope, $http, $utility, $ti
 			data: { "content": 
 						$.extend(self.currentConfig,
 							{'front_slider_obj': JSON.stringify($.map(self.slider,function(o){ if(o) return parseInt(o.id);}))},
-							{'front_twobanner_obj': JSON.stringify($.map(self.banner,function(o){ if(o) return parseInt(o.id);}))},
+							{'front_multiBanner_obj': JSON.stringify($.map(self.banner,function(o){ if(o) return parseInt(o.id);}))},
 							{'front_tag_seq': JSON.stringify(self.tag_state)}
 						)
 				},
@@ -38,7 +38,7 @@ _1know.controller('FrontpageCtrl_mainCfg', function($scope, $http, $utility, $ti
 					switch (item.name) {
 						case 'front_hide_default_discovery':
 						case 'front_hide_search_banner':
-						case 'front_twobanner_activate':
+						case 'front_multiBanner_activate':
 						case 'front_slider_activate':
 						case 'front_tagfunction_activate':
 							self.currentConfig[item.name] = (item.content == 'true');
@@ -46,7 +46,7 @@ _1know.controller('FrontpageCtrl_mainCfg', function($scope, $http, $utility, $ti
 						case 'front_slider_obj':
 							self.slider = angular.extend(new Array(3), JSON.parse(item.content));
 							break;
-						case 'front_twobanner_obj':
+						case 'front_multiBanner_obj':
 							self.banner = angular.extend(new Array(2), JSON.parse(item.content));
 							break;
 						case 'front_tag_seq':
@@ -355,8 +355,8 @@ _1know.service('anchorSmoothScroll', function(){
 						$(img).Jcrop({
 							bgColor: 'black',
 							bgOpacity: .6,
-							setSelect: [0, 0, 160, 90],
-							aspectRatio: 1.78,
+							setSelect: [0, 0, 1024, 240],
+		
 							onSelect: imgSelect,
 							onChange: imgSelect
 						});

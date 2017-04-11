@@ -408,7 +408,7 @@ class Private::DiscoveryController < ApplicationController
 	def get_front_objs
 		collector = []
 		collector.push('front_slider_obj') if APP_CONFIG['front_slider_activate']
-		collector.push('front_twobanner_obj') if APP_CONFIG['front_twobanner_activate']
+		collector.push('front_multiBanner_obj') if APP_CONFIG['front_multiBanner_activate']
 		cfg = Sysconfig.where( :target => 'frontpage' , :name => collector )
 		set = {}
 		cfg.each do |o|

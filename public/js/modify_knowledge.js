@@ -1,6 +1,6 @@
 var websnapr_hash = websnapr_hash || '';
 
-_1know.controller('ModifyKnowledgeCtrl', function($scope, $http, $location, $timeout, $compile, $routeParams, $utility) {
+_1know.controller('ModifyKnowledgeCtrl', function($scope, $http, $location, $timeout, $compile, $routeParams, $utility, $window) {
 	var self = this;
 
 	self.chooseDrawBackgroundImage = function() {

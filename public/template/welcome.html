@@ -24,10 +24,10 @@
 						<div style="font-size:48px" translate="B001"></div>
 						<div style="font-size:30px" translate="B002"></div>
 						<div style="margin-top:30px;text-align:center">
-							<div ng-if="welcomeCtrl.disableTrialAccount" style="width:200px;display:inline-block;vertical-align:top">
+							<div ng-if="welcomeCtrl.enableTrialAccount" style="width:200px;display:inline-block;vertical-align:top">
 								<a class="btn btn-block btn-primary" ng-click="welcomeCtrl.signinWithGuest()"><span translate="B003"></span></a>
 							</div>
-							<div ng-if="welcomeCtrl.disableTempUseCode" style="width:200px;display:inline-block;vertical-align:top">
+							<div ng-if="welcomeCtrl.enableTempUseCode" style="width:200px;display:inline-block;vertical-align:top">
 								<div class="input-group">
 									<input type="text" class="form-control" ng-model="welcomeCtrl.guestCode" placeholder="{{'B050'|translate}}..." ng-keyup="welcomeCtrl.loginGuest($event)"></input>
 									<span class="input-group-btn">
@@ -36,7 +36,7 @@
 								</div>
 							</div>
 						</div>
-						<div style="margin-top:6px">
+						<div ng-if="welcomeCtrl.enableOauthLogin" style="margin-top:6px">
 							<a class="btn btn-danger" style="width:406px" ng-click="welcomeCtrl.signinWithIschool()"><span translate="B004"></span></a>
 						</div>
 					</div>

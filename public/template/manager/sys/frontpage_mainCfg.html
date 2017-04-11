@@ -45,14 +45,14 @@
 			<div class="form-group">
 				<span class="col-sm-3 control-label" translate="首頁配置_啟用雙幅">啟用雙幅</span>
 				<div class="col-sm-9">
-					<label for="front_twobanner_activate" class="checkbox-inline">
-						<input id="front_twobanner_activate" name="front_twobanner_activate" type="checkbox" ng-model="frontpageCtrl.currentConfig.front_twobanner_activate">
+					<label for="front_multiBanner_activate" class="checkbox-inline">
+						<input id="front_multiBanner_activate" name="front_multiBanner_activate" type="checkbox" ng-model="frontpageCtrl.currentConfig.front_multiBanner_activate">
 						<span class="help-block" translate="首頁配置_啟用雙幅說明">啟用雙幅說明</span>
 					</label>
 				</div>
 			</div>
 			<div class="form-group" ng-repeat="x in frontpageCtrl.banner track by $index">
-				<label for="front_twobanner_param{{$index}}" class="col-sm-3 control-label" translate="首頁配置_param{{$index}}">第一橫福</label>
+				<label for="front_multiBanner_param{{$index}}" class="col-sm-3 control-label" translate="首頁配置_param{{$index}}">第一橫福</label>
 				<div class="col-sm-9">
 					<!--input id="front_twobanner_param{{x}}" name="front_twobanner_param{{x}}" type="text" class="form-control" ng-model="frontpageCtrl.banner[x]"-->
 					<select class="form-control" ng-model="frontpageCtrl.banner[$index]" ng-options="item.name for item in frontpageCtrl.objectsStorage" ng-change="frontpageCtrl.checkValid('banner')"></select>

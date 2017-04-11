@@ -1,9 +1,6 @@
 _1know.controller('DiscoveryCtrl', function($scope, $http, $location, $routeParams, $utility, $window, $interval ) {
 	var self = this;
-	self.language = $utility.LANGUAGE;
-	self.frontCfg = $window.frontCfg;
-	self.frontCfg.target = 'default';
-
+	
 	self.loadChannelList = function() {
 		$http.get([$utility.SERVICE_URL, '/discovery/channels'].join(''))
 		.success(function(response, status) {
@@ -165,34 +162,28 @@ _1know.controller('DiscoveryCtrl', function($scope, $http, $location, $routePara
 			}
 		});
 	}
-	$scope.$on('ngSliderRepeatFinished', function(ngSliderRepeatFinishedEvent) {
-		$('<link rel="stylesheet" type="text/css" href="/library/pgwSlider/pgwslider.min.css">').appendTo($('body'));
-		$.getScript('/library/pgwSlider/pgwslider.min.js',function(){
-			$('ul.pgwSlider').pgwSlider({
-				transitionEffect: 'sliding',
-				adaptiveHeight: true,
-				verticalCentering: true,
-				maxHeight: 300
-			});
-		});
+	$scope.$on('ngSliderRepeatFinished1', function(ngSliderRepeatFinishedEvent) {
+		var myIndex = 0;
+		carousel();
+		function carousel() {
+			var i;
+			var x = document.getElementsByClassName("mSlider");
+			for (i = 0; i < x.length; i++) {
+			   x[i].style.display = "none";  
+			}
+			myIndex++;
+			if (myIndex > x.length) {myIndex = 1}    
+			x[myIndex-1].style.display = "block";  
+			setTimeout(carousel, 4000); // Change image every 2 seconds
+		}
 	});
-	$scope.$on('ngSliderRepeatFinished2', function(event,e) {
-		var as = $(e).parent().find('article');
-		var des = $(e).parent().find('.description > p');
-		var index = 0;
-		var ani = function(){
-			if (index == as.length){index = 0;}
-			showSliderByIndex(index++);
-		}
-		var mission = $interval(ani,3000);
-		var showSliderByIndex = function(index){
-			as.stop().fadeOut().eq(index).stop().fadeIn();
-		}
-		des.each(function(i,e){
-			var t = $(e).text().substring(0,160)+"...";
-			$(e).text(t);
+	$scope.$on('ngSliderRepeatFinished2', function(ngSliderRepeatFinishedEvent) {
+		$('#multiBanner').slick({
+			slidesToShow: 6,
+			slidesToScroll: 1,
+			autoplay: true,
+			autoplaySpeed: 3500,
 		});
-		as.not(":eq(0)").hide();
 	});
 	
 	self.banner_set_bg = function(o){
@@ -224,6 +215,10 @@ _1know.controller('DiscoveryCtrl', function($scope, $http, $location, $routePara
 		if ($routeParams.t !== undefined) {
 			self.target = $routeParams.t;
 			self.orderType = 'date';
+			self.language = $utility.LANGUAGE;
+			self.frontCfg = $window.frontCfg;
+			if (self.frontCfg.target == "") self.frontCfg.target = 'default';
+			if (self.frontCfg.target == "dxVersion") self.frontCfg.show='normal';
 
 			if ($routeParams.t === 'knowledge')
 				self.loadKnowledge(0);
@@ -244,24 +239,24 @@ _1know.controller('DiscoveryCtrl', function($scope, $http, $location, $routePara
 	$scope.$watch('mainCtrl.account', function(newVal, oldVal) {
 		if (newVal !== undefined && newVal !== 'NotLogin') self.init();
 	});
-}).directive('onFinishRender', function ($timeout) {
+}).directive('onFinishRender1', function ($timeout) {
 	return {
 		restrict: 'A',
 		link: function (scope, element, attr) {
 			if (scope.$last === true) {
 				$timeout(function () {
-					scope.$emit(attr.onFinishRender);
+					scope.$emit(attr.onFinishRender1);
 				});
 			}
 		}
 	}
-}).directive('imgSlider', function($timeout) {
+}).directive('onFinishRender2', function ($timeout) {
 	return {
 		restrict: 'A',
-		link: function(scope,element,attrs){
+		link: function (scope, element, attr) {
 			if (scope.$last === true) {
 				$timeout(function () {
-					scope.$emit(attrs.imgSlider,element);
+					scope.$emit(attr.onFinishRender2);
 				});
 			}
 		}

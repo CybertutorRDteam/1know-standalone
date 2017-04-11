@@ -5,17 +5,17 @@ require "uuid"
 class OauthController < ApplicationController
 	def callback
 		@params = {
-			url: [APP_CONFIG['OAuth_server'], '/oauth/authorize.php'].join(''),
+			url: [APP_CONFIG['OAuth_server'], '/oauth2/authorize'].join(''),
 			client_id: APP_CONFIG['client_id'],
 			redirect_uri: APP_CONFIG['redirect_uri'],
 			response_type: 'code',
 			state: 'ischool_authbug_code',
-			scope: 'User.Mail,User.BasicInfo'
+			scope: 'userinfo'
 		}
 	end
 
 	def ischool
-		uri = URI([APP_CONFIG['OAuth_server'], '/oauth/token.php'].join(''))
+		uri = URI([APP_CONFIG['OAuth_server'], '/oauth2/authorize/token'].join(''))
 		response = Net::HTTP.post_form(uri,
 			'grant_type' => 'authorization_code',
 			'code' => params[:code],
@@ -25,12 +25,12 @@ class OauthController < ApplicationController
 		)
 		token = JSON.parse(response.body)
 
-		uri = URI([APP_CONFIG['OAuth_server'], "/services/me.php?access_token=#{token['access_token']}&token_type=bearer"].join(''))
+		uri = URI([APP_CONFIG['OAuth_server'], "/oauth2/me?access_token=#{token['access_token']}&token_type=bearer"].join(''))
 		result = Net::HTTP.get_response(uri)
-		target = JSON.parse(result.body)
+		target = JSON.parse(result.body)['data']
 		
-		if target['mail'] != nil and target['mail'] != ''
-			domain = target['mail'].split('@')[1]
+		if target['email'] != nil and target['email'] != ''
+			domain = target['email'].split('@')[1]
 
 			if domain == 'ischool.com.tw'
 				setLocalUser(target, 'ischool')
@@ -60,14 +60,14 @@ class OauthController < ApplicationController
 	def setLocalUser(target, type)
 		reset_session
 		
-		localUser = User.where(userid: target['mail'].downcase).first
+		localUser = User.where(userid: target['email'].downcase).first
 
 		if localUser == nil
 			user = User.new
 			user.uqid = UUID.new.generate[0..7]
-			user.userid = target['mail'].downcase
-			user.first_name = target['firstName']
-			user.last_name = target['lastName']
+			user.userid = target['email'].downcase
+			user.first_name = ''
+			user.last_name = target['fullname']
 			user.banner = DEFAULT_USER_BANNER
 			user.photo = DEFAULT_USER_PHOTO
 			user.last_login_ip = request.remote_ip

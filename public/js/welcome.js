@@ -42,8 +42,10 @@ if (!$.browser.msie && !$.browser.webkit && !$.browser.mozilla) {
 
 			self.web_name = $window.web_name;
 			self.hideSysIntroduce = $window.hide_sys_introduce;
-			self.disableTrialAccount = $window.disable_trial_account;
-			self.disableTempUseCode = $window.disable_tempuse_code;
+			self.enableTrialAccount = $window.enable_trial_account;
+			self.enableTempUseCode = $window.enable_tempuse_code;
+			self.enableOauthLogin = $window.enable_oauth_login;
+			self.enabledDefaultLogin = $window.enable_default_login;
 			self.logo = $window.logo;
 			self.copyright = $window.copyright;
 			self.service_email = $window.service_email;
@@ -94,11 +96,11 @@ if (!$.browser.msie && !$.browser.webkit && !$.browser.mozilla) {
 			}
 
 			self.signinWithIschool = function() {
-				var width = 800;
+				var width = screen.width * 0.78;
 				var height = 700;
 				var top = (screen.height / 2) - (height / 2);
 				var left = (screen.width / 2) - (width / 2);
-				var target = [oauth_server, '/oauth/authorize.php?client_id=', client_id, '&response_type=code&state=ischool_authbug_code&redirect_uri=', redirect_uri, '&scope=User.Mail,User.BasicInfo'].join('');
+				var target = [oauth_server, '/oauth2/authorize?client_id=', client_id, '&response_type=code&state=ischool_authbug_code&redirect_uri=', redirect_uri, '&scope=userinfo'].join('');
 
 				window.open(target, '1409620722041', ['width=', width, ',height=', height, ',menubar=0,titlebar=0,status=0,top=', top, ',left=', left].join(''));
 			}

@@ -512,7 +512,8 @@ _1know.controller('LearningCtrl', function($scope, $http, $location, $timeout, $
 
 			if ($routeParams.t === 'knowledge') {
 				self.listCategory();
-				self.toggleCategory('last_7_day');
+				//self.toggleCategory('last_7_day');
+				self.toggleCategory('all');
 			}
 			else if ($routeParams.t === 'notebook') {
 				self.loadNoteKnowledge(function() {
