@@ -397,9 +397,6 @@ var _1know = angular.module('1know', ['ngRoute', 'ngAnimate', 'pascalprecht.tran
 
 	self.showChangePassowrd = function() {
 		//to oauth personal center
-		var url = [oauth_server, '/default/profile.php'].join('');
-		window.open(url);
-		return;
 		$('#changePasswordModal').modal('show');
 		$('#changePasswordModal').on('hidden.bs.modal', function() {
 			self.password = {};

@@ -69,6 +69,15 @@
 				</div>
 			</div>
 			<div class="form-group">
+				<span class="col-sm-3 control-label" translate="系統配置_帳號數上限">帳號數上限</span>
+				<div class="col-sm-9">
+					<label class="checkbox-inline" for="default_login_max">
+						<input id="default_login_max" name="default_login_max" type="number" ng-model="configCtrl.currentConfig.default_login_max" placeholder="10" value="10" ng-disabled="!configCtrl.currentConfig.enable_default_login">
+						<span class="help-block" translate="系統配置_帳號數上限說明">「一般登入」功能帳號數上限數量</span>
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
 				<span class="col-sm-3 control-label" translate="系統配置_啟用個人資訊">啟用個人資訊</span>
 				<div class="col-sm-9">
 					<label class="checkbox-inline" for="enable_personal_page">

@@ -54,6 +54,35 @@ class Private::SysadminController  < ApplicationController
 		render :json => permissions
 	end
 
+	def list_import_permission
+		require 'csv'
+		permission_name = params[:pname] || ''
+
+		importUsers = User
+			.where('NOT EXISTS (SELECT NULL FROM activation_codes WHERE "user".id = activation_codes.ref_user_id)')
+			.order('expired_date DESC', 'id')
+
+		render :json => importUsers
+	end
+
+	def update_import_permission
+		ids = params[:id]
+		set = params[:setTo]
+		days = params[:days]
+		user = User.where(:id => ids)
+		if !user.nil?
+			user.each do |u|
+				if set
+					u.expired_date = (u.expired_date.nil??  days.days.from_now : u.expired_date + days.days)
+				else
+					u.expired_date = -1.days.from_now
+				end
+				u.save
+			end
+		end
+		render :json => { success: "Well done!" }
+	end
+
 	def view_permission
 		require 'csv'
 		permission_name = params[:pname] || ''
@@ -211,6 +240,114 @@ class Private::SysadminController  < ApplicationController
 				end
 			end
 		end
+	end
+
+	def import_permission
+		require 'openssl'
+		require 'json'
+		require 'securerandom'
+		require 'csv'
+		#1. save to disk
+		#2. read and parse permission content
+		#3. check if the permission is valid (ever used ?)
+		#4. show permission content
+
+		#save to disk
+		uploaded_io = params[:importFile]
+		def_duration = 365 # 1 year
+		begin
+			filename = uploaded_io.original_filename
+			File.open(Rails.root.join('public', 'permissions', filename), 'wb') do |file|
+				file.write(uploaded_io.read)
+			end
+		rescue
+			render :json => { error: "無法讀取檔案" } and return
+		end
+
+		#read and parse permission content
+		file_content = File.read("public/permissions/#{filename}")
+		# puts file_content
+
+		sys = Sysconfig.where({ :target => 'system', :name => 'default_login_max' }).first
+		sys.nil?? max = 10 : max = sys.content.to_i
+		users = User.count('userid')
+
+		csv = CSV.parse(file_content)
+		isOverload = (users + csv.size) > max
+		importData = []
+		denyData = []
+		#puts index
+		if(isOverload)
+			render :json => {view: importData, deny: denyData, filename: filename, :over => isOverload} and return
+		end
+		if (csv.nil?)
+			render :json => { error: "使用許可內容無法解析" } and return
+		else
+			csv.each do |row|
+				if row[0] != '#' && 
+					user = {acc: row[1], pwd: row[2], first_name: row[3], last_name: row[4], duration: row[5].to_i.nil?? def_duration : row[5]}
+					item = User.where(['lower(userid) = ?', row[1].downcase + '@dr-cloud.net']).first
+					item.nil?? importData.push(user) : denyData.push(user)
+				end
+			end
+		end
+
+		render :json => {view: importData, deny: denyData, filename: filename}
+	end
+
+	def create_permission_import
+		require 'csv'
+		#1. read and parse permission content
+		#2. read public key
+		#3. validate the signature
+		#4. create codes
+
+		#read and parse permission content
+		# filename = 'fsjh_00011.cbp';
+		filename = params[:filename]
+		file_content = File.read("public/permissions/#{filename}")
+		# puts file_content
+
+		sysLang = Sysconfig.where({ :target => "system", :name => "default_language" }).first
+		case sysLang.content
+		when "en-us"
+			lang = '{"title":"简体中文","type":"zh-cn"}'
+		when "zh-cn"
+			lang = '{"title":"简体中文","type":"zh-cn"}'
+		when "zh-tw"
+			lang = '{"title":"繁體中文","type":"zh-tw"}'
+		else
+			lang = '{"title":"简体中文","type":"zh-cn"}'
+		end
+		
+		csv = CSV.parse(file_content)
+		#puts index
+		if (csv.nil?)
+			render :json => { error: "使用許可內容無法解析" } and return
+		else
+			csv.each do |row|
+				item = User.where(['lower(userid) = ?', row[1].downcase + '@dr-cloud.net']).first
+				if row[0] != '#' and item.nil?
+					item = User.new
+					item.password = Digest::SHA2.hexdigest(row[2])
+					item.uqid = UUID.new.generate[0..7]
+					item.userid = (row[1].downcase + '@dr-cloud.net')
+					item.first_name = row[3]
+					item.last_name = row[4]
+					item.banner = DEFAULT_USER_BANNER
+					item.photo = DEFAULT_USER_PHOTO
+					item.create_time = Time.now()
+					item.account_type = 'plus'
+					item.nouser = false
+					item.language = lang
+					item.expired_date = row[5].to_i.days.from_now
+					item.save()
+					set_image('user', { uqid: item.uqid, banner: item.banner, photo: item.photo })
+				end
+			end
+		end
+
+		render :json => { success: "Well done!", pname: filename }
 	end
 
 	def search_permission_code

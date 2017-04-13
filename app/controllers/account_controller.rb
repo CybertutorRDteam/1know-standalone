@@ -155,7 +155,7 @@ class AccountController < ApplicationController
 		reset_session
 
 		item = User.where(nouser: true, userid: params[:email].downcase).first
-		if item != nil
+		if item == nil
 			item.last_login_ip = request.remote_ip
 			item.last_login_time = Time.now()
 			item.save()
@@ -165,6 +165,49 @@ class AccountController < ApplicationController
 			render :json => { success: "Well done!" }
 		else
 			render :json => { error: "We're sorry, but something went wrong." }
+		end
+	end
+
+	def switch2
+		acc = (params[:email]).downcase
+		pwd = Digest::SHA2.hexdigest(params[:pwd])
+
+		item = User.where( nouser: false, userid: acc, password: pwd ).first
+		if item != nil
+			reset_session
+			if(item.expired_date > Time.now())
+				item.last_login_ip = request.remote_ip
+				item.last_login_time = Time.now()
+				item.save()
+				
+				session[:userinfo] = {id: item.id, uqid: item.uqid, userid: item.userid, accountType: item.account_type, nouser: item.nouser, thirdParty: '1know'}
+				
+				render :json => { success: "Well done!" }
+			else
+				render :json => { error: "We're sorry, but something went wrong." }
+			end
+		else
+			if session[:regist_timer].nil? or session[:regist_timer] > 1.days.from_now
+				
+				item = User.new
+				item.uqid = UUID.new.generate[0..7]
+				item.userid = acc
+				item.first_name = ''
+				item.last_name = ''
+				item.banner = DEFAULT_USER_BANNER
+				item.photo = DEFAULT_USER_PHOTO
+				item.create_time = Time.now()
+				item.expired_date = nil
+				item.account_type = 'plus'
+				item.nouser = false
+				item.save()
+				
+				session[:regist_timer] = Time.now()
+				
+				render :json => { success: "Well done!" }
+			else
+				render :json => { error: "We're sorry, but something went wrong." }
+			end
 		end
 	end
 	

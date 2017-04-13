@@ -154,9 +154,9 @@
 </head>
 <body>
     <div layout="vertical" layout-fill ng-app="fileChooser" ng-controller="mainCtrl">
-        <div class="mynavbar" style="margin-bottom:auto;">
-            <div style="margin:20px;height:20px;">
-                <div style="font-size:20px;padding:10px;">上传{{config.type.lang}}到 {{config.unit.name}} 单元</div>
+        <div class="mynavbar" style="margin-bottom: auto;">
+            <div style="margin:20px; height: 20px;">
+                <div style="font-size:20px; padding: 10px;">上传{{config.type.lang}}到 {{config.unit.name}} 单元</div>
             </div>
             <div>
                 <ul class="tabs" style="padding-left: 0px;">
@@ -172,9 +172,9 @@
                 </ul>
             </div>
         </div>
-        <div id="fileUpload" ng-show="action=='uploader'" ng-controller="uploaderCtrl" style="margin:20px;">
+        <div id="fileUpload" ng-show="action=='uploader'" ng-controller="uploaderCtrl" style="margin: 20px;">
             <%= form_tag({:action=>:uploadFile}, :multipart => false) do %>
-                <input type="file" style="display:none;" name="upload" id="upload-input" />
+                <input type="file" style="display: none;" name="upload" id="upload-input" />
             <% end %>
             <div id="dragndropimage" class="uploadimage-dragndrop">
                 <!--ProgressBar-->

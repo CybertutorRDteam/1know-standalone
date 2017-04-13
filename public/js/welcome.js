@@ -45,7 +45,7 @@ if (!$.browser.msie && !$.browser.webkit && !$.browser.mozilla) {
 			self.enableTrialAccount = $window.enable_trial_account;
 			self.enableTempUseCode = $window.enable_tempuse_code;
 			self.enableOauthLogin = $window.enable_oauth_login;
-			self.enabledDefaultLogin = $window.enable_default_login;
+			self.enableDefaultLogin = $window.enable_default_login;
 			self.logo = $window.logo;
 			self.copyright = $window.copyright;
 			self.service_email = $window.service_email;
@@ -95,7 +95,7 @@ if (!$.browser.msie && !$.browser.webkit && !$.browser.mozilla) {
 					});
 			}
 
-			self.signinWithIschool = function() {
+			self.signinWithOauth = function() {
 				var width = screen.width * 0.78;
 				var height = 700;
 				var top = (screen.height / 2) - (height / 2);
@@ -114,6 +114,24 @@ if (!$.browser.msie && !$.browser.webkit && !$.browser.mozilla) {
 
 				$http.post([self.BASE_URL, '/account/switch'].join(''), {
 						email: [self.guestCode, '@1know.net'].join('')
+					})
+					.success(function(response, status) {
+						if (!response.error)
+							window.location.reload();
+					});
+			}
+
+			self.loginDefault = function(event){
+				if (event !== undefined)
+					if (event.keyCode !== 13)
+						return;
+
+				if (self.loginAccount === undefined || self.loginAccount.trim() === '') return;
+				if (self.loginPassword === undefined || self.loginPassword.trim() === '') return;
+
+				$http.post([self.BASE_URL, '/account/switch2'].join(''), {
+						email: [self.loginAccount, '@dr-cloud.net'].join(''),
+						pwd: self.loginPassword
 					})
 					.success(function(response, status) {
 						if (!response.error)
@@ -146,7 +164,7 @@ if (!$.browser.msie && !$.browser.webkit && !$.browser.mozilla) {
 							$(element[0]).children().animate({'padding-top': mH/3+'px'},1000);
 							console.log(mW,mH);
 						}else{
-							$(element[0]).css('background', 'url(/img/index_cover.png) no-repeat 50% 50%').height(600);
+							$(element[0]).css('background', 'url(/img/index_cover.png) 0px 0px/cover no-repeat fixed').height(600);
 						}
 					});
 				}

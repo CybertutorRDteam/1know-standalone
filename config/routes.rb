@@ -34,6 +34,7 @@ Oneknow::Application.routes.draw do
   match  'account/login' => 'account#login', :via => [:get, :post]
   match  'account/logout' => 'account#logout', :via => [:get, :post]
   match  'account/switch' => 'account#switch', :via => [:get, :post]
+  match  'account/switch2' => 'account#switch2', :via => [:get, :post]
   match  'account/guest' => 'account#guest', :via => [:get, :post]
   get    'account/setup' => 'account#setup'
   post   'account/setACode' => 'account#setACode'
@@ -354,10 +355,14 @@ Oneknow::Application.routes.draw do
 
     # 使用許可
     get    'sys/permission/permissions' => 'sysadmin#list_permissions'
+    get    'sys/permission/i_permissions' => 'sysadmin#list_import_permission'
+    post    'sys/permission/update_i_permissions' => 'sysadmin#update_import_permission'
     get    'sys/permission/changeCode' => 'sysadmin#list_permission_changecode'
     get    'sys/permission/export/:pname' => 'sysadmin#view_permission'
     post   'sys/permission/upload_permission' => 'sysadmin#upload_permission'
+    post   'sys/permission/import_permission' => 'sysadmin#import_permission'
     post   'sys/permission/create_code' => 'sysadmin#create_permission_code'
+    post   'sys/permission/create_import' => 'sysadmin#create_permission_import'
     post   'sys/permission/search_code' => 'sysadmin#search_permission_code'
     post   'sys/permission/reset/:id' => 'sysadmin#reset_permission_code'
 

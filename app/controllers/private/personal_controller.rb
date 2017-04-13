@@ -91,12 +91,15 @@ class Private::PersonalController  < ApplicationController
 	end
 
 	def set_password
-		uri = URI([APP_CONFIG['OAuth_server'], "/service/changepassword.php?account=#{session[:userinfo][:userid]}&password=#{params[:oldpassword]}&newpassword=#{params[:newpassword]}"].join(''))
-		http = Net::HTTP.get_response(uri)
-		result = JSON.parse(http.body)
-
-		if result['statusCode'] == '00'
-			render :json => result
+		#uri = URI([APP_CONFIG['OAuth_server'], "/service/changepassword.php?account=#{session[:userinfo][:userid]}&password=#{params[:oldpassword]}&newpassword=#{params[:newpassword]}"].join(''))
+		#http = Net::HTTP.get_response(uri)
+		#result = JSON.parse(http.body)
+		hash_pwd = Digest::SHA2.hexdigest(params[:oldpassword])
+		item = User.where({ :userid => session[:userinfo][:userid], :password => hash_pwd }).first
+		if !item.nil?
+			item.password = Digest::SHA2.hexdigest(params[:newpassword])
+			item.save()
+			render :json => { success: "Well done!" }
 		else
 			render :json => { error: "We're sorry, but something went wrong." }
 		end

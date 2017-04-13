@@ -34,6 +34,7 @@ _1know.controller('ConfigCtrl', function($scope, $http, $location, $timeout, $ro
 			enable_personal_page: false,
 			enable_oauth_login: true,
 			enable_default_login: false,
+			default_login_max: 10,
 			oauth_server_url: "",
 			oauth_client_id: "",
 			oauth_client_secret: "",

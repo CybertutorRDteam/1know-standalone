@@ -8,7 +8,7 @@
 					<span class="icon-bar"></span>
 				</button>
 				<a class="navbar-brand logo" style="padding:7px 15px" href="javascript:;">
-					<img ng-show="welcomeCtrl.logo" ng-src="{{ welcomeCtrl.logo }}">
+					<img ng-show="welcomeCtrl.logo" style="height: 40px;" ng-src="{{ welcomeCtrl.logo }}">
 					<span ng-show="!welcomeCtrl.logo && welcomeCtrl.web_name" class="logo-header">{{ welcomeCtrl.web_name }}</span>
 					<span ng-show="!welcomeCtrl.logo && !welcomeCtrl.web_name" class="logo-header"><span style="color:#f00">1</span>Know</span>
 				</a>
@@ -36,8 +36,19 @@
 								</div>
 							</div>
 						</div>
-						<div ng-if="welcomeCtrl.enableOauthLogin" style="margin-top:6px">
-							<a class="btn btn-danger" style="width:406px" ng-click="welcomeCtrl.signinWithIschool()"><span translate="B004"></span></a>
+						<div ng-if="welcomeCtrl.enableDefaultLogin" style="margin-top:12px;text-align:center">
+							<div style="width:200px;display:inline-block;vertical-align:top">
+								<input type="text" class="form-control" ng-model="welcomeCtrl.loginAccount" placeholder="{{'B051'|translate}}..."></input>
+							</div>
+							<div style="width:200px;display:inline-block;vertical-align:top">
+								<input type="password" class="form-control" ng-model="welcomeCtrl.loginPassword" placeholder="{{'B052'|translate}}..."></input>
+							</div>
+						</div>
+						<div ng-if="welcomeCtrl.enableDefaultLogin" style="margin-top:6px">
+							<a class="btn btn-success" style="width:406px" ng-click="welcomeCtrl.loginDefault()"><span translate="B053"></span></a>
+						</div>
+						<div ng-if="welcomeCtrl.enableOauthLogin" style="margin-top:12px">
+							<a class="btn btn-danger" style="width:406px" ng-click="welcomeCtrl.signinWithOauth()"><span translate="B004"></span></a>
 						</div>
 					</div>
 				</div>

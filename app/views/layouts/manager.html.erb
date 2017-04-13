@@ -53,14 +53,15 @@
 	</style>
 	<script type="text/javascript">
 		var default_language = "<%=@APP_CONFIG['default_language']%>";
-		var enable_default_login = "<%=@APP_CONFIG['enable_default_login']%>";
+		var enable_default_login = Boolean(<%=@APP_CONFIG['enable_default_login']%>);
+		var enable_tempuse_code = Boolean(<%=@APP_CONFIG['enable_tempuse_code']%>);
 	</script>
 </head>
 <body>
 	<header class="navbar navbar-default navbar-fixed-top">
 		<div class="container-fluid">
 			<div class="navbar-header">
-				<a href="/admin/index" class="navbar-brand" title="back to index">易知主控台</a>
+				<a href="/admin/index" class="navbar-brand" title="back to index">主控台</a>
 			</div>
 			<div class="collapse navbar-collapse navbar-right">
 				<span style="color:#ffffff;">Hi, <%= session[:admin_name] %> </span>
