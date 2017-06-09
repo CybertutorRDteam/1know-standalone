@@ -1,4 +1,4 @@
-_1know.controller('PermissionCtrl', function($scope, $http, $location, $timeout, $routeParams, $utility, $window) {
+_1know.controller('PermissionCtrl', function($scope, $http, $location, $timeout, $routeParams, $utility, $window, $interval) {
 	var self = this;
 
 	self.disableAccount = function(dateStr) {
@@ -16,7 +16,23 @@ _1know.controller('PermissionCtrl', function($scope, $http, $location, $timeout,
 		$http.get([$utility.SERVICE_URL, '/sys/permission/i_permissions'].join(''))
 		.then(function(response) {
 			self.i_permissions = response.data;
+			$scope.home2AccountTotal = 0;
+			angular.forEach(self.i_permissions, function(item, key){
+				if(item.expired_date && !self.disableAccount(item.expired_date))
+					$scope.home2AccountTotal++;
+			});
 		});
+		/*
+		if(self.home2Interval){
+			cancel(self.home2Interval)
+			delete self.home2Interval;
+			self.home2AccountTotal = 0;
+		}
+		$scope.home2Interval = $interval(function(){
+			$scope.home2AccountTotal++;
+			if($scope.home2AccountTotal == self.i_permissions.length)
+				$interval.cancel($scope.home2Interval);
+		}, 200);*/
 	}
 
 	self.getContent = function(item) {
@@ -251,11 +267,19 @@ _1know.controller('PermissionCtrl', function($scope, $http, $location, $timeout,
 			info: {}
 		};
 		self.create2 = {
+			example: [$utility.SERVICE_URL, '/sys/permission/example'].join(''),
 			layout: "upload",
 			uploadBtnDisabled: false,
 			createBtnDisabled: false,
 			info: {}
 		};
+		
+		$scope.home2AccountTotal = 0;
+		$scope.home2AccountMax = $window.default_login_max;
+		$scope.c2example = [{id:1,u:'user1',p:'26iYh',f: '小名',l:'王',d:60},
+			{id:2,u:'user2',p:'26iw',f: 'awesome',l:'Jone',d:80},
+			{id:'#',u:'user5',p:'Jtw3',f: '小山',l:'张',d:50}
+		];
 	}
 
 	self.init();

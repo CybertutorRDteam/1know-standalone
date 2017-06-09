@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="1know">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# object: http://ogp.me/ns/object#">
+	<title><%= @content[:name] %></title>
+
+	<meta charset="UTF-8">
+
+	<meta name="keywords" content="1know, oneknow, ischool, flip, classroom, e-learning" />
+	<meta name="description" content="<%= @content[:description].gsub(/<\/?[^>]*>/, "")[0, 120] if @content[:description] != nil %>..." />
+	<meta name="author" content="ischool" />
+
+	<meta property="og:url" content="<%= root_url() + 'group/' + @content[:uqid] %>" />
+	<meta property="og:title" content="<%= @content[:name] %>" />
+	<meta property="og:description" content="<%= @content[:description].gsub(/<\/?[^>]*>/, "")[0, 120] if @content[:description] != nil %>..." />
+	<meta property="og:image" content="<%= @content[:logo] %>" />
+
+	<link rel="icon" href="<%= @content[:logo]%>" />
+
+	<link rel="stylesheet" href="/library/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="/library/font-awesome/css/font-awesome.css" />
+	<link rel="stylesheet" href="/css/default.css">
+
+	<script src="/library/jquery/jquery-1.11.0.min.js"></script>
+	<script src="/library/angularjs/angular.min.js"></script>
+	<script src="/library/angularjs/angular-translate.min.js"></script>
+	<script src="/library/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/js/language.js"></script>
+
+	<script>
+		var web_name = "<%=@APP_CONFIG['web_name']%>";
+		var hide_account_type = "<%=@APP_CONFIG['hide_account_type']%>";
+		var logo = "<%=@APP_CONFIG['logo']%>";
+		var copyright = "<%=@APP_CONFIG['copyright']%>";
+		var service_email = "<%=@APP_CONFIG['service_email']%>";
+	</script>
+</head>
+
+<body ng-controller="MainCtrl as mainCtrl">
+	<div id="globalAlertModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<h4 class="text-danger">{{mainCtrl.global.message}}</h4>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div>
+		<div style="margin-top:60px" progress-container>
+			<div class="progress progress-striped active" style="margin:0 auto;height:32px;width:400px">
+				<div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+					<h5><span remark="讀取中">Loading</span>...</h5>
+				</div>
+			</div>
+		</div>
+		<div style="display:none" main-container>
+			<nav class="navbar navbar-static-top navbar-inverse">
+				<div class="container">
+					<div class="navbar-header">
+						<a href="javascript:;" class="navbar-brand logo" style="padding:7px 15px" ng-click="mainCtrl.open1know()">
+							<img ng-show="mainCtrl.logo" style="height: 40px;" ng-src="{{ mainCtrl.logo }}">
+							<span ng-show="!mainCtrl.logo && mainCtrl.web_name" class="logo-header">{{ mainCtrl.web_name }}</span>
+							<span ng-show="!mainCtrl.logo && !mainCtrl.web_name" class="logo-header"><span style="color:#f00">1</span>Know</span>
+						</a>
+					</div>
+				</div>
+			</nav>
+
+			<div class="container" style="margin:20px auto">
+				<div class="row">
+					<div class="col-xs-3">
+						<div class="panel panel-default">
+							<div class="panel-body" style="padding:10px">
+								<div>
+									<img src="<%= @content[:logo] %>" style="width:191px;height:191px"/>
+								</div>
+								<h3><%= @content[:name] %></h3>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-xs-9">
+						<h4 translate="P018" remark="請輸入姓名">請輸入姓名</h4>
+						<form action="/private/join/<%= @content[:uqid] %>/guestJoinGroup" method="POST">
+							<div class="form-group">
+								<label for="last_name" translate="P019" remark="姓">姓</label>
+								<input type="text" class="form-control" id="last_name" name="last_name">
+							</div>
+							<div class="form-group">
+								<label for="first_name" translate="P020" remark="名">名</label>
+								<input type="text" class="form-control" id="first_name" name="first_name">
+							</div>
+							<input type="submit" class="btn btn-primary pull-right" name="submit">
+						</form>
+					</div>
+				</div>
+			</div>
+
+			<div class="container" style="text-align:center;margin-top:20px">
+				<span style="margin:0 8px">{{mainCtrl.copyright}}</span>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		angular.module('1know', ['pascalprecht.translate'])
+		.config(function($sceProvider, $locationProvider, $translateProvider) {
+			$sceProvider.enabled(false);
+			$locationProvider.html5Mode(true);
+			$translateProvider.translations('zh-tw', translations['zh-tw']);
+			$translateProvider.translations('zh-cn', translations['zh-cn']);
+			$translateProvider.translations('en-us', translations['en-us']);
+			$translateProvider.translations('es-es', translations['es-es']);
+			$translateProvider.translations('de-de', translations['de-de']);
+		})
+		.controller('MainCtrl', function($scope, $http, $location, $timeout, $translate, $window) {
+			var self = this;
+
+			self.web_name = $window.web_name;
+			self.logo = $window.logo;
+			self.copyright = $window.copyright;
+			self.service_email = $window.service_email
+
+			self.service_url = [location.origin, '/private'].join('');
+			self.global = { message: '' };
+
+			function init(){
+				$('[progress-container]').hide();
+				$('[main-container]').show();
+				$translate.uses('<%= session[:userinfo][:language][:type] %>');
+			}
+
+			init();
+		})
+	</script>
+</body>
+</html>

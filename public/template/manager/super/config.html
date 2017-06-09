@@ -42,6 +42,15 @@
 				</div>
 			</div>
 			<div class="form-group">
+				<span class="col-sm-3 control-label" translate="系統配置_隱藏說明文件">隱藏說明文件</span>
+				<div class="col-sm-9">
+					<label class="checkbox-inline" for="hide_example_docs">
+						<input id="hide_example_docs" name="hide_example_docs" type="checkbox" ng-model="configCtrl.currentConfig.hide_example_docs">
+						<span class="help-block" translate="系統配置_隱藏說明文件說明">隱藏功能列表中的「說明文件」</span>
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
 				<span class="col-sm-3 control-label" translate="系統配置_啟用測試功能">啟用測試功能</span>
 				<div class="col-sm-9">
 					<label class="checkbox-inline" for="enable_trial_account">

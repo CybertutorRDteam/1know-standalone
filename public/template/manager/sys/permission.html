@@ -85,6 +85,9 @@
 			<div ng-switch-when="home2" ng-init="permissionCtrl.home2.selectedImportPermssion=[]">
 				<div style="margin-top: 10px">
 					<div>
+						<label for="show_account_total"><i class="fa fa-user" aria-hidden="true"></i></label>
+						<input type="hidden" id="show_account_total" style="width: 3em;" ng-model="home2AccountTotal" disabled>
+						<label for="show_account_total">{{home2AccountTotal}} / {{home2AccountMax}}</label>
 						<div class="pull-right clearfix">
 							<label for="search_importPermission"><i class="fa fa-search"></i></label>
 							<input type="text" id="search_importPermission" placeholder="{{ '使用許可_搜尋匯入帳號' | translate }}" ng-model="permissionCtrl.search_importPermission.keyword" >
@@ -219,7 +222,39 @@
 							<input type="file" id="importFile" class="form-control" accept=".csv" required>
 						</div>
 						<button type="submit" class="btn btn-primary" translate="使用許可_上傳" ng-disabled="permissionCtrl.create2.uploadBtnDisabled">上傳</button>
+						<a type="button" href="{{permissionCtrl.create2.example}}" class="btn btn-info" translate="使用許可_範例檔案">範例檔案</a>
 					</form>
+					<div class="row" style="margin-top: 10px;border-radius: 2px;border: 1px solid #CCC">
+						<div class="col-md-3" style="margin-top: 10px">
+							<h4 translate="使用許可_範例說明">範例說明</h4>
+							<p translate="使用許可_範例說明1">1.第一列為各欄位說明</p>
+							<p translate="使用許可_範例說明2">2.第二列為新增範例</p>
+							<p translate="使用許可_範例說明3">3.每列第一欄為編號，若輸入「#」則不理會該列(如表黃色)</p>
+							<p translate="使用許可_範例說明4">4.請用csv格式存檔，utf8編碼</p>
+							<p translate="使用許可_範例說明5">5.上傳完畢後系統將會過濾資料，請檢查底色為紅色的資料</p>
+							<p translate="使用許可_範例說明6">6.若匯入紅色資料則會<strong>導致該帳號重新覆寫</strong>，請注意!</p>
+						</div>
+						<div class="col-md-9">
+							<table class="table table-bordered">
+								<caption translate="使用許可_範例示意表">範例示意表</caption>
+								<thead>
+									<tr>
+										<th translate="使用許可_範例編號">編號</th>
+										<th translate="使用許可_範例帳號">帳號</th>
+										<th translate="使用許可_範例密碼">密碼</th>
+										<th translate="使用許可_範例名字">名字</th>
+										<th translate="使用許可_範例姓氏">姓氏</th>
+										<th translate="使用許可_範例時間">有效時間(天)</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="x in c2example" ng-class="{'warning' : x.id=='#'}">
+										<td>{{ x.id }}</td><td>{{ x.u }}</td><td>{{ x.p }}</td><td>{{ x.f }}</td><td>{{ x.l }}</td><td>{{ x.d }}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
 
                 <div class="panel panel-primary" style="margin-top: 10px" ng-if="permissionCtrl.create2.layout=='checked'">

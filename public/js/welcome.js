@@ -134,8 +134,7 @@ if (!$.browser.msie && !$.browser.webkit && !$.browser.mozilla) {
 						pwd: self.loginPassword
 					})
 					.success(function(response, status) {
-						if (!response.error)
-							window.location.reload();
+						window.location.reload();
 					});
 			}
 

@@ -1,4 +1,4 @@
-<div class="container" style="margin: 40px auto;font-family: 'Microsoft YaHei'">
+<div class="container" style="margin-top: 10px;font-family: 'Microsoft YaHei'">
 	<div ng-show="discoveryCtrl.target=='knowledge'">
 		<div ng-show=discoveryCtrl.frontCfg.target=='default'>
 			<div style="background-color: white" ng-show=discoveryCtrl.frontCfg.sliderActivate>
@@ -93,7 +93,7 @@
 				</div>
 			</div>
 			<div ng-show="!discoveryCtrl.frontCfg.hideDefaultDiscovery">
-				<div style="margin:30px 0 15px">
+				<div style="margin:15px 0">
 					<div class="btn-group">
 						<a class="btn btn-default" ng-class="{active: discoveryCtrl.orderType=='date', 'btn-primary': discoveryCtrl.orderType=='date'}" ng-click="discoveryCtrl.toggleOrder('date')"><span translate="C004" remark="最新發佈"></span></a>
 						<a class="btn btn-default" ng-class="{active: discoveryCtrl.orderType=='subscribed', 'btn-primary': discoveryCtrl.orderType=='subscribed'}" ng-click="discoveryCtrl.toggleOrder('subscribed')"><span translate="C005" remark="熱門訂閱"></span></a>
@@ -109,7 +109,7 @@
 									<span translate="C001" remark="探索知識"></span>
 								</a>
 							</li>
-							<li>
+							<li ng-if="{{false}}">
 								<a href="#!/discover/channel/chle0ef90209f34">
 									<span translate="C007" remark="編輯精選"></span>
 								</a>

@@ -29,10 +29,11 @@ _1know.controller('ConfigCtrl', function($scope, $http, $location, $timeout, $ro
 			need_activation: false,
 			hide_account_type: false,
 			hide_sys_introduce: false,
+			hide_example_docs: false,
 			enable_trial_account: true,
 			enable_tempuse_code: true,
 			enable_personal_page: false,
-			enable_oauth_login: true,
+			enable_oauth_login: false,
 			enable_default_login: false,
 			default_login_max: 10,
 			oauth_server_url: "",
@@ -69,6 +70,7 @@ _1know.controller('ConfigCtrl', function($scope, $http, $location, $timeout, $ro
 						case 'qiniu_activate':
 						case 'enable_oauth_login':
 						case 'enable_default_login':
+						case 'hide_example_docs':
 							item.content = (item.content == 'true');
 							break;
 					}

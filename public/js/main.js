@@ -240,15 +240,16 @@ var _1know = angular.module('1know', ['ngRoute', 'ngAnimate', 'pascalprecht.tran
 
 	self.web_name = $window.web_name;
 	self.hide_account_type = $window.hide_account_type;
+	self.hide_example_docs = $window.hide_example_docs;
 	self.disable_personal_page = $window.disable_personal_page;
 	self.logo = $window.logo;
 	self.copyright = $window.copyright;
 	self.service_email = $window.service_email;
 	var oauth_server = $window.oauth_server;
-
 	self.password = {};
 	self.auth_url = [$utility.BASE_URL, '/oauth/ischool'].join('');
 	self.visible = true;
+	self.qrcode = new QRCode(document.getElementById('joinQRcode'), {width: 250, height: 250, correctLevel: QRCode.CorrectLevel.M});
 
 	self.toggleVisible = function(visible) {
 		self.visible = visible;
@@ -274,7 +275,8 @@ var _1know = angular.module('1know', ['ngRoute', 'ngAnimate', 'pascalprecht.tran
 				type: 'social',
 				shareType: 'group'
 			};
-
+			self.qrcode.clear();
+			self.qrcode.makeCode($utility.BASE_URL + '/account/guest/group/' + target.uqid);
 			$('#shareModal').modal('show');
 		} else if (type === 'channel') {
 			self.shareTarget = {

@@ -325,30 +325,29 @@ class Private::JoinController < ApplicationController
 	def join_group
 		group = Group.where(code: params[:groupCode].upcase).first
 
-		if group != nil
-			gm = GroupMember.where(['ref_user_id = ? and ref_group_id = ?', session[:userinfo][:id], group.id]).first
-
-			if gm == nil
-				order = GroupMember.where(ref_group_id: group.id).maximum('order')
-
-				gm = GroupMember.new
-				gm.uqid = UUID.new.generate.split('-')[0..1].join('')
-				gm.ref_user_id = session[:userinfo][:id]
-				gm.ref_group_id = group.id
-				gm.status = 'approved'
-				gm.role = 'member'
-				gm.order = (order == nil ? 1 : order + 1)
-				gm.notification = true
-				gm.sign_time = Time.now
-				gm.save
-			else
-				gm.status = 'approved'
-				gm.save
-			end
-
+		if join_to_group(group)
 			render :json => { uqid: group.uqid, name: group.name }
 		else
 			render :json => { error: "We're sorry, but something went wrong." }
+		end
+	end
+
+	def guest_join_group
+		group = Group.where(uqid: params[:groupUqid]).first
+		user = item = User.find(session[:userinfo][:id])
+
+		if item != nil
+			item.first_name = params[:first_name] if params[:first_name] != nil
+			item.last_name = params[:last_name] if params[:last_name] != nil
+			item.save()
+		else
+			group = nil
+		end
+
+		if join_to_group(group)
+			redirect_to '/#!/join/group/' + group.uqid
+		else
+			raise ActionController::RoutingError.new('Not Found')
 		end
 	end
 
@@ -2603,6 +2602,36 @@ class Private::JoinController < ApplicationController
 			render :json => { success: "Well done!" }
 		else
 			render :json => { error: "We're sorry, but something went wrong." }
+		end
+	end
+
+	private
+
+	def join_to_group(group)
+		if group != nil
+			gm = GroupMember.where(['ref_user_id = ? and ref_group_id = ?', session[:userinfo][:id], group.id]).first
+
+			if gm == nil
+				order = GroupMember.where(ref_group_id: group.id).maximum('order')
+
+				gm = GroupMember.new
+				gm.uqid = UUID.new.generate.split('-')[0..1].join('')
+				gm.ref_user_id = session[:userinfo][:id]
+				gm.ref_group_id = group.id
+				gm.status = 'approved'
+				gm.role = 'member'
+				gm.order = (order == nil ? 1 : order + 1)
+				gm.notification = true
+				gm.sign_time = Time.now
+				gm.save
+			else
+				gm.status = 'approved'
+				gm.save
+			end
+
+			return true
+		else
+			return false
 		end
 	end
 end

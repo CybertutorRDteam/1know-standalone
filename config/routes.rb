@@ -36,6 +36,7 @@ Oneknow::Application.routes.draw do
   match  'account/switch' => 'account#switch', :via => [:get, :post]
   match  'account/switch2' => 'account#switch2', :via => [:get, :post]
   match  'account/guest' => 'account#guest', :via => [:get, :post]
+  match  'account/guest/group/:target' => 'account#guest2', :via => [:get, :post]
   get    'account/setup' => 'account#setup'
   post   'account/setACode' => 'account#setACode'
 
@@ -257,6 +258,7 @@ Oneknow::Application.routes.draw do
     put    'join/:groupUqid/resetCode' => 'join#reset_group_code'
     post   'join/:groupUqid/requestToJoin' => 'join#request_to_join'
     post   'join/:groupCode/joinGroup' => 'join#join_group'
+    post   'join/:groupUqid/guestJoinGroup' => 'join#guest_join_group'
     post   'join/:groupUqid/leaveGroup' => 'join#leave_group'
 
     # -------------
@@ -357,6 +359,7 @@ Oneknow::Application.routes.draw do
     get    'sys/permission/permissions' => 'sysadmin#list_permissions'
     get    'sys/permission/i_permissions' => 'sysadmin#list_import_permission'
     post    'sys/permission/update_i_permissions' => 'sysadmin#update_import_permission'
+    get    'sys/permission/example' => 'sysadmin#get_import_example'
     get    'sys/permission/changeCode' => 'sysadmin#list_permission_changecode'
     get    'sys/permission/export/:pname' => 'sysadmin#view_permission'
     post   'sys/permission/upload_permission' => 'sysadmin#upload_permission'

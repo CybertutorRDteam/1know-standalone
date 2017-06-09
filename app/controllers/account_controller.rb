@@ -171,9 +171,10 @@ class AccountController < ApplicationController
 	def switch2
 		acc = (params[:email]).downcase
 		pwd = Digest::SHA2.hexdigest(params[:pwd])
-
+		logger.debug pwd
 		item = User.where( nouser: false, userid: acc, password: pwd ).first
-		if item != nil
+		logger.debug :json => item.nil?
+		if not item.nil?
 			reset_session
 			if(item.expired_date > Time.now())
 				item.last_login_ip = request.remote_ip
@@ -184,59 +185,58 @@ class AccountController < ApplicationController
 				
 				render :json => { success: "Well done!" }
 			else
-				render :json => { error: "We're sorry, but something went wrong." }
+				render :json => { error: "We're sorry, but something went wrong."}
 			end
 		else
-			if session[:regist_timer].nil? or session[:regist_timer] > 1.days.from_now
-				
-				item = User.new
-				item.uqid = UUID.new.generate[0..7]
-				item.userid = acc
-				item.first_name = ''
-				item.last_name = ''
-				item.banner = DEFAULT_USER_BANNER
-				item.photo = DEFAULT_USER_PHOTO
-				item.create_time = Time.now()
-				item.expired_date = nil
-				item.account_type = 'plus'
-				item.nouser = false
-				item.save()
-				
-				session[:regist_timer] = Time.now()
-				
-				render :json => { success: "Well done!" }
-			else
-				render :json => { error: "We're sorry, but something went wrong." }
-			end
+			
+			#if session[:regist_timer].nil? or session[:regist_timer] > 1.days.from_now				
+				#item = User.new
+				#item.uqid = UUID.new.generate[0..7]
+				#item.userid = acc
+				#item.password = pwd
+				#item.first_name = ''
+				#item.last_name = ''
+				#item.banner = DEFAULT_USER_BANNER
+				#item.photo = DEFAULT_USER_PHOTO
+				#item.create_time = Time.now()
+				#item.expired_date = nil
+				#item.account_type = 'plus'
+				#item.nouser = false
+				#item.save!				
+				#session[:regist_timer] = Time.now()				
+				#render :json => { success: "Well done!" }
+			#else
+				#render :json => { error: "We're sorry, but something went wrong.", msg: "you can regist one account only." }
+			#end
+			
+			render :json => { error: "We're sorry, but something went wrong.", msg: "access deny."}
 		end
 	end
 	
 	def guest
 		reset_session
 		
-		uqid = UUID.new.generate.split('-')[0]
-		item = User.new
-		item.uqid = uqid
-		item.userid = "#{uqid}@1know.net"
-		item.first_name = ''
-		item.last_name = ''
-		item.last_login_ip = request.remote_ip
-		item.last_login_time = Time.now()
-		item.create_time = Time.now()
-		item.account_type = 'free'
-		item.nouser = true
-		item.save()
-
-		session[:userinfo] = {
-			id: item.id,
-			uqid: item.uqid,
-			userid: item.userid,
-			accountType: item.account_type,
-			nouser: item.nouser,
-			language: {title:'English', type:'en-us'}
-		}
+		set_guest()
 
 		render :json => { success: "Well done!" }
+	end
+
+	def guest2
+		reset_session
+
+		group = Group.where(uqid: params[:target], is_public: true).first
+
+		if group == nil or group.is_destroyed
+			redirect_to root_url()
+			return
+		end
+
+		set_guest()
+
+		@APP_CONFIG = APP_CONFIG
+		@content = group
+
+		render "page/guest2"
 	end
 
 	def setACode
@@ -274,6 +274,42 @@ class AccountController < ApplicationController
 				return
 			end
 		end
-		
+	end
+
+	private
+
+	def set_guest
+		uqid = UUID.new.generate.split('-')[0]
+		item = User.new
+		item.uqid = uqid
+		item.userid = "#{uqid}@1know.net"
+		item.first_name = ''
+		item.last_name = ''
+		item.last_login_ip = request.remote_ip
+		item.last_login_time = Time.now()
+		item.create_time = Time.now()
+		item.account_type = 'free'
+		item.nouser = true
+		item.save()
+
+		case APP_CONFIG[:default_language]
+		when 'zh-cn'
+			lang = {title: '简体中文', type: 'zh-cn'}
+		when 'zh-tw'
+			lang = {title: '繁體中文', type: 'zh-tw'}
+		when 'en-us'
+			lang = {title: 'English', type: 'en-us'}
+		else
+			lang = {title: '简体中文', type: 'zh-cn'}
+		end
+
+		session[:userinfo] = {
+			id: item.id,
+			uqid: item.uqid,
+			userid: item.userid,
+			accountType: item.account_type,
+			nouser: item.nouser,
+			language: lang
+		}
 	end
 end

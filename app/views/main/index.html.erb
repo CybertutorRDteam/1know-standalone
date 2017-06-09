@@ -74,7 +74,8 @@
     <script src="/library/websocket_rails/http_connection.js"></script>
     <script src="/library/websocket_rails/websocket_connection.js"></script>
     <script src="/library/websocket_rails/channel.js"></script>
-
+	<script src="/library/QRCode/qrcode.min.js"></script>
+	
 	<script src="/js/chooser.js"></script>
 	<script src="/js/language.js?<%= srand %>"></script>
 </head>
@@ -85,6 +86,7 @@
 		var default_language = "<%=@APP_CONFIG['default_language']%>";
 		var hide_account_type = Boolean(<%=@APP_CONFIG['hide_account_type']%>);
 		var hide_sys_introduce = Boolean(<%=@APP_CONFIG['hide_sys_introduce']%>);
+		var hide_example_docs = Boolean(<%=@APP_CONFIG['hide_example_docs']%>);
 		var enable_personal_page = Boolean(<%=@APP_CONFIG['enable_personal_page']%>);
 		var enable_trial_account = Boolean(<%=@APP_CONFIG['enable_trial_account']%>);
 		var enable_tempuse_code = Boolean(<%=@APP_CONFIG['enable_tempuse_code']%>);

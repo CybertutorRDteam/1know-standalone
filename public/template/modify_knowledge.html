@@ -1,3 +1,4 @@
+<script type="text/javascript" src="/library/recorderjs/recoder.js"></script>
 <div>
 	<div id="embedModal" class="modal fade">
 		<div class="modal-dialog">
@@ -719,6 +720,9 @@
 												<a class="btn btn-sm btn-default" ng-class="{'btn-primary': modifyKnowledgeCtrl.modifyTarget.edit_unit_type == 'draw', active: modifyKnowledgeCtrl.modifyTarget.edit_unit_type == 'draw'}" ng-click="modifyKnowledgeCtrl.toggleUnitType('draw')">
 													<i class="fa fa-fw fa-picture-o"></i> <span translate="G066" remark="塗鴉"></span>
 												</a>
+												<a class="btn btn-sm btn-default" ng-class="{'btn-primary': modifyKnowledgeCtrl.modifyTarget.edit_unit_type == 'voice', active: modifyKnowledgeCtrl.modifyTarget.edit_unit_type == 'voice'}" ng-click="modifyKnowledgeCtrl.toggleUnitType('voice')">
+													<i class="fa fa-microphone"></i> <span translate="G999" remark="錄音"></span>
+												</a>
 											</div>
 										</div>
 									</div>
@@ -863,6 +867,11 @@
 													<div id="draw-description" style="height:140px"></div>
 												</div>
 											</div>
+										</div>
+										<div ng-if="modifyKnowledgeCtrl.modifyTarget.edit_unit_type=='voice'" ng-init="recordInit=false">
+											<canvas id="voiceCanvas"><!-- voice mark -->
+												
+											</canvas>
 										</div>
 									</div>
 								</form>

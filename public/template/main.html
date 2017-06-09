@@ -68,19 +68,19 @@
 					<span translate="A009" remark="知識頁面"></span>
 				</a>
 				<div class="btn-group">
-					<a class="btn btn-sm" ng-class="{'btn-default': mainCtrl.shareTarget.type != 'social', 'btn-primary': mainCtrl.shareTarget.type == 'social'}"
-						ng-click="mainCtrl.shareTarget.type='social'">
+					<a class="btn btn-sm" ng-class="{'btn-default': mainCtrl.shareTarget.type != 'social', 'btn-primary': mainCtrl.shareTarget.type == 'social'}" ng-click="mainCtrl.shareTarget.type='social'">
 						<span translate="A010" remark="分享這個群組" ng-if="mainCtrl.shareTarget.shareType=='group'"></span>
 						<span translate="A011" remark="分享這個頻道" ng-if="mainCtrl.shareTarget.shareType=='channel'"></span>
 						<span translate="A012" remark="分享這個知識" ng-if="mainCtrl.shareTarget.shareType=='knowledge'"></span>
 					</a>
-					<a class="btn btn-sm" ng-class="{'btn-default': mainCtrl.shareTarget.type != 'embed', 'btn-primary': mainCtrl.shareTarget.type == 'embed'}"
-						ng-click="mainCtrl.shareTarget.type='embed'">
+					<a class="btn btn-sm" ng-class="{'btn-default': mainCtrl.shareTarget.type != 'embed', 'btn-primary': mainCtrl.shareTarget.type == 'embed'}" ng-click="mainCtrl.shareTarget.type='embed'">
 						<span translate="A013" remark="嵌入"></span>
 					</a>
-					<a class="btn btn-sm" ng-class="{'btn-default': mainCtrl.shareTarget.type != 'email', 'btn-primary': mainCtrl.shareTarget.type == 'email'}"
-						ng-click="mainCtrl.shareTarget.type='email'">
+					<a class="btn btn-sm" ng-class="{'btn-default': mainCtrl.shareTarget.type != 'email', 'btn-primary': mainCtrl.shareTarget.type == 'email'}" ng-click="mainCtrl.shareTarget.type='email'">
 						<span translate="A014" remark="電子郵件"></span>
+					</a>
+					<a class="btn btn-sm" ng-if="mainCtrl.shareTarget.shareType=='group'" ng-class="{'btn-default': mainCtrl.shareTarget.type != 'qr', 'btn-primary': mainCtrl.shareTarget.type == 'qr'}" ng-click="mainCtrl.shareTarget.type='qr'">
+						<span translate="A039" remark="QR Code"></span>
 					</a>
 				</div>
 			</div>
@@ -165,6 +165,9 @@
 							</li>
 						</ul>
 					</div>
+				</div>
+				<div ng-show="mainCtrl.shareTarget.type=='qr'">
+					<div id="joinQRcode" style="margin:auto;"></div>
 				</div>
 			</div>
 		</div>
@@ -270,12 +273,12 @@
 							</ul>
 						</li> -->
 						<li class="divider"></li>
-						<li>
+						<li ng-if="!mainCtrl.hide_example_docs">
 							<a href="/docs/index.html" target="_blank">
 								<i class="fa fa-fw fa-book"></i><span> 说明文件</span>
 							</a>
 						</li>
-						<li class="divider"></li>
+						<li ng-if="!mainCtrl.hide_example_docs" class="divider"></li>
 						<li ng-if="mainCtrl.account.role=='ischool'">
 							<a href="#!/background">
 								<i class="fa fa-fw fa-cog"></i> <span translate="A028" remark="後台管理"></span>

@@ -65,6 +65,28 @@ class Private::SysadminController  < ApplicationController
 		render :json => importUsers
 	end
 
+	def get_import_example
+		require 'csv'
+
+		case APP_CONFIG['default_language']
+		when "zh-tw"
+			@results = ["#","帳號","密碼","名字","姓氏","有效時間(天)"].to_csv
+		when "zh-cn"
+			@results = ["#","帐号","密码","名字","姓氏","有效时间(天)"].to_csv
+		when "en-us"
+			@results = ["#","account","password","firstName","lastName","duration(day)"].to_csv
+		else
+			@results = ["#","帐号","密码","名字","姓氏","有效时间(天)"].to_csv
+		end
+
+		@results = @results + ([0,"test","test","firstName","lastName",20]).to_csv
+
+		send_data @results,
+			:type=>"application/csv",
+			:filename => "example.csv",
+			:x_sendfile=>true
+	end
+
 	def update_import_permission
 		ids = params[:id]
 		set = params[:setTo]
@@ -337,7 +359,7 @@ class Private::SysadminController  < ApplicationController
 					item.banner = DEFAULT_USER_BANNER
 					item.photo = DEFAULT_USER_PHOTO
 					item.create_time = Time.now()
-					item.account_type = 'plus'
+					item.account_type = 'pro'
 					item.nouser = false
 					item.language = lang
 					item.expired_date = row[5].to_i.days.from_now

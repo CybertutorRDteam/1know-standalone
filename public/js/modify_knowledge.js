@@ -1024,6 +1024,7 @@ _1know.controller('ModifyKnowledgeCtrl', function($scope, $http, $location, $tim
 			self.initHtmlEditor('#qa-content', self.modifyTarget.edit_content_qa);
 		else if (self.modifyTarget.edit_unit_type === 'draw')
 			self.initHtmlEditor('#draw-description', self.modifyTarget.edit_content_draw.description);
+		else if (self.modifyTarget.edit_unit_type === 'voice') ;
 
 		self.parseUnitContent();
 	}
