@@ -1,5 +1,8 @@
 _1know.controller('DiscoveryCtrl', function($scope, $http, $location, $routeParams, $utility, $window, $interval ) {
 	var self = this;
+	self.language = $utility.LANGUAGE;			
+	self.frontCfg = $window.frontCfg;		
+	self.frontCfg.target = 'default';
 	
 	self.loadChannelList = function() {
 		$http.get([$utility.SERVICE_URL, '/discovery/channels'].join(''))
@@ -215,9 +218,6 @@ _1know.controller('DiscoveryCtrl', function($scope, $http, $location, $routePara
 		if ($routeParams.t !== undefined) {
 			self.target = $routeParams.t;
 			self.orderType = 'date';
-			self.language = $utility.LANGUAGE;
-			self.frontCfg = $window.frontCfg;
-			if (self.frontCfg.target == "") self.frontCfg.target = 'default';
 			if (self.frontCfg.target == "dxVersion") self.frontCfg.show='normal';
 
 			if ($routeParams.t === 'knowledge')

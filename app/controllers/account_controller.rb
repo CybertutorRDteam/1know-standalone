@@ -222,8 +222,6 @@ class AccountController < ApplicationController
 	end
 
 	def guest2
-		reset_session
-
 		group = Group.where(uqid: params[:target], is_public: true).first
 
 		if group == nil or group.is_destroyed
@@ -231,12 +229,34 @@ class AccountController < ApplicationController
 			return
 		end
 
-		set_guest()
+		if session[:userinfo].nil? or (item = User.find(session[:userinfo][:id])).nil? or (item.first_name.blank? and item.last_name.blank?)
+			set_guest()
+			@APP_CONFIG = APP_CONFIG
+			@content = group
 
-		@APP_CONFIG = APP_CONFIG
-		@content = group
+			render "page/guest2"
+		else
+			gm = GroupMember.where(['ref_user_id = ? and ref_group_id = ?', session[:userinfo][:id], group.id]).first
+			if gm == nil
+				order = GroupMember.where(ref_group_id: group.id).maximum('order')
 
-		render "page/guest2"
+				gm = GroupMember.new
+				gm.uqid = UUID.new.generate.split('-')[0..1].join('')
+				gm.ref_user_id = session[:userinfo][:id]
+				gm.ref_group_id = group.id
+				gm.status = 'approved'
+				gm.role = 'member'
+				gm.order = (order == nil ? 1 : order + 1)
+				gm.notification = true
+				gm.sign_time = Time.now
+				gm.save
+			else
+				gm.status = 'approved'
+				gm.save
+			end
+			redirect_to '/#!/join/group/' + group.uqid
+			return
+		end
 	end
 
 	def setACode
